@@ -14,6 +14,6 @@ bash -x benchmark.sh
 
 ```bash
 JINA_VER=master
-docker build --build-arg JINA_VER=$JINA_VER -f dockerfiles/Dockerfile.benchmark -t bechmark .
+docker build --build-arg JINA_VER=$JINA_VER -t bechmark .
 docker run -v $(pwd):/app bechmark:latest
 ```
