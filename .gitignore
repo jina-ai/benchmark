@@ -133,6 +133,7 @@ dmypy.json
 
 # output directory
 output/
+outputs/
 
 # indexer directory
 MyIndexer/
