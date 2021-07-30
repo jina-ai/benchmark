@@ -138,3 +138,8 @@ outputs/
 # indexer directory
 MyIndexer/
 MyMemMap/
+
+# Hugo default output directory
+/public
+/resources
+/themes
