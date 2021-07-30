@@ -1,6 +1,6 @@
-baseURL: 'https://benchmarking.jina.ai/'
+baseURL: 'https://benchmark.jina.ai/'
 defaultContentLanguage: en
-title: Benchmarking Jina
+title: Benchmark Jina
 theme: book
 
 # Book configuration
