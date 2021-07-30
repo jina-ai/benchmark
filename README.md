@@ -1,6 +1,6 @@
 # Benchmarking
 
-To do the resource benchmarking (CPU & Memory usage) of Jina features, you can use `benchmark.sh` file. This file actually benchmark scripts under `benchmarks` directory with [cmdbench](https://github.com/manzik/cmdbench) utility tool.
+To do the resource benchmarking (CPU & Memory usage) of Jina features, you can use `benchmark.sh` file. This file actually benchmark scripts under `src` directory with [cmdbench](https://github.com/manzik/cmdbench) utility tool.
 
 ## Run
 
