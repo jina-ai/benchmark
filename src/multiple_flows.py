@@ -1,9 +1,13 @@
 import os
+from pathlib import Path
 
-from jina import Document, Flow
+from jina import Document, Flow, __version__
 from memory_profiler import profile as memory_profiler
 
-output_dir = os.path.join(os.getcwd().replace('/benchmarks', ''), 'outputs')
+output_dir = os.path.join(
+    os.getcwd().replace('/src', ''), 'docs/static/artifacts/{}'.format(__version__)
+)
+Path(output_dir).mkdir(parents=True, exist_ok=True)
 fp = open(
     os.path.join(
         output_dir,
