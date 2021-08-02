@@ -138,6 +138,9 @@ outputs/
 # indexer directory
 **/MyIndexer/
 **/MyMemMap/
+**/original/
+**/fashion/
+**/chatbot/
 
 # Hugo default output directory
 **/public

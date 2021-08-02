@@ -10,4 +10,4 @@ RUN apt-get update && \
     pip3 install cmdbench==0.1.13 memory-profiler==0.58.0
 
 # run benchmark
-ENTRYPOINT ["bash", "-x", "benchmark.sh"]
+ENTRYPOINT ["python3"]
