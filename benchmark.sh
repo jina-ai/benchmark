@@ -2,7 +2,7 @@
 
 declare -r jina_version=$(jina --version)
 
-mkdir -p docs/static/artifacts
+mkdir -p docs/static/artifacts/${jina_version}
 
 for file in src/*.py; do
     output_json=$(echo $file | sed -r 's|.py|.json|g' | sed -r "s|src|docs/static/artifacts/${jina_version}|g")
