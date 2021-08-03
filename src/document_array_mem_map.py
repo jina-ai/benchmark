@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 
 from jina import Document, __version__
@@ -22,7 +23,9 @@ fp = open(
 def benchmark():
     dlist = []
     dam_size = 1000000
-    dam = DocumentArrayMemmap(os.path.join(os.getcwd(), 'MyMemMap'))
+    mem_map_path = os.path.join(os.getcwd(), 'tmp/{}'.format(str(uuid.uuid4())))
+    Path(mem_map_path).mkdir(parents=True, exist_ok=True)
+    dam = DocumentArrayMemmap(mem_map_path)
 
     for i in range(dam_size):
         dlist.append(

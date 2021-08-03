@@ -31,7 +31,7 @@ fp = open(
 def prepare():
     args = set_hw_parser().parse_args()
     args.hello = 'chatbot'
-    args.workdir = os.path.join(os.getcwd(), 'chatbot')
+    args.workdir = os.path.join('tmp', args.workdir)
 
     targets = {
         'index-labels': {
