@@ -83,21 +83,23 @@ def generate_menus(input_dir: str, output_dir: str) -> None:
         fp.write('---\n\n')
         fp.write('- [Homepage]({{< relref "/" >}})\n')
 
-        for folder_name in sorted(os.listdir(input_dir)):
+        folder_list = list(os.listdir(input_dir))
+        folder_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
+
+        for folder_name in folder_list:
             fp.write(
-                '- [{folder_name}]({{< relref "/docs/{folder_name}.md" >}})\n'.format(
-                    folder_name=folder_name
-                )
+                '- [%s]({{< relref "/docs/%s.md" >}})\n' % (folder_name, folder_name)
             )
 
 
 def main():
     base_dir = os.path.join(os.getcwd(), 'docs')
-    docs_dir = os.path.join(base_dir, 'content/docs')
+    content_dir = os.path.join(base_dir, 'content')
+    docs_dir = os.path.join(content_dir, 'docs')
     artifacts_dir = os.path.join(base_dir, 'static/artifacts')
 
     generate_docs(artifacts_dir, docs_dir)
-    generate_menus(artifacts_dir, docs_dir)
+    generate_menus(artifacts_dir, content_dir)
 
 
 if __name__ == '__main__':
