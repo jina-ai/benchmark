@@ -1,0 +1,2 @@
+cmdbench==0.1.13
+memory-profiler==0.58.0
