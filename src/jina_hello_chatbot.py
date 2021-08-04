@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 from pathlib import Path
 
 from jina import Flow, __version__
@@ -8,24 +10,28 @@ from jina.helloworld.fashion.helper import (
     index_generator,
     query_generator,
 )
-from memory_profiler import profile as memory_profiler
+from memory_profiler import LogFile, profile
 
 try:
     from jina.helloworld.fashion.executors import MyEncoder, MyEvaluator, MyIndexer
 except:
     from jina.helloworld.fashion.my_executors import MyEncoder, MyEvaluator, MyIndexer
 
-output_dir = os.path.join(
-    os.getcwd().replace('/src', ''), 'docs/static/artifacts/{}'.format(__version__)
-)
+os.environ['JINA_LOG_LEVEL'] = 'CRITICAL'
+output_dir = 'docs/static/artifacts/{}'.format(__version__)
 Path(output_dir).mkdir(parents=True, exist_ok=True)
-fp = open(
-    os.path.join(
-        output_dir,
-        '{}_memory_profile.txt'.format(os.path.basename(__file__)).replace('.py', ''),
-    ),
-    'w+',
+log_file = os.path.join(
+    output_dir,
+    '{}_memory_profile.txt'.format(os.path.basename(__file__)).replace('.py', ''),
 )
+
+# create logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler(log_file, 'w+')
+fh.setLevel(logging.DEBUG)
+logger.addHandler(fh)
+sys.stdout = LogFile(__name__)
 
 
 def prepare():
@@ -62,7 +68,7 @@ def prepare():
     return args, targets
 
 
-@memory_profiler(stream=fp)
+@profile
 def benchmark(args, targets):
     f = (
         Flow()
@@ -94,4 +100,3 @@ def benchmark(args, targets):
 if __name__ == '__main__':
     args, targets = prepare()
     benchmark(args, targets)
-    fp.close()
