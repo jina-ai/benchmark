@@ -6,7 +6,7 @@ from faker import Faker
 
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
-from jina.logging.profile import TimeContext
+from timecontext import TimeContext
 
 fake = Faker()
 NUM_DOCS = 10000
@@ -63,56 +63,56 @@ def _generate_document_array_memmap():
 
 def benchmark_construct_document_array_from_repeated_container(fp):
     doc = _generate_repeated_container()
-    with TimeContext('benchmark construct from repeated container') as timer:
+    with TimeContext() as timer:
         DocumentArray(doc.chunks)
-        fp.write(
-            f'Constructing DocumentArray from repeated container took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from repeated container took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark_construct_document_array_from_another_document_array(fp):
     da = _generate_document_array()
-    with TimeContext('benchmark construct from another document array') as timer:
+    with TimeContext() as timer:
         DocumentArray(da)
-        fp.write(
-            f'Constructing DocumentArray from another document array took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from another document array took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark_construct_document_array_from_list_of_documents(fp):
     da = _generate_list_documents()
-    with TimeContext('benchmark construct from list of docs') as timer:
+    with TimeContext() as timer:
         DocumentArray(da)
-        fp.write(
-            f'Constructing DocumentArray from list of documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from list of documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark_construct_document_array_from_tuple_of_documents(fp):
     da = _generate_tuple_documents()
-    with TimeContext('benchmark construct from tuple of docs') as timer:
+    with TimeContext() as timer:
         DocumentArray(da)
-        fp.write(
-            f'Constructing DocumentArray from tuple of documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from tuple of documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark_construct_document_array_from_generator(fp):
     da = _yield_documents()
-    with TimeContext('benchmark construct from generator') as timer:
+    with TimeContext() as timer:
         DocumentArray(da)
-        fp.write(
-            f'Constructing DocumentArray from generator took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from generator took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark_construct_document_array_from_memmap(fp):
     da = _generate_document_array_memmap()
-    with TimeContext('benchmark construct from document array memmap') as timer:
+    with TimeContext() as timer:
         DocumentArray(da)
-        fp.write(
-            f'Constructing DocumentArray from document array memmap took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
-        )
+    fp.write(
+        f'Constructing DocumentArray from document array memmap took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    )
 
 
 def benchmark():
