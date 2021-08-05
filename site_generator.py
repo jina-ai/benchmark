@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import re
 from typing import Union
 
 
@@ -18,8 +19,15 @@ def _cleaned_memory_profile_output(file_path: str) -> Union[str, None]:
     with open(file_path) as fp:
         lines = fp.readlines()
 
-    if len(lines) > 3:
-        lines[0] = '```'
+    lines_lenth = len(lines)
+    start_point = 0
+    end_point = -1
+    if lines_lenth > 3:
+        for x in range(lines_lenth):
+            if re.search('^Line #', lines[x]):
+                start_point = x - 1
+        lines = lines[start_point:end_point]
+        lines[0] = '```\n'
         lines[-1] = '```\n\n'
         return ''.join(lines)
     else:
