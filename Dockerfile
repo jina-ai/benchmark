@@ -12,4 +12,4 @@ RUN apt-get update && \
     pip3 install -r requirements.txt
 
 # run benchmark
-ENTRYPOINT ["python3"]
+ENTRYPOINT ["bash", "benchmark.sh"]
