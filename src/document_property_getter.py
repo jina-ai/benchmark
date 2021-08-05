@@ -60,7 +60,7 @@ def benchmark_get_embedding(fp):
     docs = [Document(embedding=_generate_random_blob()) for _ in range(NUM_DOCS)]
     with TimeContext() as timer:
         for doc in docs:
-            _ = doc.blob
+            _ = doc.embedding
 
     fp.write(f'Getting Document embedding took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
 
