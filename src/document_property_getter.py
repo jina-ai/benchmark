@@ -5,7 +5,7 @@ import string
 import numpy as np
 
 from jina import Document, __version__
-from timecontext import TimeContext
+from packages.timecontext import TimeContext
 
 
 def _generate_random_text():
