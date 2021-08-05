@@ -1,5 +1,5 @@
 import numpy as np
-from benchmark import _meth_profiler, BenchmarkedDocument
+from benchmark import BenchmarkedDocument, BenchmarkedDocumentArray
 from jina import Document, Executor, requests, DocumentArray
 
 
@@ -14,10 +14,11 @@ class DummyEncoder(Executor):
 
 
 def benchmark():
-    docs = DocumentArray([BenchmarkedDocument(text='hey here') for _ in range(100)])
+    docs = BenchmarkedDocumentArray([BenchmarkedDocument(text='hey here') for _ in range(100)])
     executor = DummyEncoder()
     executor.encode(docs)
-    print(f' _meth_profiler {_meth_profiler}')
+    print(f' Document profile {BenchmarkedDocument.profile}')
+    print(f' DocumentArray profile {BenchmarkedDocumentArray.profile}')
 
 
 if __name__ == '__main__':
