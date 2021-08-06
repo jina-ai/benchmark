@@ -6,7 +6,7 @@ from faker import Faker
 
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
-from timecontext import TimeContext
+from utils.timecontext import TimeContext
 
 fake = Faker()
 NUM_DOCS = 10000

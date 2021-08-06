@@ -7,7 +7,7 @@ from pathlib import Path
 from jina import Document, DocumentArray, __version__
 from memory_profiler import LogFile, profile
 
-from timecontext import TimeContext
+from utils.timecontext import TimeContext
 
 NUM_DOCS = 100000
 os.environ['JINA_LOG_LEVEL'] = 'CRITICAL'
