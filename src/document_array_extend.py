@@ -8,7 +8,7 @@ import numpy as np
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
-from timecontext import TimeContext
+from utils.timecontext import TimeContext
 
 NUM_REPETITIONS = 25
 NUM_DOCS = [100, 1000, 10000]
