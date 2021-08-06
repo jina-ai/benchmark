@@ -143,3 +143,6 @@ outputs/
 # Hugo default output directory
 **/public
 **/resources
+
+# pycharm
+.idea/
