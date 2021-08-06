@@ -6,7 +6,7 @@ import uuid
 from pathlib import Path
 
 from jina import Document, __version__
-from timecontext import TimeContext
+from utils.timecontext import TimeContext
 
 
 def _generate_random_text():
