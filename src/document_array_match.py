@@ -1,6 +1,7 @@
 from typing import Generator, Union
 
 import numpy as np
+import pytest
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
@@ -85,28 +86,37 @@ def _match_against_self(size: int, topk: int, emb_size: int = 128) -> float:
     return result_str
 
 
-def benchmark():
-
+@pytest.fixture(scope='module')
+def results_file():
     with open(get_output_file_name(__file__), 'w+') as fp:
-
-        for size1 in [10, 100]:
-            for size2 in [10_000, 100_000]:
-                fp.write(_standard_benchmark(size1=size1, size2=size2))
-
-        for emb_size in [512, 1024]:
-            fp.write(_standard_benchmark(emb_size=emb_size))
-
-        for use_scipy in [True, False]:
-            for metric in ['cosine', 'euclidean', 'sqeuclidean']:
-                if use_scipy and metric == 'cosine':
-                    continue  # skip default case, which is already checked
-                fp.write(_standard_benchmark(metric=metric, use_scipy=use_scipy))
-
-        # Benchmark against self
-        for size in [100, 1000]:
-            for topk in [10, 100]:
-                fp.write(_match_against_self(size=size, topk=topk))
+        yield fp
 
 
-if __name__ == "__main__":
-    benchmark()
+@pytest.mark.parametrize('size1', [10, 100])
+@pytest.mark.parametrize('size2', [10_000, 100_000])
+def test_array_sizes(size1: int, size2: int, results_file):
+    results_str = _standard_benchmark(size1=size1, size2=size2)
+    results_file.write(results_str)
+
+@pytest.mark.parametrize('emb_size', [512, 1024])
+def test_emb_sizes(emb_size: int):
+    results_str = _standard_benchmark(emb_size=emb_size)
+    results_file.write(results_str)
+
+
+@pytest.mark.parametrize('use_scipy', [True, False])
+@pytest.mark.parametrize('metric', ['cosine', 'euclidean', 'sqeuclidean'])
+def test_metrics(use_scipy: bool, metric: str, results_file):
+    if not use_scipy and metric == 'cosine':
+        pytest.skip('Skipping repeated default configuration')
+ 
+    results_str = _standard_benchmark(metric=metric, use_scipy=use_scipy)
+    results_file.write(results_str)
+
+
+@pytest.mark.parametrize('size', [100, 1000])
+@pytest.mark.parametrize('topk', [10, 100])
+def test_match_against_self(size: int, topk: int, results_file):
+    results_str = _match_against_self(size=size, topk=topk)
+    results_file.write(results_str)
+
