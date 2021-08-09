@@ -99,7 +99,7 @@ def test_array_sizes(size1: int, size2: int, results_file):
     results_file.write(results_str)
 
 @pytest.mark.parametrize('emb_size', [512, 1024])
-def test_emb_sizes(emb_size: int):
+def test_emb_sizes(emb_size: int, results_file):
     results_str = _standard_benchmark(emb_size=emb_size)
     results_file.write(results_str)
 
