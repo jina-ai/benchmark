@@ -98,6 +98,8 @@ def benchmark():
 
         for use_scipy in [True, False]:
             for metric in ['cosine', 'euclidean', 'sqeuclidean']:
+                if use_scipy and metric == 'cosine':
+                    continue  # skip default case, which is already checked
                 fp.write(_standard_benchmark(metric=metric, use_scipy=use_scipy))
 
         # Benchmark against self
