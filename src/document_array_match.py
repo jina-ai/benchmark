@@ -1,4 +1,4 @@
-from typing import Dict, Generator, Tuple, Union
+from typing import Dict, Generator, List, Tuple, Union
 
 import numpy as np
 import pytest
@@ -69,7 +69,7 @@ def setup_match(**kwargs) -> Tuple[Tuple, Dict]:
 
 @pytest.mark.parametrize('size1', [10, 100])
 @pytest.mark.parametrize('size2', [10_000, 100_000])
-def test_array_sizes(size1: int, size2: int, json_metadata):
+def test_array_sizes(size1: int, size2: int, json_writer: List):
 
     mean_time, std_time = benchmark_time(
         match_arrays,
@@ -78,12 +78,19 @@ def test_array_sizes(size1: int, size2: int, json_metadata):
         kwargs=prepare_inputs_standard(size1=size1, size2=size2),
     )
 
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
+    json_writer.append(
+        dict(
+            name='document_array_match/test_array_sizes',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(size1=size1, size2=size2),
+        )
+    )
 
 
 @pytest.mark.parametrize('emb_size', [512, 1024])
-def test_emb_sizes(emb_size: int, json_metadata):
+def test_emb_sizes(emb_size: int, json_writer: List):
 
     mean_time, std_time = benchmark_time(
         match_arrays,
@@ -92,13 +99,20 @@ def test_emb_sizes(emb_size: int, json_metadata):
         kwargs=prepare_inputs_standard(emb_size=emb_size),
     )
 
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
+    json_writer.append(
+        dict(
+            name='document_array_match/test_emb_sizes',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(emb_size=emb_size),
+        )
+    )
 
 
 @pytest.mark.parametrize('use_scipy', [True, False])
 @pytest.mark.parametrize('metric', ['cosine', 'euclidean', 'sqeuclidean'])
-def test_metrics(use_scipy: bool, metric: str, json_metadata):
+def test_metrics(use_scipy: bool, metric: str, json_writer: List):
     if not use_scipy and metric == 'cosine':
         pytest.skip('Skipping repeated default configuration')
 
@@ -109,13 +123,20 @@ def test_metrics(use_scipy: bool, metric: str, json_metadata):
         kwargs=prepare_inputs_standard(metric=metric, use_scipy=use_scipy),
     )
 
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
+    json_writer.append(
+        dict(
+            name='document_array_match/test_metrics',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(metric=metric, use_scipy=use_scipy),
+        )
+    )
 
 
 @pytest.mark.parametrize('size', [100, 1000])
 @pytest.mark.parametrize('topk', [10, 100])
-def test_match_against_self(size: int, topk: int, json_metadata):
+def test_match_against_self(size: int, topk: int, json_writer: List):
 
     mean_time, std_time = benchmark_time(
         match_arrays,
@@ -124,5 +145,12 @@ def test_match_against_self(size: int, topk: int, json_metadata):
         kwargs=prepare_inputs_self(size=size, topk=topk),
     )
 
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
+    json_writer.append(
+        dict(
+            name='document_array_match/test_match_against_self',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(size=size, topk=topk),
+        )
+    )
