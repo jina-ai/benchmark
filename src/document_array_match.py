@@ -55,6 +55,8 @@ def prepare_inputs_self(size: int = 10, emb_size: int = 128, topk: int = 10) -> 
         use_scipy=False,
     )
 
+    json_metadata["mean_time"] = mean_time
+    json_metadata["std_time"] = std_time
 
 def setup_match(**kwargs) -> Tuple[Tuple, Dict]:
     array1 = kwargs["array1"]
