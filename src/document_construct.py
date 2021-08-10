@@ -1,217 +1,450 @@
 import random
 import string
 import numpy as np
-import os
-import uuid
-from pathlib import Path
+import pytest
 
 from jina import Document, __version__
-from utils.timecontext import TimeContext
+from utils.benchmark import benchmark_time
 
 
-def _generate_random_text():
-    length = random.randint(30, 3000)
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+def _generate_random_text(text_length):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(text_length))
 
 
-def _generate_random_buffer():
-    length = random.randint(30, 3000)
-    return bytes(bytearray(random.getrandbits(8) for _ in range(length)))
+def _generate_random_buffer(buffer_length):
+    return bytes(bytearray(random.getrandbits(8) for _ in range(buffer_length)))
 
 
-def _generate_random_blob():
+def _generate_random_blob(num_dims):
     # 1 and 3 can cover from audio signals to images. 3 dimensions make the memory too high
     shape_length = random.randint(1, 2)
-    shape = [random.randint(100, 200)] * shape_length
+    shape = [random.randint(100, 200)] * num_dims
 
     return np.random.rand(*shape)
 
 
-def _generate_random_document():
+def _generate_random_document(origin, text_length=None, buffer_length=None, num_dims=None):
     tags = {'tag1': [0, 2, 3], 'tag2': 'value of tag2'}
-    option = random.choice(['text', 'blob', 'buffer'])
-    if option == 'text':
-        return Document(text=_generate_random_text(), tags=tags)
-    if option == 'blob':
-        return Document(blob=_generate_random_blob(), tags=tags)
-    if option == 'buffer':
-        return Document(buffer=_generate_random_buffer(), tags=tags)
+    if origin == 'text':
+        return Document(text=_generate_random_text(text_length), tags=tags)
+    if origin == 'blob':
+        return Document(blob=_generate_random_blob(num_dims), tags=tags)
+    if origin == 'buffer':
+        return Document(buffer=_generate_random_buffer(buffer_length), tags=tags)
 
 
-def _generate_random_document_with_chunks_and_matches():
-    root = _generate_random_document()
+def _generate_random_document_with_chunks_and_matches(origin, text_length=None, buffer_length=None, num_dims=None):
+    root = _generate_random_document(origin, text_length, buffer_length, num_dims)
 
     num_chunks = random.randint(1, 20)
     num_matches = random.randint(1, 20)
     for _ in range(num_chunks):
-        root.chunks.append(_generate_random_document())
+        root.chunks.append(_generate_random_document(origin, text_length, buffer_length, num_dims))
     for _ in range(num_matches):
-        root.matches.append(_generate_random_document())
+        root.matches.append(_generate_random_document(origin, text_length, buffer_length, num_dims))
     return root
 
 
 NUM_DOCS = 1000
 
 
-# 1000 documents
-def benchmark_construct_text(fp):
-    texts = []
-    for _ in range(NUM_DOCS):
-        texts.append(_generate_random_text())
-    with TimeContext() as timer:
-        for text in texts:
-            Document(text=text)
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_text(text_length, json_writer):
+    def _doc_build(text):
+        Document(text=text)
 
-    fp.write(f'Constructing Document from text took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_blob(fp):
-    blobs = []
-    for _ in range(NUM_DOCS):
-        blobs.append(_generate_random_blob())
-    with TimeContext() as timer:
-        for blob in blobs:
-            Document(blob=blob)
-
-    fp.write(f'Constructing Document from blob took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_buffer(fp):
-    buffers = []
-    for _ in range(NUM_DOCS):
-        buffers.append(_generate_random_buffer())
-    with TimeContext() as timer:
-        for buffer in buffers:
-            Document(buffer=buffer)
-
-    fp.write(f'Constructing Document from buffer took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_bytes(fp):
-    bytes_list = []
-    for _ in range(NUM_DOCS):
-        bytes_list.append(_generate_random_document().proto.SerializeToString())
-    with TimeContext() as timer:
-        for b in bytes_list:
-            Document(document=b)
-
-    fp.write(f'Constructing Document from bytes took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_str_json(fp):
-    json_list = []
-    for _ in range(NUM_DOCS):
-        json_list.append(_generate_random_document().json())
-    with TimeContext() as timer:
-        for s in json_list:
-            Document(document=s)
-
-    fp.write(f'Constructing Document from str took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_str_json_with_chunks_and_matches(fp):
-    json_list = []
-    for _ in range(NUM_DOCS):
-        json_list.append(_generate_random_document_with_chunks_and_matches().json())
-    with TimeContext() as timer:
-        for s in json_list:
-            Document(document=s)
-
-    fp.write(f'Constructing Document from str with chunks and matches took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_dict(fp):
-    dict_list = []
-    for _ in range(NUM_DOCS):
-        dict_list.append(_generate_random_document().dict())
-    with TimeContext() as timer:
-        for d in dict_list:
-            Document(document=d)
-
-    fp.write(f'Constructing Document from Dict took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_dict_with_chunks_and_matches(fp):
-    json_list = []
-    for _ in range(NUM_DOCS):
-        json_list.append(_generate_random_document_with_chunks_and_matches().dict())
-    with TimeContext() as timer:
-        for s in json_list:
-            Document(document=s)
-
-    fp.write(f'Constructing Document from str with chunks and matches took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_document_no_copy(fp):
-    docs_list = []
-    for _ in range(NUM_DOCS):
-        docs_list.append(_generate_random_document())
-    with TimeContext() as timer:
-        for d in docs_list:
-            Document(document=d)
-
-    fp.write(f'Constructing Document from Document without copy took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_proto_no_copy(fp):
-    proto_list = []
-    for _ in range(NUM_DOCS):
-        proto_list.append(_generate_random_document())
-    with TimeContext() as timer:
-        for p in proto_list:
-            Document(document=p)
-
-    fp.write(f'Constructing Document from proto without copy took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_document_copy(fp):
-    docs_list = []
-    for _ in range(NUM_DOCS):
-        docs_list.append(_generate_random_document())
-    with TimeContext() as timer:
-        for d in docs_list:
-            Document(document=d, copy=True)
-
-    fp.write(f'Constructing Document from Document with copy took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark_construct_proto_copy(fp):
-    proto_list = []
-    for _ in range(NUM_DOCS):
-        proto_list.append(_generate_random_document())
-    with TimeContext() as timer:
-        for p in proto_list:
-            Document(document=p, copy=True)
-
-    fp.write(f'Constructing Document from proto with copy took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n')
-
-
-def benchmark():
-    output_dir = os.path.join(
-        os.getcwd().replace('/src', ''), 'docs/static/artifacts/{}'.format(__version__)
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(text=_generate_random_text(text_length))
     )
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-    fp = open(
-        os.path.join(
-            output_dir,
-            '{}.txt'.format(os.path.basename(__file__)).replace('.py', ''),
-        ),
-        'w+',
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_text',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length)
+        )
     )
-    with fp:
-        benchmark_construct_text(fp)
-        benchmark_construct_blob(fp)
-        benchmark_construct_buffer(fp)
-        benchmark_construct_bytes(fp)
-        benchmark_construct_str_json(fp)
-        benchmark_construct_str_json_with_chunks_and_matches(fp)
-        benchmark_construct_dict(fp)
-        benchmark_construct_dict_with_chunks_and_matches(fp)
-        benchmark_construct_document_no_copy(fp)
-        benchmark_construct_proto_no_copy(fp)
-        benchmark_construct_document_copy(fp)
-        benchmark_construct_proto_copy(fp)
 
 
-if __name__ == '__main__':
-    benchmark()
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_blob(num_dims, json_writer):
+    def _doc_build(blob):
+        Document(blob=blob)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(blob=_generate_random_blob(num_dims))
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_blob',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims)
+        )
+    )
+
+
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_buffer(buffer_length, json_writer):
+    def _doc_build(buffer):
+        Document(buffer=buffer)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(buffer=_generate_random_buffer(buffer_length))
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_buffer',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_btyes_origin_text(text_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('text', text_length=text_length).proto.SerializeToString())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_bytes_origin_text',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_btyes_origin_blob(num_dims, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('blob', num_dims=num_dims).proto.SerializeToString())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_bytes_origin_blob',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims)
+        )
+    )
+
+
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_btyes_origin_buffer(buffer_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('buffer', buffer_length=buffer_length).proto.SerializeToString())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_bytes_origin_buffer',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_str_json_origin_text(text_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('text', text_length=text_length).json())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_str_json_origin_text',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_str_json_origin_blob(num_dims, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('blob', num_dims=num_dims).json())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_str_json_origin_blob',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims)
+        )
+    )
+
+
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_str_json_origin_buffer(buffer_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('buffer', buffer_length=buffer_length).json())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_str_json_origin_buffer',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_dict_origin_text(text_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('text', text_length=text_length).dict())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_dict_origin_text',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_dict_origin_blob(num_dims, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('blob', num_dims=num_dims).dict())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_dict_origin_blob',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims)
+        )
+    )
+
+
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_dict_origin_buffer(buffer_length, json_writer):
+    def _doc_build(b):
+        Document(document=b)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(b=_generate_random_document('buffer', buffer_length=buffer_length).dict())
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_dict_origin_buffer',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_document_origin_text(copy, text_length, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('text', text_length))
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_text',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length, copy=copy)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_document_origin_blob(copy, num_dims, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('blob', num_dims=num_dims))
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_blob',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims, copy=copy)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_document_origin_buffer(copy, buffer_length, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('buffer', buffer_length=buffer_length))
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_buffer',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length, copy=copy)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
+def test_construct_document_origin_text_proto(copy, text_length, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('text', text_length).proto)
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_text_proto',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(text_length=text_length, copy=copy)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('num_dims', [1, 2])
+def test_construct_document_origin_blob_proto(copy, num_dims, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('blob', num_dims=num_dims).proto)
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_blob_proto',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_dims=num_dims, copy=copy)
+        )
+    )
+
+
+@pytest.mark.parametrize('copy', [True, False])
+@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
+def test_construct_document_origin_buffer_proto(copy, buffer_length, json_writer):
+    def _doc_build(d):
+        Document(document=d, copy=copy)
+
+    mean_time, std_time = benchmark_time(
+        _doc_build,
+        NUM_DOCS,
+        kwargs=dict(d=_generate_random_document('buffer', buffer_length=buffer_length).proto)
+    )
+
+    json_writer.append(
+        dict(
+            name='document_construct/test_construct_document_origin_buffer_proto',
+            iterations=NUM_DOCS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(buffer_length=buffer_length, copy=copy)
+        )
+    )

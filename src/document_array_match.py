@@ -71,7 +71,6 @@ def test_match(size_X: int, size_Y: int, dam_x: bool, dam_y: bool, emb_size: int
         match_arrays,
         NUM_REPETITIONS,
         kwargs=_prepare_inputs_standard(size1=size_X, size2=size_Y, dam_x=dam_x, dam_y=dam_y, emb_size=emb_size, use_scipy=use_scipy, metric=metric, dam_path=str(tmpdir), topk=top_k)
-
     )
 
     json_writer.append(
