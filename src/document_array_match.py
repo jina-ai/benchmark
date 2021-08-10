@@ -64,7 +64,7 @@ def _prepare_inputs_standard(
 @pytest.mark.parametrize('dam_y', [True, False])
 @pytest.mark.parametrize('emb_size', [256, 1024])
 @pytest.mark.parametrize('use_scipy', [True, False])
-@pytest.mark.parametrize('metric', ['cosine', 'euclidean', 'sqeuclidean'])
+@pytest.mark.parametrize('metric', ['cosine', 'euclidean'])
 def test_match(size_X: int, size_Y: int, dam_x: bool, dam_y: bool, emb_size: int, use_scipy: bool, metric: str, tmpdir,
                json_metadata):
     mean_time, std_time = benchmark_time(
@@ -74,14 +74,10 @@ def test_match(size_X: int, size_Y: int, dam_x: bool, dam_y: bool, emb_size: int
                                         dam_y=dam_y, dam_path=str(tmpdir)),
     )
 
+    meta = {"description": "match between different arrays", "metric": metric, "use_scipy": use_scipy, "size_X": size_X,
+            "size_Y": size_Y, "dam_x": dam_y, "dam_y": dam_y, "emb_size": emb_size}
+
     json_metadata["mean_time"] = mean_time
     json_metadata["std_time"] = std_time
-    json_metadata["description"] = "match between different arrays"
     json_metadata["repetitions"] = NUM_REPETITIONS
-    json_metadata["metric"] = metric
-    json_metadata["use_scipy"] = use_scipy
-    json_metadata["size_X"] = size_X
-    json_metadata["size_Y"] = size_Y
-    json_metadata["dam_x"] = dam_y
-    json_metadata["dam_y"] = dam_y
-    json_metadata["emb_size"] = emb_size
+    json_metadata["meta"] = meta
