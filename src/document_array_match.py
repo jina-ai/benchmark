@@ -59,25 +59,27 @@ def _prepare_inputs_standard(
 
 
 @pytest.mark.parametrize('size_X', [100, 1000])
-@pytest.mark.parametrize('size_Y', [1000, 10000, 100000])
+@pytest.mark.parametrize('size_Y', [10000, 100000])
 @pytest.mark.parametrize('dam_x', [True])
 @pytest.mark.parametrize('dam_y', [True, False])
-@pytest.mark.parametrize('emb_size', [256, 1024])
+@pytest.mark.parametrize('emb_size', [256])
 @pytest.mark.parametrize('use_scipy', [True, False])
 @pytest.mark.parametrize('metric', ['cosine', 'euclidean'])
-def test_match(size_X: int, size_Y: int, dam_x: bool, dam_y: bool, emb_size: int, use_scipy: bool, metric: str, tmpdir,
-               json_metadata):
+@pytest.mark.parametrize('top_k', [100])
+def test_match(size_X: int, size_Y: int, dam_x: bool, dam_y: bool, emb_size: int, use_scipy: bool, metric: str, top_k: int, tmpdir, json_writer):
     mean_time, std_time = benchmark_time(
         match_arrays,
         NUM_REPETITIONS,
-        kwargs=_prepare_inputs_standard(size1=size_X, size2=size_Y, metric=metric, use_scipy=use_scipy, dam_x=dam_x,
-                                        dam_y=dam_y, dam_path=str(tmpdir)),
+        kwargs=_prepare_inputs_standard(size1=size_X, size2=size_Y, dam_x=dam_x, dam_y=dam_y, emb_size=emb_size, use_scipy=use_scipy, metric=metric, dam_path=str(tmpdir), topk=top_k)
+
     )
 
-    meta = {"description": "match between different arrays", "metric": metric, "use_scipy": use_scipy, "size_X": size_X,
-            "size_Y": size_Y, "dam_x": dam_y, "dam_y": dam_y, "emb_size": emb_size}
-
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
-    json_metadata["repetitions"] = NUM_REPETITIONS
-    json_metadata["meta"] = meta
+    json_writer.append(
+        dict(
+            name='document_array_match/test_match',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(size_X=size_X, size_Y=size_Y, dam_x=dam_x, dam_y=dam_y, emb_size=emb_size, use_scipy=use_scipy, metric=metric, top_k=top_k),
+        )
+    )
