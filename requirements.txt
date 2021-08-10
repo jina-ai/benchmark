@@ -2,4 +2,3 @@ cmdbench==0.1.13
 memory-profiler==0.58.0
 faker==8.11.0
 scipy==1.7.1
-pytest-json-report==1.4.0
