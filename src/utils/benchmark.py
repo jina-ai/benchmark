@@ -37,4 +37,7 @@ def benchmark_time(
 
         results.append(t.duration)
 
-    return mean(results), stdev(results)
+    m = mean(results)
+    s = stdev(results) if len(results) > 1 else None
+
+    return m, s
