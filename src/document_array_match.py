@@ -55,8 +55,6 @@ def prepare_inputs_self(size: int = 10, emb_size: int = 128, topk: int = 10) -> 
         use_scipy=False,
     )
 
-    json_metadata["mean_time"] = mean_time
-    json_metadata["std_time"] = std_time
 
 def setup_match(**kwargs) -> Tuple[Tuple, Dict]:
     array1 = kwargs["array1"]
@@ -111,6 +109,7 @@ def test_emb_sizes(emb_size: int, json_writer: List):
         )
     )
 
+
 @pytest.mark.parametrize('use_scipy', [True, False])
 @pytest.mark.parametrize('metric', ['cosine', 'euclidean', 'sqeuclidean'])
 def test_metrics(use_scipy: bool, metric: str, json_writer: List):
@@ -133,6 +132,7 @@ def test_metrics(use_scipy: bool, metric: str, json_writer: List):
             metadata=dict(metric=metric, use_scipy=use_scipy),
         )
     )
+
 
 @pytest.mark.parametrize('size', [100, 1000])
 @pytest.mark.parametrize('topk', [10, 100])
