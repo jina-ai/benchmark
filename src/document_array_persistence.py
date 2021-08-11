@@ -1,70 +1,79 @@
-import logging
-import os
-import sys
-import uuid
-from pathlib import Path
+import pytest
 
 from jina import Document, DocumentArray, __version__
-from memory_profiler import LogFile, profile
 
-from utils.timecontext import TimeContext
+from utils.benchmark import benchmark_time
 
 NUM_DOCS = 100000
-os.environ['JINA_LOG_LEVEL'] = 'CRITICAL'
-output_dir = 'docs/static/artifacts/{}'.format(__version__)
-Path(output_dir).mkdir(parents=True, exist_ok=True)
-log_file = os.path.join(
-    output_dir,
-    '{}_memory_profile.txt'.format(os.path.basename(__file__)).replace('.py', ''),
-)
 
-# create logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler(log_file, 'w+')
-fh.setLevel(logging.DEBUG)
-logger.addHandler(fh)
-sys.stdout = LogFile(__name__)
+NUM_REPETITIONS = 5
 
 
-def _get_document_array():
-    da = DocumentArray(
+@pytest.fixture
+def doc_array():
+    return DocumentArray(
         (Document(text=f'This is the document number: {i}') for i in range(NUM_DOCS))
     )
 
-    return da
 
+@pytest.mark.parametrize('file_format', ['json', 'binary'])
+def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
+    extension = 'bin' if file_format == 'binary' else 'json'
+    file = f'{str(tmpdir)}/doc_array.{extension}'
 
-@profile
-def benchmark(fp, document_array, binfile):
-    with TimeContext() as timer:
-        document_array.save(binfile, file_format='binary')
-    fp.write(
-        'Saving DocumentArray in a binary file took {}, {} per doc\n'.format(
-            timer.duration, timer.duration / NUM_DOCS
+    def _save():
+        doc_array.save(file, file_format=file_format)
+
+    def _teardown():
+        import os
+        os.remove(file)
+
+    mean_time, std_time = benchmark_time(
+        func=_save,
+        teardown=_teardown,
+        n=NUM_REPETITIONS
+    )
+
+    json_writer.append(
+        dict(
+            name='document_array_persistence/test_document_array_save',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format)
         )
     )
 
-    with TimeContext() as timer:
-        DocumentArray.load(binfile, file_format='binary')
-    fp.write(
-        'Loading DocumentArray from a binary file took {}, {} per doc\n'.format(
-            timer.duration, timer.duration / NUM_DOCS
+
+@pytest.mark.parametrize('file_format', ['json', 'binary'])
+def test_document_array_load(doc_array, file_format, json_writer, tmpdir):
+    extension = 'bin' if file_format == 'binary' else 'json'
+    file = f'{str(tmpdir)}/doc_array.{extension}'
+
+    def _save():
+        doc_array.save(file, file_format=file_format)
+        return (), dict()
+
+    def _load():
+        DocumentArray.load(file, file_format=file_format)
+
+    def _teardown():
+        import os
+        os.remove(file)
+
+    mean_time, std_time = benchmark_time(
+        setup=_save,
+        func=_load,
+        teardown=_teardown,
+        n=NUM_REPETITIONS
+    )
+
+    json_writer.append(
+        dict(
+            name='document_array_persistence/test_document_array_load',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format)
         )
     )
-
-
-if __name__ == '__main__':
-    Path('tmp').mkdir(parents=True, exist_ok=True)
-    binfile = 'tmp/{}.bin'.format(str(uuid.uuid4()))
-    da = _get_document_array()
-
-    fp = open(
-        os.path.join(
-            output_dir,
-            '{}_time_context.txt'.format(os.path.basename(__file__)).replace('.py', ''),
-        ),
-        'w+',
-    )
-    with fp:
-        benchmark(fp, da, binfile)
