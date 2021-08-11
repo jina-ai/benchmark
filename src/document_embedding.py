@@ -2,10 +2,10 @@ import numpy as np
 
 import pytest
 
-from profiler import Profiler
 from jina import Document, Executor, requests, DocumentArray
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
+from .utils.profiler import Profiler
 
 
 class DummyEncoder(Executor):
