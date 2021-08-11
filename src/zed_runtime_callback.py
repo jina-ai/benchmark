@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from profiler import Profiler
 
@@ -11,6 +12,8 @@ from jina.types.request import Request
 from jina.clients.request import request_generator
 from jina.peapods.runtimes.zmq.zed import ZEDRuntime
 
+from utils.benchmark import benchmark_time
+
 
 class DummyEncoder(Executor):
 
@@ -22,26 +25,40 @@ class DummyEncoder(Executor):
             doc.embedding = embedding
 
 
-def benchmark():
+@pytest.fixture()
+def process_message():
     req = list(
         request_generator(
             '/', DocumentArray([Document(text='input document') for _ in range(10)])
         )
     )[0]
     msg = Message(None, req, 'test', '123')
+    return msg
+
+
+@pytest.fixture()
+def runtime():
     args = set_pea_parser().parse_args(['--uses', 'DummyEncoder'])
-    runtime = ZEDRuntime(args)
+    return ZEDRuntime(args)
+
+
+@pytest.skip
+def test_zed_runtime_callback(runtime, process_message, json_writer):
+    def _function(**kwargs):
+        runtime._callback(process_message)
+
     with Profiler(Document) as document_profiler, \
             Profiler(DocumentArray) as document_array_profiler, \
             Profiler(Message) as message_profiler, \
             Profiler(Request) as request_profiler:
-        runtime._callback(msg)
+        time, _ = benchmark_time(
+            _function,
+            1)
 
-    print(f' Document profile {document_profiler.profile} \n')
-    print(f' DocumentArray profile {document_array_profiler.profile} \n')
-    print(f' Message profile {message_profiler.profile} \n')
-    print(f' Request profile {request_profiler.profile} \n')
-
-
-if __name__ == '__main__':
-    benchmark()
+    json_writer.append(
+        dict(
+            name='zed_runtime_callback/test_zed_runtime_callback',
+            time=time,
+            metadata=dict(Document=document_profiler.profile, DocumentArray=document_array_profiler.profile, Message=message_profiler.profile, Request=request_profiler.profile)
+        )
+    )

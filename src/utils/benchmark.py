@@ -8,6 +8,7 @@ def benchmark_time(
     func: Callable[[Any], Any],
     n: int,
     setup: Optional[Callable[[Any], Tuple[Iterable, Dict[str, Any]]]] = None,
+    teardown: Optional[Callable[[Any], None]] = None,
     args: Optional[Tuple] = None,
     kwargs: Optional[Dict] = None,
 ) -> str:
@@ -19,6 +20,8 @@ def benchmark_time(
         that you provided, and return a tuple of an iterable, which will
         be used to provide ``args`` to ``func``, and a dictionary, which
         will be used to provide ``kwargs`` to ``func``.
+    :param teardown: A teardown function that can perform teardown/cleanup after running
+        the ``func``.
     :param n: Number of repetitions
     :param args: Positional arguments to pass to ``func`` (or ``setup``)
     :param kwargs: Keyword arguments to pass to ``func`` (or ``setup``)
@@ -35,6 +38,12 @@ def benchmark_time(
         with TimeContext() as t:
             func(*args, **kwargs)
 
+        if teardown is not None:
+            teardown()
+
         results.append(t.duration)
 
-    return mean(results), stdev(results)
+    m = mean(results)
+    s = stdev(results) if len(results) > 1 else None
+
+    return m, s

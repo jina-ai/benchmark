@@ -1,7 +1,11 @@
 import numpy as np
 
+import pytest
+
 from profiler import Profiler
 from jina import Document, Executor, requests, DocumentArray
+
+from utils.benchmark import benchmark_time
 
 
 class DummyEncoder(Executor):
@@ -14,15 +18,30 @@ class DummyEncoder(Executor):
             doc.embedding = embedding
 
 
-def benchmark():
+@pytest.fixture()
+def input_docs():
+    return DocumentArray([Document(text='hey here') for _ in range(100)])
+
+
+@pytest.fixture()
+def executor():
+    return DummyEncoder()
+
+
+@pytest.skip
+def test_document_encoder_executor(executor, input_docs, json_writer):
+    def _function(**kwargs):
+        executor.encode(input_docs)
+
     with Profiler(Document) as document_profiler, Profiler(DocumentArray) as document_array_profiler:
-        docs = DocumentArray([Document(text='hey here') for _ in range(100)])
-        executor = DummyEncoder()
-        executor.encode(docs)
+        time, _ = benchmark_time(
+            _function,
+            1)
 
-    print(f' Document profile {document_profiler.profile} \n')
-    print(f' DocumentArray profile {document_array_profiler.profile} \n')
-
-
-if __name__ == '__main__':
-    benchmark()
+    json_writer.append(
+        dict(
+            name='document_embedding/test_document_encoder_executor',
+            time=time,
+            metadata=dict(Document=document_profiler.profile, DocumentArray=document_array_profiler.profile)
+        )
+    )
