@@ -1,5 +1,5 @@
 import inspect
-from utils.timecontext import TimeContext
+from .timecontext import TimeContext
 
 
 def profile(profile, function, *args, **kwargs):

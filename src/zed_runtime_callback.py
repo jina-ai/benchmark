@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 
-from profiler import Profiler
 
 from jina import Executor, requests
 from jina.parsers import set_pea_parser
@@ -12,7 +11,8 @@ from jina.types.request import Request
 from jina.clients.request import request_generator
 from jina.peapods.runtimes.zmq.zed import ZEDRuntime
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
+from .utils.profiler import Profiler
 
 
 class DummyEncoder(Executor):
@@ -42,7 +42,7 @@ def runtime():
     return ZEDRuntime(args)
 
 
-@pytest.skip
+@pytest.mark.skip()
 def test_zed_runtime_callback(runtime, process_message, json_writer):
     def _function(**kwargs):
         runtime._callback(process_message)
