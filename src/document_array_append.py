@@ -4,7 +4,7 @@ from faker import Faker
 
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
 
 fake = Faker()
 NUM_DOCS = 10000

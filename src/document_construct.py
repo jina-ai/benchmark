@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from jina import Document, __version__
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
 
 
 def _generate_random_text(text_length):

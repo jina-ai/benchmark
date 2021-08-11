@@ -5,7 +5,7 @@ import pytest
 from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
 
 NUM_REPETITIONS = 5
 

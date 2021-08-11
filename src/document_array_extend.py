@@ -7,7 +7,7 @@ import pytest
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
 
 NUM_REPETITIONS = 25
 NUM_DOCS = 1000

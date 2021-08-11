@@ -2,7 +2,7 @@ import pytest
 
 from jina import Document, DocumentArray, __version__
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
 
 NUM_DOCS = 100000
 
