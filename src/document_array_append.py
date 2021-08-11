@@ -1,76 +1,72 @@
-import os
-import uuid
-from pathlib import Path
+import pytest
 
 from faker import Faker
 
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
-from utils.timecontext import TimeContext
+from utils.benchmark import benchmark_time
 
 fake = Faker()
 NUM_DOCS = 10000
-MEMMAP_PATH = os.path.join(os.getcwd(), 'tmp/{}'.format(str(uuid.uuid4())))
+NUM_REPETITIONS = 5
 
 
-def _generate_list_documents():
-    """Used to benchmark construct DocumentArray from a list of documents."""
-    docs = []
-    for idx in range(NUM_DOCS):
-        docs.append(Document(text=fake.text()))
-    return docs
+@pytest.fixture
+def docs():
+    return [Document(text=fake.text()) for _ in range(NUM_DOCS)]
 
 
-def benchmark_document_array_append(fp):
-    docs = _generate_list_documents()
-    da = DocumentArray()
-    with TimeContext() as timer:
+def test_docarray_append(docs, json_writer):
+    def _append(da):
         for doc in docs:
             da.append(doc)
-    fp.write(
-        f'Append {NUM_DOCS} Document to DocumentArray from list of Documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+
+    def _setup(**kwargs):
+        return (), dict(da=DocumentArray())
+
+    mean_time, std_time = benchmark_time(
+        setup=_setup,
+        func=_append,
+        n=NUM_REPETITIONS
+    )
+
+    json_writer.append(
+        dict(
+            name='document_array_append/test_docarray_append',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_docs_append=NUM_DOCS)
+        )
     )
 
 
-def benchmark_document_array_memmap_append_with_flush(fp):
-    docs = _generate_list_documents()
-    dam = DocumentArrayMemmap(MEMMAP_PATH)
-    with TimeContext() as timer:
+@pytest.mark.parametrize('flush', [True, False])
+def test_document_array_memmap_append(docs, flush, json_writer, tmpdir):
+    def _append(da):
         for doc in docs:
-            dam.append(doc)
-    fp.write(
-        f'Append {NUM_DOCS} Document to DocumentArrayMemmap with flush from list of Documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+            da.append(doc, flush=flush)
+
+    def _setup(**kwargs):
+        return (), dict(da=DocumentArrayMemmap(f'{str(tmpdir)}/memmap'))
+
+    def _teardown():
+        import shutil
+        shutil.rmtree(f'{str(tmpdir)}/memmap')
+
+    mean_time, std_time = benchmark_time(
+        setup=_setup,
+        func=_append,
+        teardown=_teardown,
+        n=NUM_REPETITIONS
     )
 
-
-def benchmark_document_array_memmap_append_without_flush(fp):
-    docs = _generate_list_documents()
-    dam = DocumentArrayMemmap(MEMMAP_PATH)
-    with TimeContext() as timer:
-        for doc in docs:
-            dam.append(doc, flush=False)
-    fp.write(
-        f'Append {NUM_DOCS} Document to DocumentArrayMemmap without flush from list of Documents took {timer.duration}, {timer.duration / NUM_DOCS} per doc\n'
+    json_writer.append(
+        dict(
+            name='document_array_append/test_document_array_memmap_append',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(num_docs_append=NUM_DOCS, flush=flush)
+        )
     )
-
-
-def benchmark():
-    output_dir = os.path.join(
-        os.getcwd().replace('/src', ''), 'docs/static/artifacts/{}'.format(__version__)
-    )
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-    fp = open(
-        os.path.join(
-            output_dir,
-            '{}.txt'.format(os.path.basename(__file__)).replace('.py', ''),
-        ),
-        'w+',
-    )
-    with fp:
-        benchmark_document_array_append(fp)
-        benchmark_document_array_memmap_append_with_flush(fp)
-        benchmark_document_array_memmap_append_without_flush(fp)
-
-
-if __name__ == '__main__':
-    benchmark()
