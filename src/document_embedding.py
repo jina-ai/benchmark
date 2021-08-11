@@ -2,10 +2,12 @@ import numpy as np
 
 import pytest
 
-from profiler import Profiler
 from jina import Document, Executor, requests, DocumentArray
 
-from utils.benchmark import benchmark_time
+from .utils.benchmark import benchmark_time
+
+NUM_REPETITIONS = 5
+NUM_DOCS = 100
 
 
 class DummyEncoder(Executor):
@@ -20,7 +22,7 @@ class DummyEncoder(Executor):
 
 @pytest.fixture()
 def input_docs():
-    return DocumentArray([Document(text='hey here') for _ in range(100)])
+    return DocumentArray([Document(text='hey here') for _ in range(NUM_DOCS)])
 
 
 @pytest.fixture()
@@ -28,20 +30,25 @@ def executor():
     return DummyEncoder()
 
 
-@pytest.skip
 def test_document_encoder_executor(executor, input_docs, json_writer):
     def _function(**kwargs):
         executor.encode(input_docs)
 
-    with Profiler(Document) as document_profiler, Profiler(DocumentArray) as document_array_profiler:
-        time, _ = benchmark_time(
-            _function,
-            1)
+    mean_time, std_time, profiles = benchmark_time(
+        profile_cls=[Document, DocumentArray],
+        func=_function,
+        n=NUM_REPETITIONS)
+
+    document_profile = profiles[0]
+    document_array_profile = profiles[1]
 
     json_writer.append(
         dict(
             name='document_embedding/test_document_encoder_executor',
-            time=time,
-            metadata=dict(Document=document_profiler.profile, DocumentArray=document_array_profiler.profile)
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            metadata=dict(profiles=dict(Document=document_profile, DocumentArray=document_array_profile),
+                          num_docs=NUM_DOCS)
         )
     )
