@@ -42,7 +42,7 @@ def runtime():
     return ZEDRuntime(args)
 
 
-@pytest.skip
+@pytest.mark.skip()
 def test_zed_runtime_callback(runtime, process_message, json_writer):
     def _function(**kwargs):
         runtime._callback(process_message)

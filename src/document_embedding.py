@@ -28,7 +28,7 @@ def executor():
     return DummyEncoder()
 
 
-@pytest.skip
+@pytest.mark.skip()
 def test_document_encoder_executor(executor, input_docs, json_writer):
     def _function(**kwargs):
         executor.encode(input_docs)
