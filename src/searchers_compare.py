@@ -1,0 +1,141 @@
+import pytest
+import os
+
+import numpy as np
+
+from jina.types.arrays.memmap import DocumentArrayMemmap
+from jina import Document, Flow, Executor, requests, DocumentArray
+
+from statistics import mean, stdev
+from .utils.memorycontext import MemoryContext, get_readable_size
+from .utils.timecontext import TimeContext
+
+NUM_REPETITIONS = 5
+NUM_QUERY_DOCS_PER_BATCH = 64
+NUM_BATCHES = 5
+
+
+def _get_docs(number_of_documents, embedding_size):
+    return [Document(embedding=np.random.rand(embedding_size), id=str(i)) for i in range(number_of_documents)]
+
+
+def _get_dam(number_of_documents, embedding_size, dir_path, **kwargs):
+    import shutil
+    tmp_path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}_tmp'
+    path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}'
+    if os.path.exists(path):
+        return path
+    da = DocumentArrayMemmap(tmp_path)
+    docs = _get_docs(number_of_documents, embedding_size)
+    da.extend(docs)
+    da.save()
+    shutil.copytree(tmp_path, path)
+    da.clear()
+    da._last_mmap = None
+    return path
+
+
+def _get_da(number_of_documents, embedding_size, dir_path, **kwargs):
+    path = f'{dir_path}/docs.bin'
+    if os.path.exists(path):
+        return path
+    da = DocumentArray()
+    docs = _get_docs(number_of_documents, embedding_size)
+    da.extend(docs)
+    da.save(path, file_format='binary')
+    da.clear()
+    return path
+
+
+def _get_document_array(dam_index, **kwargs):
+    return _get_dam(**kwargs) if dam_index else _get_da(**kwargs)
+
+
+class DocumentArraySearcher(Executor):
+
+    def __init__(self, indexed_docs_path, dam_index, warmup=False, top_k: int = 50, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.indexed_docs_path = indexed_docs_path
+        self._index_docs = DocumentArray.load(indexed_docs_path, file_format='binary') if not dam_index else DocumentArrayMemmap(
+            indexed_docs_path)
+        if warmup:
+            self._index_docs.get_attributes('embedding')
+        self._top_k = top_k
+
+    @requests
+    def search(self, docs, **kwargs):
+        docs.match(
+            self._index_docs,
+            metric='cosine',
+            use_scipy=False,
+            limit=self._top_k,
+        )
+
+
+@pytest.mark.parametrize('number_of_documents', [10000, 100000])
+@pytest.mark.parametrize('emb_size', [128])
+@pytest.mark.parametrize('dam_index', [True, False])
+@pytest.mark.parametrize('warmup', [True, False])
+def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir, json_writer):
+    if warmup and not dam_index:
+        pytest.skip('Warmup is not relevant for `DocumentArray`')
+
+    def _get_indexer():
+        path = _get_document_array(dam_index=dam_index, number_of_documents=number_of_documents,
+                                   embedding_size=emb_size,
+                                   dir_path=str(tmpdir))
+
+        with MemoryContext() as ctx:
+            indexer = DocumentArraySearcher(indexed_docs_path=path, dam_index=dam_index, warmup=warmup)
+        used_memory = ctx.used_memory
+        return indexer, used_memory
+
+    query_docs = [DocumentArray(_get_docs(NUM_QUERY_DOCS_PER_BATCH, embedding_size=emb_size))] * NUM_BATCHES
+
+    indexer_memory_measures = []
+    time_measures = []
+    mem_measures = []
+    for _ in range(NUM_REPETITIONS):
+        indexer, indexer_memory = _get_indexer()
+        print(f' indexer_memory {indexer_memory}')
+
+        with TimeContext() as time_context, MemoryContext() as memory_context:
+            for i in range(NUM_BATCHES):
+                indexer.search(query_docs[i])
+
+        print(f' used_memory {memory_context.used_memory}')
+        time_measures.append(time_context.duration)
+        mem_measures.append(memory_context.used_memory)
+        indexer_memory_measures.append(indexer_memory)
+
+    mean_time = mean(time_measures)
+    std_time = stdev(time_measures) if len(time_measures) > 1 else None
+
+    mean_memory = mean(mem_measures)
+    std_memory = stdev(mem_measures) if len(mem_measures) > 1 else None
+
+    mean_indexer_memory = mean(indexer_memory_measures)
+    std_indexer_memory = stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
+
+    json_writer.append(
+        dict(
+            name='searchers_compare/test_search_compare',
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            mean_memory=get_readable_size(mean_memory),
+            std_memory=get_readable_size(std_memory),
+            mean_indexer_memory=get_readable_size(mean_indexer_memory),
+            std_indexer_memory=get_readable_size(std_indexer_memory),
+            metadata=dict(number_of_documents=number_of_documents,
+                          embedding_size=emb_size,
+                          query_docs=NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES,
+                          query_docs_per_batch=NUM_QUERY_DOCS_PER_BATCH,
+                          mean_docs_per_second=(NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES) / mean_time,
+                          latency_per_doc=mean_time / (NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES),
+                          num_batches=NUM_BATCHES,
+                          dam_index=dam_index,
+                          warmup_embeddings=warmup
+                          )
+        )
+    )
