@@ -24,11 +24,11 @@ def _get_version_list(artifacts_dir: str) -> List[str]:
     Return: List of versions found in reports.
     """
     version_list: List[str] = []
-    
+
     for folder in os.listdir(artifacts_dir):
         if os.path.isfile(os.path.join(artifacts_dir, folder, 'report.json')):
             version_list.append(folder)
-    
+
     version_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
 
     return version_list
@@ -72,18 +72,16 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
         output_dir: Absolute path to Hugo docs directory.
     """
     for k in cum_data:
-        for v in cum_data[k]:
-            output_file = os.path.join(
-                output_dir, '{}-{}.md'.format(_cleaned_slug(k), _cleaned_slug(v))
-            )
+        output_file = os.path.join(output_dir, '{}.md'.format(_cleaned_slug(k)))
 
-            with open(output_file, 'w') as fp:
-                fp.write('---\n')
-                fp.write(
-                    'title: {} - {}\n'.format(_cleaned_title(k), _cleaned_title(v))
-                )
-                fp.write('---\n')
-                fp.write('# {} - {}\n\n'.format(_cleaned_title(k), _cleaned_title(v)))
+        with open(output_file, 'w') as fp:
+            fp.write('---\n')
+            fp.write('title: {}\n'.format(_cleaned_title(k)))
+            fp.write('---\n')
+            fp.write('# {}\n\n'.format(_cleaned_title(k)))
+
+            for v in cum_data[k]:
+                fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write('| version | iterations | mean_time | std_time | metadata |\n')
                 fp.write('| :---: | :---: | :---: | :---: | :---: |\n')
 
@@ -116,10 +114,13 @@ def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
         fp.write('- [Homepage]({{< relref "/" >}})\n')
 
         for k in cum_data:
-            fp.write('- %s\n' % (_cleaned_title(k)))
+            fp.write(
+                '- [%s]({{< relref "/docs/%s.md" >}})\n'
+                % (_cleaned_title(k), _cleaned_slug(k))
+            )
             for v in cum_data[k]:
                 fp.write(
-                    '\t- [%s]({{< relref "/docs/%s-%s.md" >}})\n'
+                    '\t- [%s]({{< relref "/docs/%s.md#%s" >}})\n'
                     % (_cleaned_title(v), _cleaned_slug(k), _cleaned_slug(v))
                 )
 
@@ -132,7 +133,7 @@ def main():
 
     version_list = _get_version_list(artifacts_dir)
     cum_data = _get_cum_data(version_list, artifacts_dir)
-    
+
     generate_docs(cum_data, docs_dir)
     generate_menus(cum_data, content_dir)
 
