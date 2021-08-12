@@ -6,6 +6,7 @@ from jina import Document, Executor, requests, DocumentArray
 
 from .utils.benchmark import benchmark_time
 
+
 NUM_REPETITIONS = 5
 NUM_DOCS = 100
 
@@ -30,6 +31,7 @@ def executor():
     return DummyEncoder()
 
 
+@pytest.mark.skip()
 def test_document_encoder_executor(executor, input_docs, json_writer):
     def _function(**kwargs):
         executor.encode(input_docs)
