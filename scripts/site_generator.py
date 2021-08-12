@@ -2,36 +2,54 @@
 
 import json
 import os
-import re
-from sys import path, version
-from typing import Any, Dict, Union
+from typing import Any, Dict, List
 
 
 def _cleaned_title(raw_heading: str) -> str:
     """Return cleaned title of artifact name."""
-    return raw_heading.replace('_', ' ').title()
+    return raw_heading.replace('test_', '').replace('_', ' ').title()
 
 
 def _cleaned_slug(raw_heading: str) -> str:
     """Return cleaned slug of artifact name."""
-    return raw_heading.replace('_', '-')
+    return raw_heading.replace('test_', '').replace('_', '-')
 
 
-def _get_cum_data(artifacts_dir: str) -> Dict[Any, Any]:
+def _get_version_list(artifacts_dir: str) -> List[str]:
+    """Generates sorted list of all versions found in reports.
+
+    Args:
+        artifacts_dir: Absolute path to artifact directory.
+
+    Return: List of versions found in reports.
+    """
+    version_list: List[str] = []
+    
+    for folder in os.listdir(artifacts_dir):
+        if os.path.isfile(os.path.join(artifacts_dir, folder, 'report.json')):
+            version_list.append(folder)
+    
+    version_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
+
+    return version_list
+
+
+def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]:
     """Generates cumulative data and return in a dict.
 
     Args:
+        version_list: List of versions found in reports.
         artifacts_dir: Absolute path to artifact directory.
 
     Return: Dict of cumulative data
     """
     data: Dict[Any, Any] = dict()
-    for file in os.listdir(artifacts_dir):
-        if file.endswith('.json'):
-            with open(os.path.join(artifacts_dir, file)) as fp:
-                _raw_data = json.load(fp)
 
-            version = file.replace('.json', '')
+    for version in version_list:
+        report_file = os.path.join(artifacts_dir, version, 'report.json')
+        if os.path.isfile(report_file):
+            with open(report_file) as fp:
+                _raw_data = json.load(fp)
 
             for i in _raw_data:
                 k, v = i['name'].split('/')
@@ -39,12 +57,10 @@ def _get_cum_data(artifacts_dir: str) -> Dict[Any, Any]:
                     if v in data[k]:
                         data[k][v][version] = i
                     else:
-                        data[k][v] = {
-                            version: i
-                        }
+                        data[k][v] = {version: i}
                 else:
                     data[k] = {v: {version: i}}
-    print(data)
+
     return data
 
 
@@ -114,7 +130,9 @@ def main():
     docs_dir = os.path.join(content_dir, 'docs')
     artifacts_dir = os.path.join(base_dir, 'static/artifacts')
 
-    cum_data = _get_cum_data(artifacts_dir)
+    version_list = _get_version_list(artifacts_dir)
+    cum_data = _get_cum_data(version_list, artifacts_dir)
+    
     generate_docs(cum_data, docs_dir)
     generate_menus(cum_data, content_dir)
 
