@@ -1,86 +1,108 @@
 #!/usr/bin/python3
 
+import json
 import os
-import re
-from typing import Union
+from typing import Any, Dict, List
 
 
-def _cleaned_heading(raw_heading: str) -> str:
-    """Return cleaned heading of artifact name."""
-    return raw_heading.replace('_', ' ').title()
+def _cleaned_title(raw_heading: str) -> str:
+    """Return cleaned title of artifact name."""
+    return raw_heading.replace('test_', '').replace('_', ' ').title()
 
 
-def _cleaned_memory_profile_output(file_path: str) -> Union[str, None]:
-    """Read memory profile log file and return markdown compatible output.
+def _cleaned_slug(raw_heading: str) -> str:
+    """Return cleaned slug of artifact name."""
+    return raw_heading.replace('test_', '').replace('_', '-')
+
+
+def _get_version_list(artifacts_dir: str) -> List[str]:
+    """Generates sorted list of all versions found in reports.
 
     Args:
-        file_path: Absolute file path to memory profile log file.
+        artifacts_dir: Absolute path to artifact directory.
+
+    Return: List of versions found in reports.
     """
-    with open(file_path) as fp:
-        lines = fp.readlines()
+    version_list: List[str] = []
 
-    lines_lenth = len(lines)
-    start_point = 0
-    end_point = -1
-    if lines_lenth > 3:
-        for x in range(lines_lenth):
-            if re.search('^Line #', lines[x]):
-                start_point = x - 1
-        lines = lines[start_point:end_point]
-        lines[0] = '```\n'
-        lines[-1] = '```\n\n'
-        return ''.join(lines)
-    else:
-        return None
+    for folder in os.listdir(artifacts_dir):
+        if os.path.isfile(os.path.join(artifacts_dir, folder, 'report.json')):
+            version_list.append(folder)
+
+    version_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
+
+    return version_list
 
 
-def generate_docs(input_dir: str, output_dir: str) -> None:
+def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]:
+    """Generates cumulative data and return in a dict.
+
+    Args:
+        version_list: List of versions found in reports.
+        artifacts_dir: Absolute path to artifact directory.
+
+    Return: Dict of cumulative data
+    """
+    data: Dict[Any, Any] = dict()
+
+    for version in version_list:
+        report_file = os.path.join(artifacts_dir, version, 'report.json')
+        if os.path.isfile(report_file):
+            with open(report_file) as fp:
+                _raw_data = json.load(fp)
+
+            for i in _raw_data:
+                k, v = i['name'].split('/')
+                if k in data:
+                    if v in data[k]:
+                        data[k][v][version] = i
+                    else:
+                        data[k][v] = {version: i}
+                else:
+                    data[k] = {v: {version: i}}
+
+    return data
+
+
+def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
     """This generate required docs from artifacts.
 
     Args:
-        input_dir: Absolute path to artifact directory.
+        cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo docs directory.
     """
-    for folder_name in os.listdir(input_dir):
-        folder = os.path.join(input_dir, folder_name)
-        output_file = os.path.join(output_dir, '{}.md'.format(folder_name))
+    for k in cum_data:
+        output_file = os.path.join(output_dir, '{}.md'.format(_cleaned_slug(k)))
 
-        artifact_list = []
-        for filename in os.listdir(folder):
-            file = os.path.join(folder, filename).split('static')[1]
-            artifact_list.append(file)
-
-        txt_artifact_list = []
         with open(output_file, 'w') as fp:
             fp.write('---\n')
-            fp.write('title: {}\n'.format(folder_name))
+            fp.write('title: {}\n'.format(_cleaned_title(k)))
             fp.write('---\n')
-            fp.write('# {}\n\n'.format(folder_name))
+            fp.write('# {}\n\n'.format(_cleaned_title(k)))
 
-            for artifact in artifact_list:
-                artifact_name, extension = artifact.split('/')[-1].split('.')
-                cleaned_heading = _cleaned_heading(artifact_name)
-                if extension.lower() == 'png':
-                    fp.write('## {}\n\n'.format(cleaned_heading))
-                    fp.write('![{}]({})\n\n'.format(cleaned_heading, artifact))
-                elif extension.lower() == 'txt':
-                    txt_artifact_list.append(artifact_name)
+            for v in cum_data[k]:
+                fp.write('## {}\n\n'.format(_cleaned_title(v)))
+                fp.write('| version | iterations | mean_time | std_time | metadata |\n')
+                fp.write('| :---: | :---: | :---: | :---: | :---: |\n')
 
-            for artifact_name in txt_artifact_list:
-                cleaned_heading = _cleaned_heading(artifact_name)
-                txt_content = _cleaned_memory_profile_output(
-                    os.path.join(folder, '{}.txt'.format(artifact_name))
-                )
-                if txt_content:
-                    fp.write('## {}\n\n'.format(cleaned_heading))
-                    fp.write(txt_content)
+                for version in cum_data[k][v]:
+                    _data = cum_data[k][v][version]
+                    fp.write(
+                        '| {} | {} | {} | {} | {} |\n'.format(
+                            version,
+                            _data['iterations'],
+                            round(_data['mean_time'], 4),
+                            round(_data['std_time'], 4),
+                            _data['metadata'],
+                        )
+                    )
 
 
-def generate_menus(input_dir: str, output_dir: str) -> None:
+def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
     """This generate required menus from artifacts.
 
     Args:
-        input_dir: Absolute path to artifact directory.
+        cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo menus directory.
     """
     menu_index = os.path.join(output_dir, 'menu/index.md')
@@ -91,13 +113,16 @@ def generate_menus(input_dir: str, output_dir: str) -> None:
         fp.write('---\n\n')
         fp.write('- [Homepage]({{< relref "/" >}})\n')
 
-        folder_list = list(os.listdir(input_dir))
-        folder_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
-
-        for folder_name in folder_list:
+        for k in cum_data:
             fp.write(
-                '- [%s]({{< relref "/docs/%s.md" >}})\n' % (folder_name, folder_name)
+                '- [%s]({{< relref "/docs/%s.md" >}})\n'
+                % (_cleaned_title(k), _cleaned_slug(k))
             )
+            for v in cum_data[k]:
+                fp.write(
+                    '\t- [%s]({{< relref "/docs/%s.md#%s" >}})\n'
+                    % (_cleaned_title(v), _cleaned_slug(k), _cleaned_slug(v))
+                )
 
 
 def main():
@@ -106,8 +131,11 @@ def main():
     docs_dir = os.path.join(content_dir, 'docs')
     artifacts_dir = os.path.join(base_dir, 'static/artifacts')
 
-    generate_docs(artifacts_dir, docs_dir)
-    generate_menus(artifacts_dir, content_dir)
+    version_list = _get_version_list(artifacts_dir)
+    cum_data = _get_cum_data(version_list, artifacts_dir)
+
+    generate_docs(cum_data, docs_dir)
+    generate_menus(cum_data, content_dir)
 
 
 if __name__ == '__main__':
