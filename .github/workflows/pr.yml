@@ -1,0 +1,39 @@
+name: PR Tests
+
+on: pull_request
+
+jobs:
+  check-black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: check black
+        run: |
+          pip install black==20.8b1
+          black -S --check src/
+          black -S --check scripts/
+
+  check-site-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: check site generation
+        run: |
+          python scripts/site_generator.py
+          git diff-index --quiet HEAD -- || exit 1

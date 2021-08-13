@@ -26,12 +26,11 @@ def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
 
     def _teardown():
         import os
+
         os.remove(file)
 
     mean_time, std_time = benchmark_time(
-        func=_save,
-        teardown=_teardown,
-        n=NUM_REPETITIONS
+        func=_save, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     json_writer.append(
@@ -40,7 +39,7 @@ def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format)
+            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
         )
     )
 
@@ -59,13 +58,11 @@ def test_document_array_load(doc_array, file_format, json_writer, tmpdir):
 
     def _teardown():
         import os
+
         os.remove(file)
 
     mean_time, std_time = benchmark_time(
-        setup=_save,
-        func=_load,
-        teardown=_teardown,
-        n=NUM_REPETITIONS
+        setup=_save, func=_load, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     json_writer.append(
@@ -74,6 +71,6 @@ def test_document_array_load(doc_array, file_format, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format)
+            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
         )
     )
