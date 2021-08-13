@@ -5,19 +5,19 @@ title: Document Array Append
 
 ## Docarray Append
 
-| version | iterations | mean_time | std_time | metadata |
+| Version | Mean Time (s) | Std Time (s) | Num Docs Append | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 5 | 0.0079 | 0.0013 | {'num_docs_append': 10000} |
-| 2.0.18 | 5 | 0.0068 | 0.0009 | {'num_docs_append': 10000} |
-| 2.0.17 | 5 | 0.0083 | 0.0003 | {'num_docs_append': 10000} |
-| 2.0.16 | 5 | 0.0072 | 0.0009 | {'num_docs_append': 10000} |
-| 2.0.15 | 5 | 0.008 | 0.0004 | {'num_docs_append': 10000} |
+| 2.0.19 | 0.007945 | 0.001272 | 10000 | 5 |
+| 2.0.18 | 0.006755 | 0.000864 | 10000 | 5 |
+| 2.0.17 | 0.008251 | 0.000304 | 10000 | 5 |
+| 2.0.16 | 0.007161 | 0.0009 | 10000 | 5 |
+| 2.0.15 | 0.008027 | 0.000358 | 10000 | 5 |
 ## Document Array Memmap Append
 
-| version | iterations | mean_time | std_time | metadata |
-| :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 5 | 0.1097 | 0.0058 | {'num_docs_append': 10000, 'flush': False} |
-| 2.0.18 | 5 | 0.1011 | 0.0014 | {'num_docs_append': 10000, 'flush': False} |
-| 2.0.17 | 5 | 0.1036 | 0.0005 | {'num_docs_append': 10000, 'flush': False} |
-| 2.0.16 | 5 | 0.0896 | 0.0101 | {'num_docs_append': 10000, 'flush': False} |
-| 2.0.15 | 5 | 0.0915 | 0.0129 | {'num_docs_append': 10000, 'flush': False} |
+| Version | Mean Time (s) | Std Time (s) | Num Docs Append | Flush | Iterations |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| 2.0.19 | 0.109735 | 0.005848 | 10000 | False | 5 |
+| 2.0.18 | 0.10108 | 0.001383 | 10000 | False | 5 |
+| 2.0.17 | 0.103613 | 0.00046 | 10000 | False | 5 |
+| 2.0.16 | 0.089598 | 0.010094 | 10000 | False | 5 |
+| 2.0.15 | 0.091499 | 0.01286 | 10000 | False | 5 |

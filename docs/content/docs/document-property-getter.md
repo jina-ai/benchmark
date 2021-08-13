@@ -5,37 +5,37 @@ title: Document Property Getter
 
 ## Get Content Text
 
-| version | iterations | mean_time | std_time | metadata |
+| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 10000 | 0.0 | 0.0 | {'text_length': 10000} |
-| 2.0.18 | 10000 | 0.0 | 0.0 | {'text_length': 10000} |
-| 2.0.17 | 10000 | 0.0 | 0.0 | {'text_length': 10000} |
-| 2.0.16 | 10000 | 0.0 | 0.0 | {'text_length': 10000} |
-| 2.0.15 | 10000 | 0.0 | 0.0 | {'text_length': 10000} |
+| 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.17 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.16 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.15 | 1e-06 | 0.0 | 10000 | 10000 |
 ## Get Content Blob
 
-| version | iterations | mean_time | std_time | metadata |
+| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 10000 | 0.0 | 0.0 | {'num_dims': 2} |
-| 2.0.18 | 10000 | 0.0 | 0.0 | {'num_dims': 2} |
-| 2.0.17 | 10000 | 0.0 | 0.0 | {'num_dims': 2} |
-| 2.0.16 | 10000 | 0.0 | 0.0 | {'num_dims': 2} |
-| 2.0.15 | 10000 | 0.0 | 0.0 | {'num_dims': 2} |
+| 2.0.19 | 2.3e-05 | 1e-06 | 2 | 10000 |
+| 2.0.18 | 2.7e-05 | 1e-06 | 2 | 10000 |
+| 2.0.17 | 2.3e-05 | 2e-06 | 2 | 10000 |
+| 2.0.16 | 1.4e-05 | 1e-06 | 2 | 10000 |
+| 2.0.15 | 1.7e-05 | 1e-06 | 2 | 10000 |
 ## Get Content Buffer
 
-| version | iterations | mean_time | std_time | metadata |
+| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 10000 | 0.0 | 0.0 | {'buffer_length': 10000} |
-| 2.0.18 | 10000 | 0.0 | 0.0 | {'buffer_length': 10000} |
-| 2.0.17 | 10000 | 0.0 | 0.0 | {'buffer_length': 10000} |
-| 2.0.16 | 10000 | 0.0 | 0.0 | {'buffer_length': 10000} |
-| 2.0.15 | 10000 | 0.0 | 0.0 | {'buffer_length': 10000} |
+| 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.17 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.16 | 1e-06 | 0.0 | 10000 | 10000 |
+| 2.0.15 | 1e-06 | 0.0 | 10000 | 10000 |
 ## Get Embedding
 
-| version | iterations | mean_time | std_time | metadata |
+| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 10000 | 0.0 | 0.0 | {'buffer_length': 2} |
-| 2.0.18 | 10000 | 0.0 | 0.0 | {'buffer_length': 2} |
-| 2.0.17 | 10000 | 0.0 | 0.0 | {'buffer_length': 2} |
-| 2.0.16 | 10000 | 0.0 | 0.0 | {'buffer_length': 2} |
-| 2.0.15 | 10000 | 0.0 | 0.0 | {'buffer_length': 2} |
+| 2.0.19 | 1.2e-05 | 1e-06 | 2 | 10000 |
+| 2.0.18 | 1.1e-05 | 1e-06 | 2 | 10000 |
+| 2.0.17 | 2.2e-05 | 1e-06 | 2 | 10000 |
+| 2.0.16 | 1.2e-05 | 1e-06 | 2 | 10000 |
+| 2.0.15 | 1.5e-05 | 1e-06 | 2 | 10000 |

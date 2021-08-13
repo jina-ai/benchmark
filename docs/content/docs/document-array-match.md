@@ -5,8 +5,8 @@ title: Document Array Match
 
 ## Match
 
-| version | iterations | mean_time | std_time | metadata |
-| :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 5 | 9.2097 | 0.4375 | {'size_X': 1000, 'size_Y': 100000, 'dam_x': True, 'dam_y': False, 'emb_size': 256, 'use_scipy': False, 'metric': 'euclidean', 'top_k': 100} |
-| 2.0.18 | 5 | 8.6594 | 0.1001 | {'size_X': 1000, 'size_Y': 100000, 'dam_x': True, 'dam_y': False, 'emb_size': 256, 'use_scipy': False, 'metric': 'euclidean', 'top_k': 100} |
-| 2.0.17 | 5 | 8.8131 | 0.068 | {'size_X': 1000, 'size_Y': 100000, 'dam_x': True, 'dam_y': False, 'emb_size': 256, 'use_scipy': False, 'metric': 'euclidean', 'top_k': 100} |
+| Version | Mean Time (s) | Std Time (s) | Size X | Size Y | Dam X | Dam Y | Emb Size | Use Scipy | Metric | Top K | Iterations |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 2.0.19 | 9.209743 | 0.437479 | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
+| 2.0.18 | 8.659391 | 0.100068 | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
+| 2.0.17 | 8.813086 | 0.068035 | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
