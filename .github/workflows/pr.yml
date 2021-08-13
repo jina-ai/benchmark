@@ -17,6 +17,7 @@ jobs:
 
       - name: check black
         run: |
+          pip install black==20.8b1
           black -S --check src/
           black -S --check scripts/
 
