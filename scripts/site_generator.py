@@ -2,6 +2,7 @@
 
 import json
 import os
+from shutil import copyfile
 from typing import Any, Dict, List
 
 
@@ -62,6 +63,19 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
                     data[k] = {v: {version: i}}
 
     return data
+
+
+def generate_homepage(output_dir: str) -> None:
+    """This generate required homepage for the website.
+
+    Args:
+        output_dir: Absolute path to Hugo content directory.
+    """
+    src = os.path.join(os.getcwd(), 'README.md')
+    dst = os.path.join(os.getcwd(), '_index.md')
+
+    if os.path.isfile(src):
+        copyfile(src, dst)
 
 
 def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
@@ -134,6 +148,7 @@ def main():
     version_list = _get_version_list(artifacts_dir)
     cum_data = _get_cum_data(version_list, artifacts_dir)
 
+    generate_homepage(content_dir)
     generate_docs(cum_data, docs_dir)
     generate_menus(cum_data, content_dir)
 
