@@ -16,7 +16,6 @@ from .utils.profiler import Profiler
 
 
 class DummyEncoder(Executor):
-
     @requests
     def encode(self, docs, **kwargs):
         texts = docs.get_attributes('text')
@@ -47,18 +46,22 @@ def test_zed_runtime_callback(runtime, process_message, json_writer):
     def _function(**kwargs):
         runtime._callback(process_message)
 
-    with Profiler(Document) as document_profiler, \
-            Profiler(DocumentArray) as document_array_profiler, \
-            Profiler(Message) as message_profiler, \
-            Profiler(Request) as request_profiler:
-        time, _ = benchmark_time(
-            _function,
-            1)
+    with Profiler(Document) as document_profiler, Profiler(
+        DocumentArray
+    ) as document_array_profiler, Profiler(Message) as message_profiler, Profiler(
+        Request
+    ) as request_profiler:
+        time, _ = benchmark_time(_function, 1)
 
     json_writer.append(
         dict(
             name='zed_runtime_callback/test_zed_runtime_callback',
             time=time,
-            metadata=dict(Document=document_profiler.profile, DocumentArray=document_array_profiler.profile, Message=message_profiler.profile, Request=request_profiler.profile)
+            metadata=dict(
+                Document=document_profiler.profile,
+                DocumentArray=document_array_profiler.profile,
+                Message=message_profiler.profile,
+                Request=request_profiler.profile,
+            ),
         )
     )

@@ -9,7 +9,10 @@ from .utils.benchmark import benchmark_time
 
 
 def _generate_random_text(text_length):
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(text_length))
+    return ''.join(
+        random.choice(string.ascii_uppercase + string.digits)
+        for _ in range(text_length)
+    )
 
 
 def _generate_random_buffer(buffer_length):
@@ -35,7 +38,7 @@ def test_get_content_text(text_length, json_writer):
     mean_time, std_time = benchmark_time(
         _doc_get,
         NUM_DOCS,
-        kwargs=dict(doc=Document(text=_generate_random_text(text_length)))
+        kwargs=dict(doc=Document(text=_generate_random_text(text_length))),
     )
 
     json_writer.append(
@@ -44,7 +47,7 @@ def test_get_content_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(text_length=text_length)
+            metadata=dict(text_length=text_length),
         )
     )
 
@@ -57,7 +60,7 @@ def test_get_content_blob(num_dims, json_writer):
     mean_time, std_time = benchmark_time(
         _doc_get,
         NUM_DOCS,
-        kwargs=dict(doc=Document(blob=_generate_random_blob(num_dims)))
+        kwargs=dict(doc=Document(blob=_generate_random_blob(num_dims))),
     )
 
     json_writer.append(
@@ -66,7 +69,7 @@ def test_get_content_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_dims=num_dims)
+            metadata=dict(num_dims=num_dims),
         )
     )
 
@@ -79,7 +82,7 @@ def test_get_content_buffer(buffer_length, json_writer):
     mean_time, std_time = benchmark_time(
         _doc_get,
         NUM_DOCS,
-        kwargs=dict(doc=Document(buffer=_generate_random_buffer(buffer_length)))
+        kwargs=dict(doc=Document(buffer=_generate_random_buffer(buffer_length))),
     )
 
     json_writer.append(
@@ -88,7 +91,7 @@ def test_get_content_buffer(buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(buffer_length=buffer_length)
+            metadata=dict(buffer_length=buffer_length),
         )
     )
 
@@ -101,7 +104,7 @@ def test_get_embedding(num_dims, json_writer):
     mean_time, std_time = benchmark_time(
         _doc_get,
         NUM_DOCS,
-        kwargs=dict(doc=Document(embedding=_generate_random_blob(num_dims)))
+        kwargs=dict(doc=Document(embedding=_generate_random_blob(num_dims))),
     )
 
     json_writer.append(
@@ -110,6 +113,6 @@ def test_get_embedding(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(buffer_length=num_dims)
+            metadata=dict(buffer_length=num_dims),
         )
     )

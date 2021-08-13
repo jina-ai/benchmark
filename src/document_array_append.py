@@ -24,11 +24,7 @@ def test_docarray_append(docs, json_writer):
     def _setup(**kwargs):
         return (), dict(da=DocumentArray())
 
-    mean_time, std_time = benchmark_time(
-        setup=_setup,
-        func=_append,
-        n=NUM_REPETITIONS
-    )
+    mean_time, std_time = benchmark_time(setup=_setup, func=_append, n=NUM_REPETITIONS)
 
     json_writer.append(
         dict(
@@ -36,7 +32,7 @@ def test_docarray_append(docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs_append=NUM_DOCS)
+            metadata=dict(num_docs_append=NUM_DOCS),
         )
     )
 
@@ -52,13 +48,11 @@ def test_document_array_memmap_append(docs, flush, json_writer, tmpdir):
 
     def _teardown():
         import shutil
+
         shutil.rmtree(f'{str(tmpdir)}/memmap')
 
     mean_time, std_time = benchmark_time(
-        setup=_setup,
-        func=_append,
-        teardown=_teardown,
-        n=NUM_REPETITIONS
+        setup=_setup, func=_append, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     json_writer.append(
@@ -67,6 +61,6 @@ def test_document_array_memmap_append(docs, flush, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs_append=NUM_DOCS, flush=flush)
+            metadata=dict(num_docs_append=NUM_DOCS, flush=flush),
         )
     )
