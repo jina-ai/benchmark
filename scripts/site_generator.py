@@ -2,7 +2,7 @@
 
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -13,6 +13,14 @@ def _cleaned_title(raw_heading: str) -> str:
 def _cleaned_slug(raw_heading: str) -> str:
     """Return cleaned slug of artifact name."""
     return raw_heading.replace('test_', '').replace('_', '-')
+
+
+def _get_metadata_items(raw_metadata: Dict[str, Any]) -> Tuple[str, str]:
+    """Return metadata table title and table separator."""
+    _keys = raw_metadata.keys()
+    title = ' | '.join(_keys)
+    separator = ' | '.join([':---:'] * len(_keys))
+    return title, separator
 
 
 def _get_version_list(artifacts_dir: str) -> List[str]:
@@ -102,19 +110,26 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
             fp.write('# {}\n\n'.format(_cleaned_title(k)))
 
             for v in cum_data[k]:
+                raw_metadata = list(cum_data[k][v].values())[0]['metadata']
+                title, separator = _get_metadata_items(raw_metadata)
+
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
-                fp.write('| version | iterations | mean_time | std_time | metadata |\n')
-                fp.write('| :---: | :---: | :---: | :---: | :---: |\n')
+                fp.write(
+                    '| version | mean_time | std_time | {} | iterations |\n'.format(
+                        title
+                    )
+                )
+                fp.write('| :---: | :---: | :---: | {} | :---: |\n'.format(separator))
 
                 for version in cum_data[k][v]:
                     _data = cum_data[k][v][version]
                     fp.write(
                         '| {} | {} | {} | {} | {} |\n'.format(
                             version,
+                            round(_data['mean_time'], 6),
+                            round(_data['std_time'], 6),
+                            ' | '.join(str(x) for x in _data['metadata'].values()),
                             _data['iterations'],
-                            round(_data['mean_time'], 4),
-                            round(_data['std_time'], 4),
-                            _data['metadata'],
                         )
                     )
 
@@ -132,18 +147,12 @@ def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
         fp.write('---\n')
         fp.write('headless: true\n')
         fp.write('---\n\n')
-        # fp.write('- [Homepage]({{< relref "/" >}})\n')
 
         for k in cum_data:
             fp.write(
                 '- [%s]({{< relref "/docs/%s.md" >}})\n'
                 % (_cleaned_title(k), _cleaned_slug(k))
             )
-            # for v in cum_data[k]:
-            #     fp.write(
-            #         '\t- [%s]({{< relref "/docs/%s.md#%s" >}})\n'
-            #         % (_cleaned_title(v), _cleaned_slug(k), _cleaned_slug(v))
-            #     )
 
 
 def main():
