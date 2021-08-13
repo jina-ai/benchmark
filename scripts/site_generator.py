@@ -18,7 +18,7 @@ def _cleaned_slug(raw_heading: str) -> str:
 def _get_metadata_items(raw_metadata: Dict[str, Any]) -> Tuple[str, str]:
     """Return metadata table title and table separator."""
     _keys = raw_metadata.keys()
-    title = ' | '.join(_keys)
+    title = ' | '.join(_cleaned_title(k) for k in _keys)
     separator = ' | '.join([':---:'] * len(_keys))
     return title, separator
 
@@ -115,7 +115,7 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
 
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    '| version | mean_time | std_time | {} | iterations |\n'.format(
+                    '| Version | Mean Time (s) | Std Time (s) | {} | Iterations |\n'.format(
                         title
                     )
                 )
@@ -128,7 +128,7 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                             version,
                             round(_data['mean_time'], 6),
                             round(_data['std_time'], 6),
-                            ' | '.join(str(x) for x in _data['metadata'].values()),
+                            ' | '.join(str(v) for v in _data['metadata'].values()),
                             _data['iterations'],
                         )
                     )

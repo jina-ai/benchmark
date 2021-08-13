@@ -5,7 +5,7 @@ title: Document Array Append
 
 ## Docarray Append
 
-| version | mean_time | std_time | num_docs_append | iterations |
+| Version | Mean Time (s) | Std Time (s) | Num Docs Append | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.007945 | 0.001272 | 10000 | 5 |
 | 2.0.18 | 0.006755 | 0.000864 | 10000 | 5 |
@@ -14,7 +14,7 @@ title: Document Array Append
 | 2.0.15 | 0.008027 | 0.000358 | 10000 | 5 |
 ## Document Array Memmap Append
 
-| version | mean_time | std_time | num_docs_append | flush | iterations |
+| Version | Mean Time (s) | Std Time (s) | Num Docs Append | Flush | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.109735 | 0.005848 | 10000 | False | 5 |
 | 2.0.18 | 0.10108 | 0.001383 | 10000 | False | 5 |
