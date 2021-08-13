@@ -2,7 +2,6 @@
 
 import json
 import os
-from shutil import copyfile
 from typing import Any, Dict, List
 
 
@@ -72,10 +71,18 @@ def generate_homepage(output_dir: str) -> None:
         output_dir: Absolute path to Hugo content directory.
     """
     src = os.path.join(os.getcwd(), 'README.md')
-    dst = os.path.join(os.getcwd(), '_index.md')
+    dst = os.path.join(output_dir, '_index.md')
 
     if os.path.isfile(src):
-        copyfile(src, dst)
+        with open(src) as f:
+            data = f.read()
+
+        with open(dst, 'w') as fp:
+            fp.write('---\n')
+            fp.write('title: Benchmark Jina\n')
+            fp.write('type: docs\n')
+            fp.write('---\n')
+            fp.write(data)
 
 
 def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
@@ -125,21 +132,22 @@ def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
         fp.write('---\n')
         fp.write('headless: true\n')
         fp.write('---\n\n')
-        fp.write('- [Homepage]({{< relref "/" >}})\n')
+        # fp.write('- [Homepage]({{< relref "/" >}})\n')
 
         for k in cum_data:
             fp.write(
                 '- [%s]({{< relref "/docs/%s.md" >}})\n'
                 % (_cleaned_title(k), _cleaned_slug(k))
             )
-            for v in cum_data[k]:
-                fp.write(
-                    '\t- [%s]({{< relref "/docs/%s.md#%s" >}})\n'
-                    % (_cleaned_title(v), _cleaned_slug(k), _cleaned_slug(v))
-                )
+            # for v in cum_data[k]:
+            #     fp.write(
+            #         '\t- [%s]({{< relref "/docs/%s.md#%s" >}})\n'
+            #         % (_cleaned_title(v), _cleaned_slug(k), _cleaned_slug(v))
+            #     )
 
 
 def main():
+    """This is the main function to call."""
     base_dir = os.path.join(os.getcwd(), 'docs')
     content_dir = os.path.join(base_dir, 'content')
     docs_dir = os.path.join(content_dir, 'docs')

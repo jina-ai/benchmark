@@ -1,13 +1,20 @@
-# Benchmark
+# Benchmark Jina
 
 We are currenty considering time metrics to benchmark Jina features and using [pytest](https://docs.pytest.org/en/6.2.x/) to run these tests.
+
+## Prepare environment
+
+```bash
+pip install -r requirements.txt
+pip install pre-commit==2.13.0
+pre-commit install
+```
 
 ## Playbook
 
 ### Run Locally
 
 ```bash
-pip install -r requirements.txt
 pytest
 ```
 
