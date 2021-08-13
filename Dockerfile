@@ -8,8 +8,8 @@ ADD requirements.txt .
 
 # install dependencies
 RUN apt-get update && \
-    apt-get install -y gcc time && \
+    apt-get install -y gcc && \
     pip3 install -r requirements.txt
 
 # run benchmark
-ENTRYPOINT ["bash", "scripts/benchmark.sh"]
+ENTRYPOINT ["pytest"]
