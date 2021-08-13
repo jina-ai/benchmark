@@ -7,6 +7,8 @@ from jina.types.arrays.memmap import DocumentArrayMemmap
 from jina import Document, Flow, Executor, requests, DocumentArray
 
 from statistics import mean, stdev
+from memory_profiler import profile
+from pympler import asizeof, tracker
 from .utils.memorycontext import MemoryContext, get_readable_size
 from .utils.timecontext import TimeContext
 
@@ -56,7 +58,8 @@ class DocumentArraySearcher(Executor):
     def __init__(self, indexed_docs_path, dam_index, warmup=False, top_k: int = 50, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.indexed_docs_path = indexed_docs_path
-        self._index_docs = DocumentArray.load(indexed_docs_path, file_format='binary') if not dam_index else DocumentArrayMemmap(
+        self._index_docs = DocumentArray.load(indexed_docs_path,
+                                              file_format='binary') if not dam_index else DocumentArrayMemmap(
             indexed_docs_path)
         if warmup:
             self._index_docs.get_attributes('embedding')
@@ -73,8 +76,8 @@ class DocumentArraySearcher(Executor):
 
 
 @pytest.mark.parametrize('number_of_documents', [10000, 100000])
-@pytest.mark.parametrize('emb_size', [128])
-@pytest.mark.parametrize('dam_index', [True, False])
+@pytest.mark.parametrize('emb_size', [128, 256])
+@pytest.mark.parametrize('dam_index', [False, True])
 @pytest.mark.parametrize('warmup', [True, False])
 def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir, json_writer):
     if warmup and not dam_index:
@@ -85,27 +88,34 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
                                    embedding_size=emb_size,
                                    dir_path=str(tmpdir))
 
-        with MemoryContext() as ctx:
-            indexer = DocumentArraySearcher(indexed_docs_path=path, dam_index=dam_index, warmup=warmup)
-        used_memory = ctx.used_memory
-        return indexer, used_memory
+        return DocumentArraySearcher(indexed_docs_path=path, dam_index=dam_index, warmup=warmup)
 
     query_docs = [DocumentArray(_get_docs(NUM_QUERY_DOCS_PER_BATCH, embedding_size=emb_size))] * NUM_BATCHES
 
-    indexer_memory_measures = []
-    time_measures = []
-    mem_measures = []
-    for _ in range(NUM_REPETITIONS):
-        indexer, indexer_memory = _get_indexer()
-        print(f' indexer_memory {indexer_memory}')
+    def _func():
+        indexer = _get_indexer()
+        indexer_memory = asizeof.asizeof(indexer)
+
+        tr = tracker.SummaryTracker()
+        sum1 = tr.create_summary()
 
         with TimeContext() as time_context, MemoryContext() as memory_context:
             for i in range(NUM_BATCHES):
                 indexer.search(query_docs[i])
 
-        print(f' used_memory {memory_context.used_memory}')
-        time_measures.append(time_context.duration)
-        mem_measures.append(memory_context.used_memory)
+        sum2 = tr.create_summary()
+        diff = tr.diff(sum1, sum2)
+        total_bytes = sum([ob_sum[2] for ob_sum in diff])
+
+        return time_context.duration, total_bytes, indexer_memory
+
+    indexer_memory_measures = []
+    time_measures = []
+    mem_measures = []
+    for _ in range(5):
+        time_measure, mem_measure, indexer_memory = _func()
+        time_measures.append(time_measure)
+        mem_measures.append(mem_measure)
         indexer_memory_measures.append(indexer_memory)
 
     mean_time = mean(time_measures)
@@ -124,9 +134,9 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
             mean_time=mean_time,
             std_time=std_time,
             mean_memory=get_readable_size(mean_memory),
-            std_memory=get_readable_size(std_memory),
+            std_memory=get_readable_size(std_memory) if std_memory else None,
             mean_indexer_memory=get_readable_size(mean_indexer_memory),
-            std_indexer_memory=get_readable_size(std_indexer_memory),
+            std_indexer_memory=get_readable_size(std_indexer_memory) if std_indexer_memory else None,
             metadata=dict(number_of_documents=number_of_documents,
                           embedding_size=emb_size,
                           query_docs=NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES,
