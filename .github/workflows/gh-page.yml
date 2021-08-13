@@ -32,7 +32,7 @@ jobs:
           git config user.name "Jina Dev Bot"
           git config user.email bot@jina.ai
           git add -A
-          git commit -m "chore: generated site contents"
+          git commit -m "chore: generated site contents" || echo "No changes to commit"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
