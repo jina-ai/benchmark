@@ -2,6 +2,7 @@ import pytest
 import os
 import json
 from typing import Union
+
 import numpy as np
 
 from jina import __version__
@@ -13,8 +14,8 @@ from pympler import asizeof, tracker
 from .utils.timecontext import TimeContext
 
 NUM_REPETITIONS = 5
-NUM_QUERY_DOCS_PER_BATCH = 64
-NUM_BATCHES = 5
+NUM_QUERY_DOCS_PER_REQUEST = 64
+NUM_REQUESTS = 5
 
 
 def get_readable_size(num_bytes: Union[int, float]) -> str:
@@ -36,11 +37,15 @@ def get_readable_size(num_bytes: Union[int, float]) -> str:
 
 
 def _get_docs(number_of_documents, embedding_size):
-    return [Document(embedding=np.random.rand(embedding_size), id=str(i)) for i in range(number_of_documents)]
+    return [
+        Document(embedding=np.random.rand(embedding_size), id=str(i))
+        for i in range(number_of_documents)
+    ]
 
 
 def _get_dam(number_of_documents, embedding_size, dir_path, **kwargs):
     import shutil
+
     tmp_path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}_tmp'
     path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}'
     if os.path.exists(path):
@@ -72,13 +77,22 @@ def _get_document_array(dam_index, **kwargs):
 
 
 class DocumentArraySearcher(Executor):
-
-    def __init__(self, indexed_docs_path, dam_index, warmup=False, top_k: int = 50, *args, **kwargs):
+    def __init__(
+        self,
+        indexed_docs_path,
+        dam_index,
+        warmup=False,
+        top_k: int = 50,
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.indexed_docs_path = indexed_docs_path
-        self._index_docs = DocumentArray.load(indexed_docs_path,
-                                              file_format='binary') if not dam_index else DocumentArrayMemmap(
-            indexed_docs_path)
+        self._index_docs = (
+            DocumentArray.load(indexed_docs_path, file_format='binary')
+            if not dam_index
+            else DocumentArrayMemmap(indexed_docs_path)
+        )
         if warmup:
             self._index_docs.get_attributes('embedding')
         self._top_k = top_k
@@ -99,6 +113,7 @@ def searchers_compare_writer(pytestconfig):
     yield results
 
     from pathlib import Path
+
     output_dir = 'docs/static/artifacts/{}'.format(__version__)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
@@ -110,18 +125,27 @@ def searchers_compare_writer(pytestconfig):
 @pytest.mark.parametrize('emb_size', [128, 256, 512, 1024])
 @pytest.mark.parametrize('dam_index', [False, True])
 @pytest.mark.parametrize('warmup', [True, False])
-def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir, searchers_compare_writer):
+def test_search_compare(
+    number_of_documents, emb_size, dam_index, warmup, tmpdir, searchers_compare_writer
+):
     if warmup and not dam_index:
         pytest.skip('Warmup is not relevant for `DocumentArray`')
 
     def _get_indexer():
-        path = _get_document_array(dam_index=dam_index, number_of_documents=number_of_documents,
-                                   embedding_size=emb_size,
-                                   dir_path=str(tmpdir))
+        path = _get_document_array(
+            dam_index=dam_index,
+            number_of_documents=number_of_documents,
+            embedding_size=emb_size,
+            dir_path=str(tmpdir),
+        )
 
-        return DocumentArraySearcher(indexed_docs_path=path, dam_index=dam_index, warmup=warmup)
+        return DocumentArraySearcher(
+            indexed_docs_path=path, dam_index=dam_index, warmup=warmup
+        )
 
-    query_docs = [DocumentArray(_get_docs(NUM_QUERY_DOCS_PER_BATCH, embedding_size=emb_size))] * NUM_BATCHES
+    query_docs = [
+        DocumentArray(_get_docs(NUM_QUERY_DOCS_PER_REQUEST, embedding_size=emb_size))
+    ] * NUM_REQUESTS
 
     def _func():
         indexer = _get_indexer()
@@ -131,7 +155,7 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
         sum1 = tr.create_summary()
 
         with TimeContext() as time_context:
-            for i in range(NUM_BATCHES):
+            for i in range(NUM_REQUESTS):
                 indexer.search(query_docs[i])
 
         sum2 = tr.create_summary()
@@ -156,7 +180,9 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
     std_memory = stdev(mem_measures) if len(mem_measures) > 1 else None
 
     mean_indexer_memory = mean(indexer_memory_measures)
-    std_indexer_memory = stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
+    std_indexer_memory = (
+        stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
+    )
 
     searchers_compare_writer.append(
         dict(
@@ -167,16 +193,20 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
             mean_memory=get_readable_size(mean_memory),
             std_memory=get_readable_size(std_memory) if std_memory else None,
             mean_indexer_memory=get_readable_size(mean_indexer_memory),
-            std_indexer_memory=get_readable_size(std_indexer_memory) if std_indexer_memory else None,
-            metadata=dict(number_of_documents=number_of_documents,
-                          embedding_size=emb_size,
-                          query_docs=NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES,
-                          query_docs_per_batch=NUM_QUERY_DOCS_PER_BATCH,
-                          mean_docs_per_second=(NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES) / mean_time,
-                          latency_per_doc=mean_time / (NUM_QUERY_DOCS_PER_BATCH * NUM_BATCHES),
-                          num_batches=NUM_BATCHES,
-                          dam_index=dam_index,
-                          warmup_embeddings=warmup
-                          )
+            std_indexer_memory=get_readable_size(std_indexer_memory)
+            if std_indexer_memory
+            else None,
+            metadata=dict(
+                number_of_documents=number_of_documents,
+                embedding_size=emb_size,
+                query_docs=NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS,
+                query_docs_per_request=NUM_QUERY_DOCS_PER_REQUEST,
+                mean_docs_per_second=(NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS)
+                / mean_time,
+                latency_per_doc=mean_time / (NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS),
+                num_batches=NUM_REQUESTS,
+                dam_index=dam_index,
+                warmup_embeddings=warmup,
+            ),
         )
     )
