@@ -31,3 +31,12 @@ repos:
     hooks:
       - id: check-github-workflows
         files: ^(.github/workflows/)
+
+  - repo: local
+    hooks:
+      - id: site_generator
+        name: Site Generator
+        entry: python scripts/site_generator.py
+        language: python
+        types: [python]
+        additional_dependencies: ['packaging==21.0', 'requests==2.26.0']
