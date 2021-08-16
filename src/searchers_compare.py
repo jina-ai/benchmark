@@ -1,13 +1,14 @@
 import pytest
 import os
+import json
 
 import numpy as np
 
+from jina import __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 from jina import Document, Flow, Executor, requests, DocumentArray
 
 from statistics import mean, stdev
-from memory_profiler import profile
 from pympler import asizeof, tracker
 from .utils.memorycontext import MemoryContext, get_readable_size
 from .utils.timecontext import TimeContext
@@ -75,11 +76,24 @@ class DocumentArraySearcher(Executor):
         )
 
 
-@pytest.mark.parametrize('number_of_documents', [10000, 100000])
-@pytest.mark.parametrize('emb_size', [128, 256])
+@pytest.fixture(scope='module')
+def searchers_compare_writer(pytestconfig):
+    results = []
+    yield results
+
+    from pathlib import Path
+    output_dir = 'docs/static/artifacts/{}'.format(__version__)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    with open(f'{output_dir}/searchers_compare.json', 'w+') as file:
+        json.dump(results, file)
+
+
+@pytest.mark.parametrize('number_of_documents', [10000, 100000, 1000000])
+@pytest.mark.parametrize('emb_size', [128, 256, 512, 1024])
 @pytest.mark.parametrize('dam_index', [False, True])
 @pytest.mark.parametrize('warmup', [True, False])
-def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir, json_writer):
+def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir, searchers_compare_writer):
     if warmup and not dam_index:
         pytest.skip('Warmup is not relevant for `DocumentArray`')
 
@@ -127,7 +141,7 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
     mean_indexer_memory = mean(indexer_memory_measures)
     std_indexer_memory = stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
 
-    json_writer.append(
+    searchers_compare_writer.append(
         dict(
             name='searchers_compare/test_search_compare',
             iterations=NUM_REPETITIONS,
