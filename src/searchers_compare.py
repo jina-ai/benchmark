@@ -1,7 +1,7 @@
 import pytest
 import os
 import json
-
+from typing import Union
 import numpy as np
 
 from jina import __version__
@@ -10,12 +10,29 @@ from jina import Document, Flow, Executor, requests, DocumentArray
 
 from statistics import mean, stdev
 from pympler import asizeof, tracker
-from .utils.memorycontext import MemoryContext, get_readable_size
 from .utils.timecontext import TimeContext
 
 NUM_REPETITIONS = 5
 NUM_QUERY_DOCS_PER_BATCH = 64
 NUM_BATCHES = 5
+
+
+def get_readable_size(num_bytes: Union[int, float]) -> str:
+    """
+    Transform the bytes into readable value with different units (e.g. 1 KB, 20 MB, 30.1 GB).
+
+    :param num_bytes: Number of bytes.
+    :return: Human readable string representation.
+    """
+    num_bytes = int(num_bytes)
+    if num_bytes < 1024:
+        return f'{num_bytes} Bytes'
+    elif num_bytes < 1024 ** 2:
+        return f'{num_bytes / 1024:.1f} KB'
+    elif num_bytes < 1024 ** 3:
+        return f'{num_bytes / (1024 ** 2):.1f} MB'
+    else:
+        return f'{num_bytes / (1024 ** 3):.1f} GB'
 
 
 def _get_docs(number_of_documents, embedding_size):
@@ -113,7 +130,7 @@ def test_search_compare(number_of_documents, emb_size, dam_index, warmup, tmpdir
         tr = tracker.SummaryTracker()
         sum1 = tr.create_summary()
 
-        with TimeContext() as time_context, MemoryContext() as memory_context:
+        with TimeContext() as time_context:
             for i in range(NUM_BATCHES):
                 indexer.search(query_docs[i])
 
