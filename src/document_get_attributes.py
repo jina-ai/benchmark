@@ -4,7 +4,7 @@ import numpy as np
 
 import pytest
 
-from jina import Document, __version__
+from jina import Document
 from .utils.benchmark import benchmark_time
 
 

@@ -6,6 +6,7 @@ from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
 
+
 NUM_REPETITIONS = 25
 NUM_DOCS = 1000
 CHARS = tuple(string.ascii_uppercase + string.digits)

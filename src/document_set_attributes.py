@@ -93,4 +93,3 @@ def test_set_attribute_buffer(buffer_length, json_writer):
             metadata=dict(buffer_length=buffer_length),
         )
     )
-

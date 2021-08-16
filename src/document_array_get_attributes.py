@@ -5,6 +5,7 @@ import pytest
 from faker import Faker
 import numpy as np
 
+
 from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 from .utils.benchmark import benchmark_time
@@ -50,19 +51,20 @@ def embedding_docs(num_docs):
 @pytest.mark.parametrize('memmap', [False, True])
 @pytest.mark.parametrize(
     'field',
-    [
-        'blob', 'text', 'buffer', 'embedding'
-    ],
+    ['blob', 'text', 'buffer', 'embedding'],
 )
 @pytest.mark.parametrize(
     'num_docs',
-    [
-        10, 100, 1000
-    ],
+    [10, 100, 1000],
 )
 def test_da_get_attributes(field, memmap, num_docs, json_writer, tmpdir):
     def _get_docs(field, num_docs):
-        fun_map = {'blob': blob_docs, 'embedding': embedding_docs, 'text': text_docs, 'buffer': buffer_docs}
+        fun_map = {
+            'blob': blob_docs,
+            'embedding': embedding_docs,
+            'text': text_docs,
+            'buffer': buffer_docs,
+        }
         return fun_map[field](num_docs)
 
     def _get_attributes(da):
@@ -108,9 +110,7 @@ def test_da_get_attributes(field, memmap, num_docs, json_writer, tmpdir):
 @pytest.mark.parametrize('memmap', [False, True])
 @pytest.mark.parametrize(
     'num_docs',
-    [
-        10, 100, 1000
-    ],
+    [10, 100, 1000],
 )
 def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
     def _get_embeddings(da):
@@ -151,4 +151,3 @@ def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
             metadata=dict(num_docs=num_docs, memmap=memmap),
         )
     )
-
