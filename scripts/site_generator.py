@@ -4,6 +4,19 @@ import json
 import os
 from typing import Any, Dict, List, Tuple
 
+import requests
+from packaging.version import parse
+
+
+def __get_latest_version(owner: str, repo: str) -> str:
+    """Return latest released version of Jina Core."""
+    res = requests.get(
+        "https://api.github.com/repos/{}/{}/releases/latest".format(owner, repo)
+    )
+    res_data = res.json()
+
+    return res_data["tag_name"].replace('v', '')
+
 
 def _cleaned_title(raw_heading: str) -> str:
     """Return cleaned title of artifact name."""
@@ -52,12 +65,18 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
     Return: Dict of cumulative data
     """
     data: Dict[Any, Any] = dict()
+    latest_version = __get_latest_version('jina-ai', 'jina')
 
     for version in version_list:
         report_file = os.path.join(artifacts_dir, version, 'report.json')
         if os.path.isfile(report_file):
             with open(report_file) as fp:
                 _raw_data = json.load(fp)
+
+            if version_list.index(version) == 0 and parse(version) >= parse(
+                latest_version
+            ):
+                version = 'master'
 
             for i in _raw_data:
                 k, v = i['name'].split('/')

@@ -7,7 +7,7 @@ title: Document Property Getter
 
 | Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
+| master | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.17 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.16 | 1e-06 | 0.0 | 10000 | 10000 |
@@ -16,7 +16,7 @@ title: Document Property Getter
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 2.3e-05 | 1e-06 | 2 | 10000 |
+| master | 2.3e-05 | 1e-06 | 2 | 10000 |
 | 2.0.18 | 2.7e-05 | 1e-06 | 2 | 10000 |
 | 2.0.17 | 2.3e-05 | 2e-06 | 2 | 10000 |
 | 2.0.16 | 1.4e-05 | 1e-06 | 2 | 10000 |
@@ -25,7 +25,7 @@ title: Document Property Getter
 
 | Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
+| master | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.17 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.16 | 1e-06 | 0.0 | 10000 | 10000 |
@@ -34,7 +34,7 @@ title: Document Property Getter
 
 | Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| 2.0.19 | 1.2e-05 | 1e-06 | 2 | 10000 |
+| master | 1.2e-05 | 1e-06 | 2 | 10000 |
 | 2.0.18 | 1.1e-05 | 1e-06 | 2 | 10000 |
 | 2.0.17 | 2.2e-05 | 1e-06 | 2 | 10000 |
 | 2.0.16 | 1.2e-05 | 1e-06 | 2 | 10000 |
