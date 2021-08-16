@@ -1,4 +1,7 @@
 pympler==0.9
 faker==8.11.0
+packaging==21.0
 pytest==6.2.4
-cmdbench==0.1.13
+pytest-json-report==1.4.0
+requests==2.26.0
+scipy==1.7.1

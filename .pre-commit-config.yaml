@@ -4,12 +4,13 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
+      - id: check-ast
       - id: check-added-large-files
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
 
-  - repo: https://github.com/ambv/black
+  - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
       - id: black
@@ -19,6 +20,18 @@ repos:
         args:
           - -S
 
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.9.3
+    hooks:
+      - id: isort
+        name: Sort Python Imports
+
+  - repo: https://github.com/sirosen/check-jsonschema
+    rev: 0.4.1
+    hooks:
+      - id: check-github-workflows
+        files: ^(.github/workflows/)
+
   - repo: local
     hooks:
       - id: site_generator
@@ -26,3 +39,4 @@ repos:
         entry: python scripts/site_generator.py
         language: python
         types: [python]
+        additional_dependencies: ['packaging==21.0', 'requests==2.26.0']
