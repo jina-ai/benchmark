@@ -33,10 +33,10 @@ def benchmark_time(
 
     for i in range(n):
         if setup is not None:
-            args, kwargs = setup(*args, **kwargs)
+            new_args, new_kwargs = setup(*args, **kwargs)
 
         with TimeContext() as t:
-            func(*args, **kwargs)
+            func(*new_args, **new_kwargs)
 
         if teardown is not None:
             teardown()
