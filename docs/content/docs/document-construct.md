@@ -5,7 +5,7 @@ title: Document Construct
 
 ## Construct Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.2e-05 | 4e-06 | 10000 | 1000 |
 | 2.0.18 | 1.2e-05 | 5e-06 | 10000 | 1000 |
@@ -14,7 +14,7 @@ title: Document Construct
 | 2.0.15 | 9e-06 | 6e-06 | 10000 | 1000 |
 ## Construct Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 3.1e-05 | 7e-06 | 2 | 1000 |
 | 2.0.18 | 2.7e-05 | 6e-06 | 2 | 1000 |
@@ -23,7 +23,7 @@ title: Document Construct
 | 2.0.15 | 2.5e-05 | 6e-06 | 2 | 1000 |
 ## Construct Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.1e-05 | 4e-06 | 10000 | 1000 |
 | 2.0.18 | 1.1e-05 | 3e-06 | 10000 | 1000 |
@@ -32,7 +32,7 @@ title: Document Construct
 | 2.0.15 | 8e-06 | 4e-06 | 10000 | 1000 |
 ## Construct Bytes Origin Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.3e-05 | 1e-06 | 10000 | 1000 |
 | 2.0.18 | 1.2e-05 | 1e-06 | 10000 | 1000 |
@@ -41,7 +41,7 @@ title: Document Construct
 | 2.0.15 | 1.2e-05 | 2e-06 | 10000 | 1000 |
 ## Construct Bytes Origin Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.6e-05 | 1e-06 | 2 | 1000 |
 | 2.0.18 | 1.9e-05 | 1e-06 | 2 | 1000 |
@@ -50,7 +50,7 @@ title: Document Construct
 | 2.0.15 | 2.5e-05 | 2e-06 | 2 | 1000 |
 ## Construct Bytes Origin Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.2e-05 | 1e-06 | 10000 | 1000 |
 | 2.0.18 | 1.2e-05 | 1e-06 | 10000 | 1000 |
@@ -59,7 +59,7 @@ title: Document Construct
 | 2.0.15 | 1.1e-05 | 1e-06 | 10000 | 1000 |
 ## Construct Str Json Origin Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.00044 | 0.000835 | 10000 | 1000 |
 | 2.0.18 | 0.00039 | 9e-06 | 10000 | 1000 |
@@ -68,7 +68,7 @@ title: Document Construct
 | 2.0.15 | 0.000414 | 1e-05 | 10000 | 1000 |
 ## Construct Str Json Origin Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.001441 | 2e-05 | 2 | 1000 |
 | 2.0.18 | 0.001427 | 5.7e-05 | 2 | 1000 |
@@ -77,7 +77,7 @@ title: Document Construct
 | 2.0.15 | 0.001687 | 2.2e-05 | 2 | 1000 |
 ## Construct Str Json Origin Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.000126 | 8e-06 | 10000 | 1000 |
 | 2.0.18 | 0.00012 | 7e-06 | 10000 | 1000 |
@@ -86,7 +86,7 @@ title: Document Construct
 | 2.0.15 | 0.000127 | 1.1e-05 | 10000 | 1000 |
 ## Construct Dict Origin Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.000392 | 1e-05 | 10000 | 1000 |
 | 2.0.18 | 0.000371 | 8e-06 | 10000 | 1000 |
@@ -95,7 +95,7 @@ title: Document Construct
 | 2.0.15 | 0.000392 | 1e-05 | 10000 | 1000 |
 ## Construct Dict Origin Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.001281 | 2.5e-05 | 2 | 1000 |
 | 2.0.18 | 0.001032 | 2.1e-05 | 2 | 1000 |
@@ -104,7 +104,7 @@ title: Document Construct
 | 2.0.15 | 0.001851 | 2.5e-05 | 2 | 1000 |
 ## Construct Dict Origin Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.000101 | 8e-06 | 10000 | 1000 |
 | 2.0.18 | 9.7e-05 | 7e-06 | 10000 | 1000 |
@@ -113,7 +113,7 @@ title: Document Construct
 | 2.0.15 | 0.000102 | 8e-06 | 10000 | 1000 |
 ## Construct Document Origin Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 0.0 | 10000 | False | 1000 |
@@ -122,7 +122,7 @@ title: Document Construct
 | 2.0.15 | 3e-06 | 1e-06 | 10000 | False | 1000 |
 ## Construct Document Origin Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 1e-06 | 2 | False | 1000 |
 | 2.0.18 | 4e-06 | 1e-06 | 2 | False | 1000 |
@@ -131,7 +131,7 @@ title: Document Construct
 | 2.0.15 | 3e-06 | 1e-06 | 2 | False | 1000 |
 ## Construct Document Origin Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 0.0 | 10000 | False | 1000 |
@@ -140,7 +140,7 @@ title: Document Construct
 | 2.0.15 | 3e-06 | 0.0 | 10000 | False | 1000 |
 ## Construct Document Origin Text Proto
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 0.0 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 0.0 | 10000 | False | 1000 |
@@ -149,7 +149,7 @@ title: Document Construct
 | 2.0.15 | 2e-06 | 0.0 | 10000 | False | 1000 |
 ## Construct Document Origin Blob Proto
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 0.0 | 2 | False | 1000 |
 | 2.0.18 | 4e-06 | 0.0 | 2 | False | 1000 |
@@ -158,7 +158,7 @@ title: Document Construct
 | 2.0.15 | 2e-06 | 0.0 | 2 | False | 1000 |
 ## Construct Document Origin Buffer Proto
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Copy | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 4e-06 | 0.0 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 1e-06 | 10000 | False | 1000 |

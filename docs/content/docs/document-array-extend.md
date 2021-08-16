@@ -5,7 +5,7 @@ title: Document Array Extend
 
 ## Da Extend
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Label | Memmap | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Label | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.001133 | 0.002748 | 1000 | buffer | True | 25 |
 | 2.0.18 | 0.001083 | 0.002631 | 1000 | buffer | True | 25 |

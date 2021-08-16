@@ -113,7 +113,9 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                 raw_metadata = list(cum_data[k][v].values())[0]['metadata']
                 title, separator = _get_metadata_items(raw_metadata)
 
-                first_mean_time = cum_data[k][v][list(cum_data[k][v].keys())[0]]['mean_time']
+                first_mean_time = cum_data[k][v][list(cum_data[k][v].keys())[0]][
+                    'mean_time'
+                ]
                 report_unit = 's' if first_mean_time > 1000 else 'ms'
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(

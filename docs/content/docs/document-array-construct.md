@@ -5,7 +5,7 @@ title: Document Array Construct
 
 ## Construct Document Array From Repeated Container
 
-| Version | Mean Time (s) | Std Time (s) | Num Chunks | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Chunks | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.008575 | 0.000798 | 10000 | 5 |
 | 2.0.18 | 0.006901 | 0.00013 | 10000 | 5 |
@@ -14,7 +14,7 @@ title: Document Array Construct
 | 2.0.15 | 0.00912 | 0.000557 | 10000 | 5 |
 ## Construct Document Array From Another Documentarray
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.002809 | 0.000563 | 10000 | 5 |
 | 2.0.18 | 0.002611 | 0.000526 | 10000 | 5 |
@@ -23,7 +23,7 @@ title: Document Array Construct
 | 2.0.15 | 0.003146 | 0.000351 | 10000 | 5 |
 ## Construct Document Array From List Of Documents
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.005141 | 0.000646 | 10000 | 5 |
 | 2.0.18 | 0.004572 | 0.000845 | 10000 | 5 |
@@ -32,7 +32,7 @@ title: Document Array Construct
 | 2.0.15 | 0.005604 | 0.000418 | 10000 | 5 |
 ## Construct Document Array From Tuple Of Documents
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.005112 | 0.00061 | 10000 | 5 |
 | 2.0.18 | 0.004428 | 0.000824 | 10000 | 5 |
@@ -41,7 +41,7 @@ title: Document Array Construct
 | 2.0.15 | 0.005126 | 0.000523 | 10000 | 5 |
 ## Construct Document Array From Generator
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.565056 | 0.009768 | 10000 | 5 |
 | 2.0.18 | 0.559191 | 0.008755 | 10000 | 5 |
@@ -50,7 +50,7 @@ title: Document Array Construct
 | 2.0.15 | 0.536692 | 0.013138 | 10000 | 5 |
 ## Construct Document Array From Another Documentarray Memmap
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.115061 | 0.002351 | 10000 | 5 |
 | 2.0.18 | 0.114257 | 0.002568 | 10000 | 5 |

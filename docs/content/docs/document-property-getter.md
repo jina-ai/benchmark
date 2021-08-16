@@ -5,7 +5,7 @@ title: Document Property Getter
 
 ## Get Content Text
 
-| Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
@@ -14,7 +14,7 @@ title: Document Property Getter
 | 2.0.15 | 1e-06 | 0.0 | 10000 | 10000 |
 ## Get Content Blob
 
-| Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 2.3e-05 | 1e-06 | 2 | 10000 |
 | 2.0.18 | 2.7e-05 | 1e-06 | 2 | 10000 |
@@ -23,7 +23,7 @@ title: Document Property Getter
 | 2.0.15 | 1.7e-05 | 1e-06 | 2 | 10000 |
 ## Get Content Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1e-06 | 0.0 | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | 10000 | 10000 |
@@ -32,7 +32,7 @@ title: Document Property Getter
 | 2.0.15 | 1e-06 | 0.0 | 10000 | 10000 |
 ## Get Embedding
 
-| Version | Mean Time (s) | Std Time (s) | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.2e-05 | 1e-06 | 2 | 10000 |
 | 2.0.18 | 1.1e-05 | 1e-06 | 2 | 10000 |

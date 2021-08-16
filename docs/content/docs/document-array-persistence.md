@@ -5,7 +5,7 @@ title: Document Array Persistence
 
 ## Document Array Save
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs Append | File Format | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs Append | File Format | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.331076 | 0.001479 | 100000 | binary | 5 |
 | 2.0.18 | 0.317749 | 0.00117 | 100000 | binary | 5 |
@@ -14,7 +14,7 @@ title: Document Array Persistence
 | 2.0.15 | 0.337996 | 0.001661 | 100000 | binary | 5 |
 ## Document Array Load
 
-| Version | Mean Time (s) | Std Time (s) | Num Docs Append | File Format | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Num Docs Append | File Format | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 0.185312 | 0.002235 | 100000 | binary | 5 |
 | 2.0.18 | 0.18207 | 0.000701 | 100000 | binary | 5 |
