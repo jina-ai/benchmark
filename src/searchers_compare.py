@@ -1,20 +1,17 @@
-import pytest
-import os
 import json
+import os
+from statistics import mean, stdev
 from typing import Union
 
 import numpy as np
-
-from jina import __version__
+import pytest
+from jina import Document, DocumentArray, Executor, Flow, __version__, requests
 from jina.types.arrays.memmap import DocumentArrayMemmap
-from jina import Document, Flow, Executor, requests, DocumentArray
-
-from statistics import mean, stdev
 from pympler import asizeof, tracker
+
 from .utils.timecontext import TimeContext
 
 NUM_REPETITIONS = 5
-NUM_QUERY_DOCS_PER_REQUEST = 64
 NUM_REQUESTS = 5
 
 
@@ -121,12 +118,19 @@ def searchers_compare_writer(pytestconfig):
         json.dump(results, file)
 
 
-@pytest.mark.parametrize('number_of_documents', [10000, 100000, 1000000])
+@pytest.mark.parametrize('number_of_indexed_documents', [10000, 100000, 1000000])
+@pytest.mark.parametrize('number_of_documents_request', [1, 32, 64])
 @pytest.mark.parametrize('emb_size', [128, 256, 512, 1024])
 @pytest.mark.parametrize('dam_index', [False, True])
 @pytest.mark.parametrize('warmup', [True, False])
 def test_search_compare(
-    number_of_documents, emb_size, dam_index, warmup, tmpdir, searchers_compare_writer
+    number_of_indexed_documents,
+    number_of_documents_request,
+    emb_size,
+    dam_index,
+    warmup,
+    tmpdir,
+    searchers_compare_writer,
 ):
     if warmup and not dam_index:
         pytest.skip('Warmup is not relevant for `DocumentArray`')
@@ -134,7 +138,7 @@ def test_search_compare(
     def _get_indexer():
         path = _get_document_array(
             dam_index=dam_index,
-            number_of_documents=number_of_documents,
+            number_of_documents=number_of_indexed_documents,
             embedding_size=emb_size,
             dir_path=str(tmpdir),
         )
@@ -144,7 +148,7 @@ def test_search_compare(
         )
 
     query_docs = [
-        DocumentArray(_get_docs(NUM_QUERY_DOCS_PER_REQUEST, embedding_size=emb_size))
+        DocumentArray(_get_docs(number_of_documents_request, embedding_size=emb_size))
     ] * NUM_REQUESTS
 
     def _func():
@@ -197,13 +201,14 @@ def test_search_compare(
             if std_indexer_memory
             else None,
             metadata=dict(
-                number_of_documents=number_of_documents,
+                number_of_indexed_documents=number_of_indexed_documents,
                 embedding_size=emb_size,
-                query_docs=NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS,
-                query_docs_per_request=NUM_QUERY_DOCS_PER_REQUEST,
-                mean_docs_per_second=(NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS)
+                query_docs=number_of_documents_request * NUM_REQUESTS,
+                query_docs_per_request=number_of_documents_request,
+                mean_docs_per_second=(number_of_documents_request * NUM_REQUESTS)
                 / mean_time,
-                latency_per_doc=mean_time / (NUM_QUERY_DOCS_PER_REQUEST * NUM_REQUESTS),
+                latency_per_doc=mean_time
+                / (number_of_documents_request * NUM_REQUESTS),
                 num_batches=NUM_REQUESTS,
                 dam_index=dam_index,
                 warmup_embeddings=warmup,
