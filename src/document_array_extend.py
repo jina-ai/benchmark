@@ -43,19 +43,32 @@ def buffer_docs():
 
 
 @pytest.mark.parametrize('memmap', [False, True])
-@pytest.mark.parametrize('docs, label', [(empty_docs(), 'empty'), (blob_docs(), 'blob'), (text_docs(), 'text'), (buffer_docs(), 'buffer')])
-def test_da_extend(docs, label, memmap, json_writer,  tmpdir):
+@pytest.mark.parametrize(
+    'docs, label',
+    [
+        (empty_docs(), 'empty'),
+        (blob_docs(), 'blob'),
+        (text_docs(), 'text'),
+        (buffer_docs(), 'buffer'),
+    ],
+)
+def test_da_extend(docs, label, memmap, json_writer, tmpdir):
     def _extend(da):
         da.extend(docs)
 
     def _build_da(**kwargs):
         memmap = kwargs.get('memmap', False)
-        da = DocumentArray() if not memmap else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+        da = (
+            DocumentArray()
+            if not memmap
+            else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+        )
         return (), dict(da=da)
 
     def _teardown():
         import shutil
         import os
+
         if os.path.exists(f'{str(tmpdir)}/memmap'):
             shutil.rmtree(f'{str(tmpdir)}/memmap')
 
@@ -64,7 +77,7 @@ def test_da_extend(docs, label, memmap, json_writer,  tmpdir):
         func=_extend,
         teardown=_teardown,
         n=NUM_REPETITIONS,
-        kwargs=dict(memmap=memmap)
+        kwargs=dict(memmap=memmap),
     )
 
     json_writer.append(
@@ -73,6 +86,6 @@ def test_da_extend(docs, label, memmap, json_writer,  tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs=len(docs), label=label, memmap=memmap)
+            metadata=dict(num_docs=len(docs), label=label, memmap=memmap),
         )
     )
