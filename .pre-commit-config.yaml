@@ -31,5 +31,3 @@ repos:
     hooks:
       - id: check-github-workflows
         files: ^(.github/workflows/)
-      - id: check-github-actions
-        files: ^(.github/workflows/)

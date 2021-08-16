@@ -35,5 +35,6 @@ jobs:
 
       - name: check site generation
         run: |
+          pip install requests==2.26.0
           python scripts/site_generator.py
           git diff-index --quiet HEAD -- || exit 1
