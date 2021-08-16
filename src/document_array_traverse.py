@@ -33,7 +33,7 @@ def test_document_array_traverse_flat(num_docs, num_matches, num_chunks, travers
     def _traverse_flat(da):
         da.traverse_flat(traversal_paths)
 
-    def _build_da(num_docs, num_matches, num_chunks):
+    def _build_da():
         da = DocumentArray() if not memmap else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
         da.extend(_get_docs(num_docs))
         for doc in da:
@@ -42,13 +42,12 @@ def test_document_array_traverse_flat(num_docs, num_matches, num_chunks, travers
             if num_chunks > 0:
                 doc.chunks.extend(_get_docs(num_matches))
 
-        return da
+        return (), dict(da=da)
 
     mean_time, std_time = benchmark_time(
         setup=_build_da,
         func=_traverse_flat,
-        n=NUM_REPETITIONS,
-        kwargs=dict(num_docs=num_docs, num_matches=num_matches, num_chunks=num_chunks, traversal_paths=traversal_paths),
+        n=NUM_REPETITIONS
     )
 
     json_writer.append(
