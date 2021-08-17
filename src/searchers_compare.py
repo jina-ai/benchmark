@@ -118,6 +118,7 @@ def searchers_compare_writer(pytestconfig):
         json.dump(results, file)
 
 
+@pytest.mark.timeout(3600)
 @pytest.mark.parametrize('number_of_indexed_documents', [10000, 100000, 1000000])
 @pytest.mark.parametrize('number_of_documents_request', [1, 32, 64])
 @pytest.mark.parametrize('emb_size', [128, 256, 512, 1024])
@@ -134,6 +135,33 @@ def test_search_compare(
 ):
     if warmup and not dam_index:
         pytest.skip('Warmup is not relevant for `DocumentArray`')
+
+    # make sure in case of timeout we can see which timedout
+    searchers_compare_writer.append(
+        dict(
+            name='searchers_compare/test_search_compare',
+            iterations=NUM_REPETITIONS,
+            mean_time=None,
+            std_time=None,
+            mean_memory=None,
+            std_memory=None,
+            mean_indexer_memory=None,
+            std_indexer_memory=None,
+            metadata=dict(
+                number_of_indexed_documents=number_of_indexed_documents,
+                embedding_size=emb_size,
+                query_docs=number_of_documents_request * NUM_REQUESTS,
+                query_docs_per_request=number_of_documents_request,
+                mean_docs_per_second=None,
+                latency_per_doc=None,
+                num_batches=NUM_REQUESTS,
+                dam_index=dam_index,
+                warmup_embeddings=warmup,
+            ),
+        )
+    )
+
+    result = searchers_compare_writer[-1]
 
     def _get_indexer():
         path = _get_document_array(
@@ -152,7 +180,9 @@ def test_search_compare(
     ] * NUM_REQUESTS
 
     def _func():
-        indexer = _get_indexer()
+        with TimeContext() as indexer_ctx:
+            indexer = _get_indexer()
+        print(f' indexer created/loaded in {indexer_ctx.duration}')
         indexer_memory = asizeof.asizeof(indexer)
 
         tr = tracker.SummaryTracker()
@@ -171,7 +201,7 @@ def test_search_compare(
     indexer_memory_measures = []
     time_measures = []
     mem_measures = []
-    for _ in range(5):
+    for _ in range(NUM_REPETITIONS):
         time_measure, mem_measure, indexer_memory = _func()
         time_measures.append(time_measure)
         mem_measures.append(mem_measure)
@@ -188,7 +218,7 @@ def test_search_compare(
         stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
     )
 
-    searchers_compare_writer.append(
+    result.update(
         dict(
             name='searchers_compare/test_search_compare',
             iterations=NUM_REPETITIONS,
