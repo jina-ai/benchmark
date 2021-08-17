@@ -1,18 +1,14 @@
 import numpy as np
-
 import pytest
-
-from jina import Document, Executor, requests, DocumentArray
+from jina import Document, DocumentArray, Executor, requests
 
 from .utils.benchmark import benchmark_time
-
 
 NUM_REPETITIONS = 5
 NUM_DOCS = 100
 
 
 class DummyEncoder(Executor):
-
     @requests
     def encode(self, docs, **kwargs):
         texts = docs.get_attributes('text')
@@ -37,9 +33,8 @@ def test_document_encoder_executor(executor, input_docs, json_writer):
         executor.encode(input_docs)
 
     mean_time, std_time, profiles = benchmark_time(
-        profile_cls=[Document, DocumentArray],
-        func=_function,
-        n=NUM_REPETITIONS)
+        profile_cls=[Document, DocumentArray], func=_function, n=NUM_REPETITIONS
+    )
 
     document_profile = profiles[0]
     document_array_profile = profiles[1]
@@ -50,7 +45,11 @@ def test_document_encoder_executor(executor, input_docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(profiles=dict(Document=document_profile, DocumentArray=document_array_profile),
-                          num_docs=NUM_DOCS)
+            metadata=dict(
+                profiles=dict(
+                    Document=document_profile, DocumentArray=document_array_profile
+                ),
+                num_docs=NUM_DOCS,
+            ),
         )
     )

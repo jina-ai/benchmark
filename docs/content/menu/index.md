@@ -2,10 +2,10 @@
 headless: true
 ---
 
-- [Homepage]({{< relref "/" >}})
-- [2.0.19]({{< relref "/docs/2.0.19.md" >}})
-- [2.0.17]({{< relref "/docs/2.0.17.md" >}})
-- [2.0.16]({{< relref "/docs/2.0.16.md" >}})
-- [2.0.10]({{< relref "/docs/2.0.10.md" >}})
-- [2.0.9]({{< relref "/docs/2.0.9.md" >}})
-- [2.0.8]({{< relref "/docs/2.0.8.md" >}})
+- [Document Array Append]({{< relref "/docs/document-array-append.md" >}})
+- [Document Array Construct]({{< relref "/docs/document-array-construct.md" >}})
+- [Document Array Extend]({{< relref "/docs/document-array-extend.md" >}})
+- [Document Array Match]({{< relref "/docs/document-array-match.md" >}})
+- [Document Array Persistence]({{< relref "/docs/document-array-persistence.md" >}})
+- [Document Construct]({{< relref "/docs/document-construct.md" >}})
+- [Document Property Getter]({{< relref "/docs/document-property-getter.md" >}})

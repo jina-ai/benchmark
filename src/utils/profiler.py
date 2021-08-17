@@ -1,6 +1,6 @@
 import inspect
-from typing import List, Dict
 from statistics import mean, stdev
+from typing import Dict, List
 
 from .timecontext import TimeContext
 
@@ -38,9 +38,17 @@ def merge_profiles(profiles: List[Dict]) -> Dict:
 
     for function in avg_profile.keys():
         avg_time = mean(avg_profile[function]['time'])
-        stdev_time = stdev(avg_profile[function]['time']) if len(avg_profile[function]['time']) > 0 else None
+        stdev_time = (
+            stdev(avg_profile[function]['time'])
+            if len(avg_profile[function]['time']) > 0
+            else None
+        )
         avg_calls = mean(avg_profile[function]['calls'])
-        stdev_calls = stdev(avg_profile[function]['calls']) if len(avg_profile[function]['calls']) > 0 else None
+        stdev_calls = (
+            stdev(avg_profile[function]['calls'])
+            if len(avg_profile[function]['calls']) > 0
+            else None
+        )
         del avg_profile[function]['time']
         del avg_profile[function]['calls']
         avg_profile[function]['mean_time'] = avg_time
@@ -52,7 +60,6 @@ def merge_profiles(profiles: List[Dict]) -> Dict:
 
 
 class Profiler:
-
     def __init__(self, cls):
         self._cls = cls
         self.profile = {}
