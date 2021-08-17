@@ -1,9 +1,10 @@
 import random
 import string
+
 import numpy as np
 import pytest
-
 from jina import Document, __version__
+
 from .utils.benchmark import benchmark_time
 
 
@@ -73,6 +74,7 @@ def test_construct_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length),
         )
     )
@@ -93,6 +95,7 @@ def test_construct_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims),
         )
     )
@@ -113,6 +116,7 @@ def test_construct_buffer(buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length),
         )
     )
@@ -139,6 +143,7 @@ def test_construct_btyes_origin_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length),
         )
     )
@@ -165,6 +170,7 @@ def test_construct_btyes_origin_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims),
         )
     )
@@ -191,6 +197,7 @@ def test_construct_btyes_origin_buffer(buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length),
         )
     )
@@ -215,6 +222,7 @@ def test_construct_str_json_origin_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length),
         )
     )
@@ -237,6 +245,7 @@ def test_construct_str_json_origin_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims),
         )
     )
@@ -261,6 +270,7 @@ def test_construct_str_json_origin_buffer(buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length),
         )
     )
@@ -285,6 +295,7 @@ def test_construct_dict_origin_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length),
         )
     )
@@ -307,6 +318,7 @@ def test_construct_dict_origin_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims),
         )
     )
@@ -331,6 +343,7 @@ def test_construct_dict_origin_buffer(buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length),
         )
     )
@@ -354,6 +367,7 @@ def test_construct_document_origin_text(copy, text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length, copy=copy),
         )
     )
@@ -377,6 +391,7 @@ def test_construct_document_origin_blob(copy, num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims, copy=copy),
         )
     )
@@ -400,6 +415,7 @@ def test_construct_document_origin_buffer(copy, buffer_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length, copy=copy),
         )
     )
@@ -423,6 +439,7 @@ def test_construct_document_origin_text_proto(copy, text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length, copy=copy),
         )
     )
@@ -446,6 +463,7 @@ def test_construct_document_origin_blob_proto(copy, num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims, copy=copy),
         )
     )
@@ -471,6 +489,7 @@ def test_construct_document_origin_buffer_proto(copy, buffer_length, json_writer
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=buffer_length, copy=copy),
         )
     )

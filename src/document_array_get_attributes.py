@@ -1,13 +1,12 @@
 import os
 import string
-import pytest
 
-from faker import Faker
 import numpy as np
-
-
+import pytest
+from faker import Faker
 from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
+
 from .utils.benchmark import benchmark_time
 
 fake = Faker()
@@ -78,8 +77,8 @@ def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tm
         return (), dict(da=da)
 
     def _teardown():
-        import shutil
         import os
+        import shutil
 
         if os.path.exists(f'{str(tmpdir)}/memmap'):
             shutil.rmtree(f'{str(tmpdir)}/memmap')
@@ -98,6 +97,7 @@ def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tm
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=num_docs, field=field, memmap=memmap),
         )
     )
@@ -124,8 +124,8 @@ def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
         return (), dict(da=da)
 
     def _teardown():
-        import shutil
         import os
+        import shutil
 
         if os.path.exists(f'{str(tmpdir)}/memmap'):
             shutil.rmtree(f'{str(tmpdir)}/memmap')
@@ -144,6 +144,7 @@ def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=num_docs, memmap=memmap),
         )
     )

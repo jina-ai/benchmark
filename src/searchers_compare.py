@@ -147,6 +147,7 @@ def test_search_compare(
             std_memory=None,
             mean_indexer_memory=None,
             std_indexer_memory=None,
+            unit='ms',
             metadata=dict(
                 number_of_indexed_documents=number_of_indexed_documents,
                 embedding_size=emb_size,
@@ -230,6 +231,7 @@ def test_search_compare(
             std_indexer_memory=get_readable_size(std_indexer_memory)
             if std_indexer_memory
             else None,
+            unit='ms',
             metadata=dict(
                 number_of_indexed_documents=number_of_indexed_documents,
                 embedding_size=emb_size,

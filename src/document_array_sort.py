@@ -1,11 +1,10 @@
-import string
-import pytest
 import random
+import string
 
+import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
-
 
 NUM_REPETITIONS = 25
 NUM_DOCS = 1000
@@ -39,6 +38,7 @@ def test_da_sort(num_docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=num_docs),
         )
     )

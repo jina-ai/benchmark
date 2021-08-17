@@ -5,7 +5,7 @@ title: Document Array Construct
 
 ## Construct Document Array From Repeated Container
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Chunks | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Chunks | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.007219 | 0.000203 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.006901 | 0.00013 | +4.41% | 10000 | 5 |
@@ -14,7 +14,7 @@ title: Document Array Construct
 | 2.0.15 | 0.00912 | 0.000557 | -26.33% | 10000 | 5 |
 ## Construct Document Array From Another Documentarray
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Docs | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.002836 | 0.000452 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.002611 | 0.000526 | +7.9% | 10000 | 5 |
@@ -23,7 +23,7 @@ title: Document Array Construct
 | 2.0.15 | 0.003146 | 0.000351 | -10.94% | 10000 | 5 |
 ## Construct Document Array From List Of Documents
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Docs | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.005304 | 0.001257 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.004572 | 0.000845 | +13.8% | 10000 | 5 |
@@ -32,7 +32,7 @@ title: Document Array Construct
 | 2.0.15 | 0.005604 | 0.000418 | -5.66% | 10000 | 5 |
 ## Construct Document Array From Tuple Of Documents
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Docs | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.004536 | 0.000705 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.004428 | 0.000824 | +2.39% | 10000 | 5 |
@@ -41,7 +41,7 @@ title: Document Array Construct
 | 2.0.15 | 0.005126 | 0.000523 | -13.0% | 10000 | 5 |
 ## Construct Document Array From Generator
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Docs | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.562678 | 0.009249 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.559191 | 0.008755 | +0.62% | 10000 | 5 |
@@ -50,7 +50,7 @@ title: Document Array Construct
 | 2.0.15 | 0.536692 | 0.013138 | +4.62% | 10000 | 5 |
 ## Construct Document Array From Another Documentarray Memmap
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Docs | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Docs | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | master | 0.114281 | 0.007485 | 0.0% | 10000 | 5 |
 | 2.0.18 | 0.114257 | 0.002568 | +0.02% | 10000 | 5 |

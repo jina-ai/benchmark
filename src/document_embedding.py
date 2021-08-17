@@ -45,6 +45,7 @@ def test_document_encoder_executor(executor, input_docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(
                 profiles=dict(
                     Document=document_profile, DocumentArray=document_array_profile

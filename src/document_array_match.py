@@ -58,14 +58,14 @@ def _prepare_inputs_standard(
     )
 
 
-@pytest.mark.parametrize('size_X', [100, 1000])
-@pytest.mark.parametrize('size_Y', [10000, 100000])
-@pytest.mark.parametrize('dam_x', [True])
-@pytest.mark.parametrize('dam_y', [True, False])
+@pytest.mark.parametrize('size_X', [10])
+@pytest.mark.parametrize('size_Y', [100000])
+@pytest.mark.parametrize('dam_x', [False])
+@pytest.mark.parametrize('dam_y', [False])
 @pytest.mark.parametrize('emb_size', [256])
-@pytest.mark.parametrize('use_scipy', [True, False])
-@pytest.mark.parametrize('metric', ['cosine', 'euclidean'])
-@pytest.mark.parametrize('top_k', [100])
+@pytest.mark.parametrize('use_scipy', [False])
+@pytest.mark.parametrize('metric', ['euclidean'])
+@pytest.mark.parametrize('top_k', [3])
 def test_match(
     size_X: int,
     size_Y: int,
@@ -100,6 +100,7 @@ def test_match(
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(
                 size_X=size_X,
                 size_Y=size_Y,

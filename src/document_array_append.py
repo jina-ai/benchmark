@@ -1,9 +1,8 @@
 import pytest
-
 from faker import Faker
-
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
+
 from .utils.benchmark import benchmark_time
 
 fake = Faker()
@@ -32,6 +31,7 @@ def test_docarray_append(docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS),
         )
     )
@@ -61,6 +61,7 @@ def test_document_array_memmap_append(docs, flush, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS, flush=flush),
         )
     )

@@ -1,8 +1,6 @@
 import pytest
-
 from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
-
 
 from .utils.benchmark import benchmark_time
 
@@ -73,6 +71,7 @@ def test_document_array_traverse_flat(
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(
                 num_docs=num_docs,
                 num_matches=num_matches,

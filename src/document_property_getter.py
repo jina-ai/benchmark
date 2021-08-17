@@ -1,10 +1,10 @@
 import random
 import string
+
 import numpy as np
-
 import pytest
-
 from jina import Document, __version__
+
 from .utils.benchmark import benchmark_time
 
 
@@ -47,6 +47,7 @@ def test_get_content_text(text_length, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(text_length=text_length),
         )
     )
@@ -69,6 +70,7 @@ def test_get_content_blob(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_dims=num_dims),
         )
     )
@@ -113,6 +115,7 @@ def test_get_embedding(num_dims, json_writer):
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(buffer_length=num_dims),
         )
     )

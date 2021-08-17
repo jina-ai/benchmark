@@ -1,9 +1,8 @@
 import os
 import string
+
 import numpy as np
-
 import pytest
-
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
@@ -66,8 +65,8 @@ def test_da_extend(docs, label, memmap, json_writer, tmpdir):
         return (), dict(da=da)
 
     def _teardown():
-        import shutil
         import os
+        import shutil
 
         if os.path.exists(f'{str(tmpdir)}/memmap'):
             shutil.rmtree(f'{str(tmpdir)}/memmap')
@@ -86,6 +85,7 @@ def test_da_extend(docs, label, memmap, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(docs), label=label, memmap=memmap),
         )
     )

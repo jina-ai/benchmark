@@ -1,5 +1,4 @@
 import pytest
-
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
@@ -39,6 +38,7 @@ def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
         )
     )
@@ -71,6 +71,7 @@ def test_document_array_load(doc_array, file_format, json_writer, tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
         )
     )
