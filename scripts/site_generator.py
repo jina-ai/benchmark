@@ -141,11 +141,13 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                 raw_metadata = list(cum_data[k][v].values())[0]['metadata']
                 title, separator = _get_metadata_items(raw_metadata)
 
+                first_mean_time = cum_data[k][v][list(cum_data[k][v].keys())[0]][
+                    'mean_time'
+                ]
+                report_unit = 's' if first_mean_time > 1000 else 'ms'
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    '| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | {} | Iterations |\n'.format(
-                        title
-                    )
+                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. master | {title} | Iterations |\n'
                 )
                 fp.write(
                     '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
@@ -153,11 +155,17 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
 
                 for version in cum_data[k][v]:
                     _data = cum_data[k][v][version]
+                    mean_time = _data['mean_time']
+                    std_time = _data['std_time']
+                    if report_unit == 's':
+                        mean_time = mean_time // 1000
+                        std_time = std_time // 1000
+
                     fp.write(
                         '| {} | {} | {} | {} | {} | {} |\n'.format(
                             version,
-                            round(_data['mean_time'], 6),
-                            round(_data['std_time'], 6),
+                            round(mean_time, 6),
+                            round(std_time, 6),
                             __get_delta(
                                 _data['mean_time'],
                                 cum_data[k][v]['master']['mean_time'],
