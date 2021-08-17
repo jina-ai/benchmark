@@ -38,8 +38,11 @@ def benchmark_time(
     profiles_by_cls = {_cls: [] for _cls in profile_cls}
 
     for i in range(n):
+
         if setup is not None:
             new_args, new_kwargs = setup(*args, **kwargs)
+        else:
+            new_args, new_kwargs = args, kwargs
 
         ctx_manager = ExitStack()
 
