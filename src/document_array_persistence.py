@@ -1,6 +1,6 @@
 import pytest
 
-from jina import Document, DocumentArray, __version__
+from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
 

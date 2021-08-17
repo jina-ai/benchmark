@@ -39,14 +39,14 @@ def benchmark_time(
 
     for i in range(n):
         if setup is not None:
-            args, kwargs = setup(*args, **kwargs)
+            new_args, new_kwargs = setup(*args, **kwargs)
 
         ctx_manager = ExitStack()
 
         profiles = [ctx_manager.enter_context(Profiler(cls)) for cls in profile_cls]
         with ctx_manager:
             with TimeContext() as t:
-                func(*args, **kwargs)
+                func(*new_args, **new_kwargs)
 
         for p in profiles:
             profiles_by_cls[p._cls].append(p.profile)
