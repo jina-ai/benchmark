@@ -1,18 +1,19 @@
-from statistics import mean, stdev
-from typing import Any, Callable, Dict, Iterable, Optional, Tuple, List
 from contextlib import ExitStack
-from .timecontext import TimeContext
+from statistics import mean, stdev
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+
 from .profiler import Profiler, merge_profiles
+from .timecontext import TimeContext
 
 
 def benchmark_time(
-        func: Callable[[Any], Any],
-        n: int,
-        setup: Optional[Callable[[Any], Tuple[Iterable, Dict[str, Any]]]] = None,
-        teardown: Optional[Callable[[None], None]] = None,
-        profile_cls: Optional[List[type]] = [],
-        args: Optional[Tuple] = None,
-        kwargs: Optional[Dict] = None,
+    func: Callable[[Any], Any],
+    n: int,
+    setup: Optional[Callable[[Any], Tuple[Iterable, Dict[str, Any]]]] = None,
+    teardown: Optional[Callable[[None], None]] = None,
+    profile_cls: Optional[List[type]] = [],
+    args: Optional[Tuple] = None,
+    kwargs: Optional[Dict] = None,
 ):
     """Get average time and std by benchmarking a function multiple times
 
