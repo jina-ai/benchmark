@@ -50,23 +50,19 @@ def embedding_docs(num_docs):
 
 @pytest.mark.parametrize('memmap', [False, True])
 @pytest.mark.parametrize(
-    'field',
-    ['blob', 'text', 'buffer', 'embedding'],
+    'field, docs_get_fn',
+    [
+        ('blob', blob_docs),
+        ('text', text_docs),
+        ('buffer', buffer_docs),
+        ('embedding', embedding_docs),
+    ],
 )
 @pytest.mark.parametrize(
     'num_docs',
     [10, 100, 1000],
 )
-def test_da_get_attributes(field, memmap, num_docs, json_writer, tmpdir):
-    def _get_docs(field, num_docs):
-        fun_map = {
-            'blob': blob_docs,
-            'embedding': embedding_docs,
-            'text': text_docs,
-            'buffer': buffer_docs,
-        }
-        return fun_map[field](num_docs)
-
+def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tmpdir):
     def _get_attributes(da):
         da.get_attributes(*[field])
 
@@ -93,7 +89,7 @@ def test_da_get_attributes(field, memmap, num_docs, json_writer, tmpdir):
         func=_get_attributes,
         teardown=_teardown,
         n=NUM_REPETITIONS,
-        kwargs=dict(memmap=memmap, docs=_get_docs(field, num_docs)),
+        kwargs=dict(memmap=memmap, docs=docs_get_fn(num_docs)),
     )
 
     json_writer.append(
