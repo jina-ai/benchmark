@@ -20,7 +20,6 @@ def _generate_random_buffer(buffer_length):
 
 def _generate_random_blob(num_dims):
     # 1 and 3 can cover from audio signals to images. 3 dimensions make the memory too high
-    shape_length = random.randint(1, 2)
     shape = [random.randint(100, 200)] * num_dims
 
     return np.random.rand(*shape)
