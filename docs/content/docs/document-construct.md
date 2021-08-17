@@ -7,7 +7,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 1.2e-05 | 3e-06 | 10000 | 1000 |
+| master | 1.2e-05 | 4e-06 | 10000 | 1000 |
 | 2.0.18 | 1.2e-05 | 5e-06 | 10000 | 1000 |
 | 2.0.17 | 1.2e-05 | 4e-06 | 10000 | 1000 |
 | 2.0.16 | 9e-06 | 3e-06 | 10000 | 1000 |
@@ -16,7 +16,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 5.1e-05 | 8e-06 | 2 | 1000 |
+| master | 4.2e-05 | 7e-06 | 2 | 1000 |
 | 2.0.18 | 2.7e-05 | 6e-06 | 2 | 1000 |
 | 2.0.17 | 4.5e-05 | 8e-06 | 2 | 1000 |
 | 2.0.16 | 4.2e-05 | 7e-06 | 2 | 1000 |
@@ -43,7 +43,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 1.9e-05 | 1e-06 | 2 | 1000 |
+| master | 1.5e-05 | 1e-06 | 2 | 1000 |
 | 2.0.18 | 1.9e-05 | 1e-06 | 2 | 1000 |
 | 2.0.17 | 2.4e-05 | 2e-06 | 2 | 1000 |
 | 2.0.16 | 2.3e-05 | 1e-06 | 2 | 1000 |
@@ -61,7 +61,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 0.000391 | 8e-06 | 10000 | 1000 |
+| master | 0.00039 | 9e-06 | 10000 | 1000 |
 | 2.0.18 | 0.00039 | 9e-06 | 10000 | 1000 |
 | 2.0.17 | 0.000443 | 0.000921 | 10000 | 1000 |
 | 2.0.16 | 0.00039 | 9e-06 | 10000 | 1000 |
@@ -70,7 +70,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 0.000967 | 1.4e-05 | 2 | 1000 |
+| master | 0.000726 | 1.3e-05 | 2 | 1000 |
 | 2.0.18 | 0.001427 | 5.7e-05 | 2 | 1000 |
 | 2.0.17 | 0.002449 | 2.8e-05 | 2 | 1000 |
 | 2.0.16 | 0.001155 | 1.6e-05 | 2 | 1000 |
@@ -88,7 +88,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 0.000372 | 8e-06 | 10000 | 1000 |
+| master | 0.000371 | 9e-06 | 10000 | 1000 |
 | 2.0.18 | 0.000371 | 8e-06 | 10000 | 1000 |
 | 2.0.17 | 0.000393 | 1.2e-05 | 10000 | 1000 |
 | 2.0.16 | 0.000371 | 9e-06 | 10000 | 1000 |
@@ -97,7 +97,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: |
-| master | 0.001564 | 2.6e-05 | 2 | 1000 |
+| master | 0.001366 | 2.7e-05 | 2 | 1000 |
 | 2.0.18 | 0.001032 | 2.1e-05 | 2 | 1000 |
 | 2.0.17 | 0.000681 | 1.6e-05 | 2 | 1000 |
 | 2.0.16 | 0.001698 | 2e-05 | 2 | 1000 |
@@ -115,7 +115,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Text Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 4e-06 | 0.0 | 10000 | False | 1000 |
+| master | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 0.0 | 10000 | False | 1000 |
 | 2.0.17 | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.16 | 3e-06 | 0.0 | 10000 | False | 1000 |
@@ -124,7 +124,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Num Dims | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 4e-06 | 0.0 | 2 | False | 1000 |
+| master | 4e-06 | 1e-06 | 2 | False | 1000 |
 | 2.0.18 | 4e-06 | 1e-06 | 2 | False | 1000 |
 | 2.0.17 | 4e-06 | 1e-06 | 2 | False | 1000 |
 | 2.0.16 | 3e-06 | 0.0 | 2 | False | 1000 |
@@ -160,7 +160,7 @@ title: Document Construct
 
 | Version | Mean Time (s) | Std Time (s) | Buffer Length | Copy | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 4e-06 | 0.0 | 10000 | False | 1000 |
+| master | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.18 | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.17 | 4e-06 | 1e-06 | 10000 | False | 1000 |
 | 2.0.16 | 2e-06 | 0.0 | 10000 | False | 1000 |
