@@ -4,6 +4,28 @@ import json
 import os
 from typing import Any, Dict, List, Tuple
 
+import requests
+from packaging.version import parse
+
+
+def __get_latest_version(owner: str, repo: str) -> str:
+    """Return latest released version of Jina Core."""
+    res = requests.get(
+        "https://api.github.com/repos/{}/{}/releases/latest".format(owner, repo)
+    )
+    res_data = res.json()
+
+    return res_data["tag_name"].replace('v', '')
+
+
+def __get_delta(mean_time: float, master_mean_time: float) -> str:
+    delta = (1 - (mean_time / master_mean_time)) * 100
+
+    if delta > 0:
+        return "+{}%".format(round(delta, 2))
+    else:
+        return "{}%".format(round(delta, 2))
+
 
 def _cleaned_title(raw_heading: str) -> str:
     """Return cleaned title of artifact name."""
@@ -52,12 +74,18 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
     Return: Dict of cumulative data
     """
     data: Dict[Any, Any] = dict()
+    latest_version = __get_latest_version('jina-ai', 'jina')
 
     for version in version_list:
         report_file = os.path.join(artifacts_dir, version, 'report.json')
         if os.path.isfile(report_file):
             with open(report_file) as fp:
                 _raw_data = json.load(fp)
+
+            if version_list.index(version) == 0 and parse(version) >= parse(
+                latest_version
+            ):
+                version = 'master'
 
             for i in _raw_data:
                 k, v = i['name'].split('/')
@@ -119,9 +147,11 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                 report_unit = 's' if first_mean_time > 1000 else 'ms'
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | {title} | Iterations |\n'
+                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. master | {title} | Iterations |\n'
                 )
-                fp.write('| :---: | :---: | :---: | {} | :---: |\n'.format(separator))
+                fp.write(
+                    '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
+                )
 
                 for version in cum_data[k][v]:
                     _data = cum_data[k][v][version]
@@ -132,10 +162,14 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                         std_time = std_time // 1000
 
                     fp.write(
-                        '| {} | {} | {} | {} | {} |\n'.format(
+                        '| {} | {} | {} | {} | {} | {} |\n'.format(
                             version,
                             round(mean_time, 6),
                             round(std_time, 6),
+                            __get_delta(
+                                _data['mean_time'],
+                                cum_data[k][v]['master']['mean_time'],
+                            ),
                             ' | '.join(str(v) for v in _data['metadata'].values()),
                             _data['iterations'],
                         )
