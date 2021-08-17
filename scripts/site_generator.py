@@ -18,6 +18,15 @@ def __get_latest_version(owner: str, repo: str) -> str:
     return res_data["tag_name"].replace('v', '')
 
 
+def __get_delta(latest_mean_time: float, prev_mean_time: float) -> str:
+    delta = (1 - (latest_mean_time / prev_mean_time)) * 100
+
+    if delta > 0:
+        return "+{}%".format(round(delta, 2))
+    else:
+        return "{}%".format(round(delta, 2))
+
+
 def _cleaned_title(raw_heading: str) -> str:
     """Return cleaned title of artifact name."""
     return raw_heading.replace('test_', '').replace('_', ' ').title()
@@ -134,19 +143,33 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
 
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    '| Version | Mean Time (s) | Std Time (s) | {} | Iterations |\n'.format(
+                    '| Version | Mean Time (s) | Std Time (s) | Delta | {} | Iterations |\n'.format(
                         title
                     )
                 )
-                fp.write('| :---: | :---: | :---: | {} | :---: |\n'.format(separator))
+                fp.write(
+                    '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
+                )
 
                 for version in cum_data[k][v]:
+                    version_list = list(cum_data[k][v].keys())
+                    next_version_index = version_list.index(version) + 1
+
+                    if next_version_index < len(version_list):
+                        next_version = version_list[next_version_index]
+                    else:
+                        next_version = version
+
                     _data = cum_data[k][v][version]
                     fp.write(
-                        '| {} | {} | {} | {} | {} |\n'.format(
+                        '| {} | {} | {} | {} | {} | {} |\n'.format(
                             version,
                             round(_data['mean_time'], 6),
                             round(_data['std_time'], 6),
+                            __get_delta(
+                                _data['mean_time'],
+                                cum_data[k][v][next_version]['mean_time'],
+                            ),
                             ' | '.join(str(v) for v in _data['metadata'].values()),
                             _data['iterations'],
                         )
