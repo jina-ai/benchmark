@@ -21,25 +21,10 @@ def __get_latest_version(owner: str, repo: str) -> str:
 def __get_delta(latest_mean_time: float, prev_mean_time: float) -> str:
     delta = (1 - (latest_mean_time / prev_mean_time)) * 100
 
-    if delta > 10:
-        emoji = '🐎🐎🐎'
-    elif delta > 5:
-        emoji = '🐎🐎'
-    elif delta > 0:
-        emoji = '🐎'
-    elif delta < 0:
-        emoji = '🐢'
-    elif delta < -5:
-        emoji = '🐢🐢'
-    elif delta < -10:
-        emoji = '🐢🐢🐢'
-    else:
-        emoji = '😶'
-
     if delta > 0:
-        return "+{}% {}".format(round(delta, 2), emoji)
+        return "+{}%".format(round(delta, 2))
     else:
-        return "{}% {}".format(round(delta, 2), emoji)
+        return "{}%".format(round(delta, 2))
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -158,7 +143,7 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
 
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    '| Version | Mean Time (s) | Std Time (s) | Improvement | {} | Iterations |\n'.format(
+                    '| Version | Mean Time (s) | Std Time (s) | Delta | {} | Iterations |\n'.format(
                         title
                     )
                 )
