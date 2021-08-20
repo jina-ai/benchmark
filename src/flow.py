@@ -43,6 +43,7 @@ def test_local_flow_start(flow, ftype, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(flow=ftype, num_pods=NUM_PODS),
         )
     )
@@ -67,6 +68,7 @@ def test_local_flow_close(flow, ftype, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(flow=ftype, num_pods=NUM_PODS),
         )
     )
@@ -151,6 +153,7 @@ def test_flow_load_config(config, ftype, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(flow=ftype, num_pods=NUM_PODS),
         )
     )
