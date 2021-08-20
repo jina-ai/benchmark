@@ -9,7 +9,7 @@ from .timecontext import TimeContext
 def benchmark_time(
     func: Callable[[Any], Any],
     n: int,
-    setup: Optional[Callable[[Any], Tuple[Iterable, Dict[str, Any]]]] = None,
+    setup: Optional[Callable[[Any], Optional[Tuple[Iterable, Dict[str, Any]]]]] = None,
     teardown: Optional[Callable[[None], None]] = None,
     profile_cls: Optional[List[type]] = [],
     args: Optional[Tuple] = None,
