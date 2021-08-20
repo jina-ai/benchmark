@@ -50,17 +50,19 @@ def test_document_array_traverse_flat(
         da.traverse_flat(traversal_paths)
 
     def _build_da():
+        docs = _get_docs(num_docs)
+        for doc in docs:
+            if num_matches > 0:
+                doc.matches.extend(_get_docs(num_matches))
+            if num_chunks > 0:
+                doc.chunks.extend(_get_docs(num_matches))
+
         da = (
             DocumentArray()
             if not memmap
             else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
         )
-        da.extend(_get_docs(num_docs))
-        for doc in da:
-            if num_matches > 0:
-                doc.matches.extend(_get_docs(num_matches))
-            if num_chunks > 0:
-                doc.chunks.extend(_get_docs(num_matches))
+        da.extend(docs)
 
         return (), dict(da=da)
 
