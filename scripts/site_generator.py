@@ -18,6 +18,17 @@ def __get_latest_version(owner: str, repo: str) -> str:
     return res_data["tag_name"].replace('v', '')
 
 
+def __get_last_benchmarked_version(version_list: List[str]) -> str:
+    """Return last benchmarked version of Jina Core."""
+    latest_version = __get_latest_version('jina-ai', 'jina')
+    last_benchmarked_version = version_list[0]
+
+    if parse(last_benchmarked_version) >= parse(latest_version):
+        last_benchmarked_version = 'master'
+
+    return last_benchmarked_version
+
+
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
     delta = (1 - (mean_time / master_mean_time)) * 100
 
@@ -121,13 +132,18 @@ def generate_homepage(output_dir: str) -> None:
             fp.write(data)
 
 
-def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
+def generate_docs(
+    version_list: List[str], cum_data: Dict[Any, Any], output_dir: str
+) -> None:
     """This generate required docs from artifacts.
 
     Args:
+        version_list: List of versions found in reports.
         cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo docs directory.
     """
+    last_benchmarked_version: str = __get_last_benchmarked_version(version_list)
+
     for k in cum_data:
         output_file = os.path.join(output_dir, '{}.md'.format(_cleaned_slug(k)))
 
@@ -147,7 +163,7 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                 report_unit = 's' if first_mean_time > 1000 else 'ms'
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
-                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. master | {title} | Iterations |\n'
+                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. {last_benchmarked_version} | {title} | Iterations |\n'
                 )
                 fp.write(
                     '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
@@ -168,7 +184,7 @@ def generate_docs(cum_data: Dict[Any, Any], output_dir: str) -> None:
                             round(std_time, 6),
                             __get_delta(
                                 _data['mean_time'],
-                                cum_data[k][v]['master']['mean_time'],
+                                cum_data[k][v][last_benchmarked_version]['mean_time'],
                             ),
                             ' | '.join(str(v) for v in _data['metadata'].values()),
                             _data['iterations'],
@@ -208,7 +224,7 @@ def main():
     cum_data = _get_cum_data(version_list, artifacts_dir)
 
     generate_homepage(content_dir)
-    generate_docs(cum_data, docs_dir)
+    generate_docs(version_list, cum_data, docs_dir)
     generate_menus(cum_data, content_dir)
 
 
