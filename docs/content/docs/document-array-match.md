@@ -5,7 +5,7 @@ title: Document Array Match
 
 ## Match
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.19 | Size X | Size Y | Dam X | Dam Y | Emb Size | Use Scipy | Metric | Top K | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Size X | Size Y | Dam X | Dam Y | Emb Size | Use Scipy | Metric | Top K | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 8.148593 | 0.028661 | 0.0% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
 | 2.0.18 | 8.659391 | 0.100068 | -6.27% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |

@@ -85,6 +85,7 @@ def test_da_extend(docs, label, memmap, json_writer, ephemeral_tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(docs), label=label, memmap=memmap),
         )
     )

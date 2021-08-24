@@ -5,7 +5,7 @@ title: Document Property Getter
 
 ## Get Content Text
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.19 | Text Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | +1.35% | 10000 | 10000 |
@@ -14,7 +14,7 @@ title: Document Property Getter
 | 2.0.15 | 1e-06 | 0.0 | -1.79% | 10000 | 10000 |
 ## Get Content Blob
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.19 | Num Dims | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 2.1e-05 | 1e-06 | 0.0% | 2 | 10000 |
 | 2.0.18 | 2.7e-05 | 1e-06 | -32.54% | 2 | 10000 |
@@ -23,7 +23,7 @@ title: Document Property Getter
 | 2.0.15 | 1.7e-05 | 1e-06 | +15.17% | 2 | 10000 |
 ## Get Content Buffer
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | +3.29% | 10000 | 10000 |
@@ -32,7 +32,7 @@ title: Document Property Getter
 | 2.0.15 | 1e-06 | 0.0 | -1.57% | 10000 | 10000 |
 ## Get Embedding
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.19 | 1.4e-05 | 1e-06 | 0.0% | 2 | 10000 |
 | 2.0.18 | 1.1e-05 | 1e-06 | +22.43% | 2 | 10000 |

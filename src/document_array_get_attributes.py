@@ -99,6 +99,7 @@ def test_da_get_attributes(
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=num_docs, field=field, memmap=memmap),
         )
     )
@@ -145,6 +146,7 @@ def test_embeddings_property(memmap, num_docs, json_writer, ephemeral_tmpdir):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=num_docs, memmap=memmap),
         )
     )

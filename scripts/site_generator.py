@@ -142,6 +142,16 @@ def generate_docs(
         cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo docs directory.
     """
+
+    def _convert_to_unit(time, time_unit, target_unit):
+        if time_unit == target_unit:
+            return time
+        else:
+            if time_unit == 's' and target_unit == 'ms':
+                return time * 1000
+            elif time_unit == 'ms' and target_unit == 's':
+                return time / 1000
+
     last_benchmarked_version: str = __get_last_benchmarked_version(version_list)
 
     for k in cum_data:
@@ -157,10 +167,26 @@ def generate_docs(
                 raw_metadata = list(cum_data[k][v].values())[0]['metadata']
                 title, separator = _get_metadata_items(raw_metadata)
 
-                first_mean_time = cum_data[k][v][list(cum_data[k][v].keys())[0]][
-                    'mean_time'
-                ]
-                report_unit = 's' if first_mean_time > 1000 else 'ms'
+                mean_time_unit_by_version = {}
+                common_unit = 's'
+                for version, data in cum_data[k][v].items():
+                    version_unit = data.get('unit', 's')
+                    common_unit = version_unit if version_unit == 'ms' else common_unit
+                    mean_time_unit_by_version[version] = {
+                        'unit': data.get('unit', 's'),
+                        'time': data['mean_time'],
+                    }  # default to 's' because previously it was all 's'
+
+                for version, data in cum_data[k][v].items():
+                    version_unit = data.get('unit', 's')
+                    data['mean_time'] = _convert_to_unit(
+                        data['mean_time'], version_unit, common_unit
+                    )
+                    data['std_time'] = _convert_to_unit(
+                        data['std_time'], version_unit, common_unit
+                    )
+
+                report_unit = common_unit
                 fp.write('## {}\n\n'.format(_cleaned_title(v)))
                 fp.write(
                     f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. {last_benchmarked_version} | {title} | Iterations |\n'
@@ -169,13 +195,9 @@ def generate_docs(
                     '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
                 )
 
-                for version in cum_data[k][v]:
-                    _data = cum_data[k][v][version]
+                for version, _data in cum_data[k][v].items():
                     mean_time = _data['mean_time']
                     std_time = _data['std_time']
-                    if report_unit == 's':
-                        mean_time = mean_time // 1000
-                        std_time = std_time // 1000
 
                     fp.write(
                         '| {} | {} | {} | {} | {} | {} |\n'.format(

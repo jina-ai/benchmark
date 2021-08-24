@@ -52,6 +52,7 @@ def test_construct_document_array_from_repeated_container(doc_with_chunks, json_
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_chunks=NUM_DOCS),
         )
     )
@@ -69,6 +70,7 @@ def test_construct_document_array_from_another_documentarray(doc_array, json_wri
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(doc_array)),
         )
     )
@@ -86,6 +88,7 @@ def test_construct_document_array_from_list_of_documents(docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(docs)),
         )
     )
@@ -103,6 +106,7 @@ def test_construct_document_array_from_tuple_of_documents(tuple_docs, json_write
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(tuple_docs)),
         )
     )
@@ -125,6 +129,7 @@ def test_construct_document_array_from_generator(json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=NUM_DOCS),
         )
     )
@@ -144,6 +149,7 @@ def test_construct_document_array_from_another_documentarray_memmap(
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs=len(doc_array_memmap)),
         )
     )

@@ -31,6 +31,7 @@ def test_docarray_append(docs, json_writer):
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS),
         )
     )
@@ -60,6 +61,7 @@ def test_document_array_memmap_append(docs, flush, json_writer, ephemeral_tmpdir
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
+            unit='ms',
             metadata=dict(num_docs_append=NUM_DOCS, flush=flush),
         )
     )
