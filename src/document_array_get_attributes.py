@@ -61,7 +61,9 @@ def embedding_docs(num_docs):
     'num_docs',
     [10, 100, 1000],
 )
-def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tmpdir):
+def test_da_get_attributes(
+    field, docs_get_fn, memmap, num_docs, json_writer, ephemeral_tmpdir
+):
     def _get_attributes(da):
         da.get_attributes(*[field])
 
@@ -71,7 +73,7 @@ def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tm
         da = (
             DocumentArray()
             if not memmap
-            else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+            else DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap')
         )
         da.extend(docs)
         return (), dict(da=da)
@@ -80,8 +82,8 @@ def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tm
         import os
         import shutil
 
-        if os.path.exists(f'{str(tmpdir)}/memmap'):
-            shutil.rmtree(f'{str(tmpdir)}/memmap')
+        if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
+            shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
     mean_time, std_time = benchmark_time(
         setup=_build_da,
@@ -108,7 +110,7 @@ def test_da_get_attributes(field, docs_get_fn, memmap, num_docs, json_writer, tm
     'num_docs',
     [10, 100, 1000],
 )
-def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
+def test_embeddings_property(memmap, num_docs, json_writer, ephemeral_tmpdir):
     def _get_embeddings(da):
         da.embeddings
 
@@ -118,7 +120,7 @@ def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
         da = (
             DocumentArray()
             if not memmap
-            else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+            else DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap')
         )
         da.extend(docs)
         return (), dict(da=da)
@@ -127,8 +129,8 @@ def test_embeddings_property(memmap, num_docs, json_writer, tmpdir):
         import os
         import shutil
 
-        if os.path.exists(f'{str(tmpdir)}/memmap'):
-            shutil.rmtree(f'{str(tmpdir)}/memmap')
+        if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
+            shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
     mean_time, std_time = benchmark_time(
         setup=_build_da,

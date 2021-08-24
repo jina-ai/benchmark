@@ -41,23 +41,34 @@ def _build_da(num_docs, num_matches, num_chunks):
 )
 @pytest.mark.parametrize('memmap', [False, True])
 def test_document_array_traverse_flat(
-    num_docs, num_matches, num_chunks, traversal_paths, memmap, json_writer, tmpdir
+    num_docs,
+    num_matches,
+    num_chunks,
+    traversal_paths,
+    memmap,
+    json_writer,
+    ephemeral_tmpdir,
 ):
+    if num_docs == 1000 and num_chunks == 1000 and num_matches == 1000:
+        pytest.skip('problems with memory')
+
     def _traverse_flat(da):
         da.traverse_flat(traversal_paths)
 
     def _build_da():
-        da = (
-            DocumentArray()
-            if not memmap
-            else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
-        )
-        da.extend(_get_docs(num_docs))
-        for doc in da:
+        docs = _get_docs(num_docs)
+        for doc in docs:
             if num_matches > 0:
                 doc.matches.extend(_get_docs(num_matches))
             if num_chunks > 0:
                 doc.chunks.extend(_get_docs(num_matches))
+
+        da = (
+            DocumentArray()
+            if not memmap
+            else DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap')
+        )
+        da.extend(docs)
 
         return (), dict(da=da)
 

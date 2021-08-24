@@ -75,7 +75,7 @@ def test_match(
     use_scipy: bool,
     metric: str,
     top_k: int,
-    tmpdir,
+    ephemeral_tmpdir,
     json_writer,
 ):
     mean_time, std_time = benchmark_time(
@@ -89,7 +89,7 @@ def test_match(
             emb_size=emb_size,
             use_scipy=use_scipy,
             metric=metric,
-            dam_path=str(tmpdir),
+            dam_path=str(ephemeral_tmpdir),
             topk=top_k,
         ),
     )

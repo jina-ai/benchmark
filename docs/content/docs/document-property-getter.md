@@ -5,36 +5,36 @@ title: Document Property Getter
 
 ## Get Content Text
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Text Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
+| 2.0.19 | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | +1.35% | 10000 | 10000 |
 | 2.0.17 | 1e-06 | 0.0 | -2.33% | 10000 | 10000 |
 | 2.0.16 | 1e-06 | 0.0 | -0.33% | 10000 | 10000 |
 | 2.0.15 | 1e-06 | 0.0 | -1.79% | 10000 | 10000 |
 ## Get Content Blob
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Num Dims | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 2.1e-05 | 1e-06 | 0.0% | 2 | 10000 |
+| 2.0.19 | 2.1e-05 | 1e-06 | 0.0% | 2 | 10000 |
 | 2.0.18 | 2.7e-05 | 1e-06 | -32.54% | 2 | 10000 |
 | 2.0.17 | 2.3e-05 | 2e-06 | -12.05% | 2 | 10000 |
 | 2.0.16 | 2.9e-05 | 1e-06 | -42.67% | 2 | 10000 |
 | 2.0.15 | 1.7e-05 | 1e-06 | +15.17% | 2 | 10000 |
 ## Get Content Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Buffer Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
+| 2.0.19 | 1e-06 | 0.0 | 0.0% | 10000 | 10000 |
 | 2.0.18 | 1e-06 | 0.0 | +3.29% | 10000 | 10000 |
 | 2.0.17 | 1e-06 | 0.0 | -3.1% | 10000 | 10000 |
 | 2.0.16 | 1e-06 | 0.0 | -1.22% | 10000 | 10000 |
 | 2.0.15 | 1e-06 | 0.0 | -1.57% | 10000 | 10000 |
 ## Get Embedding
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. master | Buffer Length | Iterations |
+| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.19 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 1.4e-05 | 1e-06 | 0.0% | 2 | 10000 |
+| 2.0.19 | 1.4e-05 | 1e-06 | 0.0% | 2 | 10000 |
 | 2.0.18 | 1.1e-05 | 1e-06 | +22.43% | 2 | 10000 |
 | 2.0.17 | 2.2e-05 | 1e-06 | -53.7% | 2 | 10000 |
 | 2.0.16 | 1.3e-05 | 1e-06 | +11.06% | 2 | 10000 |

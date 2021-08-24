@@ -38,18 +38,18 @@ def test_docarray_append(docs, json_writer):
 
 
 @pytest.mark.parametrize('flush', [True, False])
-def test_document_array_memmap_append(docs, flush, json_writer, tmpdir):
+def test_document_array_memmap_append(docs, flush, json_writer, ephemeral_tmpdir):
     def _append(da):
         for doc in docs:
             da.append(doc, flush=flush)
 
     def _setup(**kwargs):
-        return (), dict(da=DocumentArrayMemmap(f'{str(tmpdir)}/memmap'))
+        return (), dict(da=DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap'))
 
     def _teardown():
         import shutil
 
-        shutil.rmtree(f'{str(tmpdir)}/memmap')
+        shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
     mean_time, std_time = benchmark_time(
         setup=_setup, func=_append, teardown=_teardown, n=NUM_REPETITIONS

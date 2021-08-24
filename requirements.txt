@@ -1,5 +1,6 @@
 pympler==0.9
 faker==8.11.0
+memory-profiler==0.58.0
 packaging==21.0
 pytest==6.2.4
 pytest-json-report==1.4.0
