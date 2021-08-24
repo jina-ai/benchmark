@@ -130,7 +130,7 @@ def test_search_compare(
     emb_size,
     dam_index,
     warmup,
-    tmpdir,
+    ephemeral_tmpdir,
     searchers_compare_writer,
 ):
     if warmup and not dam_index:
@@ -168,7 +168,7 @@ def test_search_compare(
             dam_index=dam_index,
             number_of_documents=number_of_indexed_documents,
             embedding_size=emb_size,
-            dir_path=str(tmpdir),
+            dir_path=str(ephemeral_tmpdir),
         )
 
         return DocumentArraySearcher(

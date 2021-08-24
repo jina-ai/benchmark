@@ -1,9 +1,8 @@
 import os
 import string
+
 import numpy as np
-
 import pytest
-
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
@@ -52,7 +51,7 @@ def buffer_docs():
         (buffer_docs(), 'buffer'),
     ],
 )
-def test_da_extend(docs, label, memmap, json_writer, tmpdir):
+def test_da_extend(docs, label, memmap, json_writer, ephemeral_tmpdir):
     def _extend(da):
         da.extend(docs)
 
@@ -61,16 +60,16 @@ def test_da_extend(docs, label, memmap, json_writer, tmpdir):
         da = (
             DocumentArray()
             if not memmap
-            else DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+            else DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap')
         )
         return (), dict(da=da)
 
     def _teardown():
-        import shutil
         import os
+        import shutil
 
-        if os.path.exists(f'{str(tmpdir)}/memmap'):
-            shutil.rmtree(f'{str(tmpdir)}/memmap')
+        if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
+            shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
     mean_time, std_time = benchmark_time(
         setup=_build_da,

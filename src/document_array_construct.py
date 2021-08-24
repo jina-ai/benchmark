@@ -1,9 +1,8 @@
 import pytest
-
 from faker import Faker
-
 from jina import Document, DocumentArray, __version__
 from jina.types.arrays.memmap import DocumentArrayMemmap
+
 from .utils.benchmark import benchmark_time
 
 fake = Faker()
@@ -35,8 +34,8 @@ def doc_array(docs):
 
 
 @pytest.fixture
-def doc_array_memmap(docs, tmpdir):
-    dam = DocumentArrayMemmap(f'{str(tmpdir)}/memmap')
+def doc_array_memmap(docs, ephemeral_tmpdir):
+    dam = DocumentArrayMemmap(f'{str(ephemeral_tmpdir)}/memmap')
     dam.extend(docs)
     return dam
 
