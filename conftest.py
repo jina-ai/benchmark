@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from jina import __version__
 
 
@@ -21,3 +20,11 @@ def json_writer(pytestconfig):
     file_name = pytestconfig.getoption("output_file")
     with open(f'{output_dir}/{file_name}', 'w+') as file:
         json.dump(results, file)
+
+
+@pytest.fixture()
+def ephemeral_tmpdir(tmpdir):
+    yield tmpdir
+
+    import shutil
+    shutil.rmtree(str(tmpdir))

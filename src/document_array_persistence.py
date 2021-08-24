@@ -1,5 +1,4 @@
 import pytest
-
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
@@ -17,9 +16,9 @@ def doc_array():
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
+def test_document_array_save(doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
-    file = f'{str(tmpdir)}/doc_array.{extension}'
+    file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
     def _save():
         doc_array.save(file, file_format=file_format)
@@ -45,9 +44,9 @@ def test_document_array_save(doc_array, file_format, json_writer, tmpdir):
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_document_array_load(doc_array, file_format, json_writer, tmpdir):
+def test_document_array_load(doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
-    file = f'{str(tmpdir)}/doc_array.{extension}'
+    file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
     def _save():
         doc_array.save(file, file_format=file_format)
