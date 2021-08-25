@@ -118,6 +118,10 @@ def searchers_compare_writer(pytestconfig):
         json.dump(results, file)
 
 
+@pytest.mark.skipif(
+    'JINA_BENCHMARK_SEARCHERS' not in os.environ,
+    reason='This test take a lot of time, to be run explicitly and isolated from the rest',
+)
 @pytest.mark.timeout(3600)
 @pytest.mark.parametrize('number_of_indexed_documents', [10000, 100000, 1000000])
 @pytest.mark.parametrize('number_of_documents_request', [1, 32, 64])
