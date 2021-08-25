@@ -32,7 +32,7 @@ NUM_DOCS = 10000
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
 def test_get_attributes_text(text_length, json_writer):
     def _doc_get(doc):
-        _ = doc.get_attributes(['text'])
+        _ = doc.get_attributes(*['text'])
 
     mean_time, std_time = benchmark_time(
         _doc_get,
@@ -54,7 +54,7 @@ def test_get_attributes_text(text_length, json_writer):
 @pytest.mark.parametrize('num_dims', [1, 2])
 def test_get_attribute_blob(num_dims, json_writer):
     def _doc_get(doc):
-        _ = doc.get_attributes(['blob'])
+        _ = doc.get_attributes(*['blob'])
 
     mean_time, std_time = benchmark_time(
         _doc_get,
@@ -76,7 +76,7 @@ def test_get_attribute_blob(num_dims, json_writer):
 @pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
 def test_get_attribute_buffer(buffer_length, json_writer):
     def _doc_get(doc):
-        _ = doc.get_attributes(['buffer'])
+        _ = doc.get_attributes(*['buffer'])
 
     mean_time, std_time = benchmark_time(
         _doc_get,
