@@ -8,13 +8,22 @@ title: Flow
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Flow | Num Pods | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 993.4 | 82.430577 | 0.0% | wide | 10 | 5 |
+| 2.0.21.dev36 | 1006.8 | 64.565471 | -1.35% | wide | 10 | 5 |
+| 2.0.21.dev35 | 1025.4 | 93.641871 | -3.22% | wide | 10 | 5 |
+| 2.0.21.dev33 | 1010.4 | 75.79116 | -1.71% | wide | 10 | 5 |
 ## Local Flow Close
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Flow | Num Pods | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 565 | 6.041523 | 0.0% | wide | 10 | 5 |
+| 2.0.21.dev36 | 597 | 10.793517 | -5.66% | wide | 10 | 5 |
+| 2.0.21.dev35 | 594.8 | 5.932959 | -5.27% | wide | 10 | 5 |
+| 2.0.21.dev33 | 603.2 | 9.418068 | -6.76% | wide | 10 | 5 |
 ## Flow Load Config
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Flow | Num Pods | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 35 | 0.0 | 0.0% | wide | 10 | 5 |
+| 2.0.21.dev36 | 38.2 | 0.447214 | -9.14% | wide | 10 | 5 |
+| 2.0.21.dev35 | 38.2 | 0.447214 | -9.14% | wide | 10 | 5 |
+| 2.0.21.dev33 | 37.8 | 0.447214 | -8.0% | wide | 10 | 5 |
