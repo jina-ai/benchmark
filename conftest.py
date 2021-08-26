@@ -15,7 +15,11 @@ def json_writer(pytestconfig):
 
     from os import environ
     from pathlib import Path
-    output_dir = 'docs/static/artifacts/{}'.format(environ.get('JINA_VERSION', __version__))
+
+    version = environ.get('JINA_VERSION', __version__)
+    output_dir = 'docs/static/artifacts/{}'.format(
+        version[1:] if version.startswith('v') else version
+    )
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     file_name = pytestconfig.getoption("output_file")
@@ -28,4 +32,5 @@ def ephemeral_tmpdir(tmpdir):
     yield tmpdir
 
     import shutil
+
     shutil.rmtree(str(tmpdir))
