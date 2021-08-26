@@ -5,16 +5,16 @@ title: Document Set Attributes
 
 ## Set Attribute Text
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 4.5599 | 0.496424 | 0.0% | 10000 | 10000 |
+| 2.0.21.dev38 | 4.4156 | 0.49285 | 0.0% | 10000 | 10000 |
 ## Set Attribute Blob
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 0.2074 | 0.405465 | 0.0% | 2 | 10000 |
+| 2.0.21.dev38 | 0.1743 | 0.379386 | 0.0% | 2 | 10000 |
 ## Set Attribute Buffer
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. master | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| master | 0.8412 | 0.365508 | 0.0% | 10000 | 10000 |
+| 2.0.21.dev38 | 0.8592 | 0.347833 | 0.0% | 10000 | 10000 |

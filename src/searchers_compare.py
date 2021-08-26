@@ -112,9 +112,13 @@ def searchers_compare_writer(pytestconfig):
     from pathlib import Path
 
     version = os.environ.get('JINA_VERSION', __version__)
-    output_dir = 'docs/static/artifacts/{}'.format(
-        version[1:] if version.startswith('v') else version
-    )
+
+    if version == 'master':
+        version = __version__
+    elif version.startswith('v'):
+        version = version[1:]
+
+    output_dir = f'docs/static/artifacts/{version}'
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     with open(f'{output_dir}/searchers_compare.json', 'w+') as file:
