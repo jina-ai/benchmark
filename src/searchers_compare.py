@@ -111,8 +111,9 @@ def searchers_compare_writer(pytestconfig):
 
     from pathlib import Path
 
+    version = os.environ.get('JINA_VERSION', __version__)
     output_dir = 'docs/static/artifacts/{}'.format(
-        os.environ.get('JINA_VERSION', __version__)
+        version[1:] if version.startswith('v') else version
     )
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
