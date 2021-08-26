@@ -13,8 +13,9 @@ def json_writer(pytestconfig):
     results = []
     yield results
 
+    from os import environ
     from pathlib import Path
-    output_dir = 'docs/static/artifacts/{}'.format(__version__)
+    output_dir = 'docs/static/artifacts/{}'.format(environ.get('JINA_VERSION', __version__))
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     file_name = pytestconfig.getoption("output_file")
