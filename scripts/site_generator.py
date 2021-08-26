@@ -4,27 +4,7 @@ import json
 import os
 from typing import Any, Dict, List, Tuple
 
-import requests
 from packaging.version import parse
-
-
-def __get_latest_version(owner: str, repo: str) -> str:
-    """Return latest released version of Jina Core."""
-    res = requests.get(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
-    res_data = res.json()
-
-    return res_data["tag_name"].replace('v', '')
-
-
-def __get_last_benchmarked_version(version_list: List[str]) -> str:
-    """Return last benchmarked version of Jina Core."""
-    latest_version = __get_latest_version('jina-ai', 'jina')
-    last_benchmarked_version = version_list[0]
-
-    if parse(last_benchmarked_version) >= parse(latest_version):
-        last_benchmarked_version = 'master'
-
-    return last_benchmarked_version
 
 
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
@@ -84,7 +64,9 @@ def _get_version_list(artifacts_dir: str) -> List[str]:
         if os.path.isfile(os.path.join(artifacts_dir, folder, 'report.json')):
             version_list.append(folder)
 
-    version_list.sort(key=lambda s: [int(u) for u in s.split('.')], reverse=True)
+    version_list.sort(
+        key=lambda s: [int(u.replace('dev', '')) for u in s.split('.')], reverse=True
+    )
 
     return version_list
 
@@ -99,18 +81,12 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
     Return: Dict of cumulative data
     """
     data: Dict[Any, Any] = dict()
-    latest_version = __get_latest_version('jina-ai', 'jina')
 
     for version in version_list:
         report_file = os.path.join(artifacts_dir, version, 'report.json')
         if os.path.isfile(report_file):
             with open(report_file) as fp:
                 _raw_data = json.load(fp)
-
-            if version_list.index(version) == 0 and parse(version) >= parse(
-                latest_version
-            ):
-                version = 'master'
 
             for i in _raw_data:
                 k, v = i['name'].split('/')
@@ -166,7 +142,7 @@ def generate_docs(
             elif time_unit == 'ms' and target_unit == 's':
                 return time / 1000
 
-    last_benchmarked_version: str = __get_last_benchmarked_version(version_list)
+    last_benchmarked_version: str = version_list[0]
 
     for k in cum_data:
         output_file = os.path.join(output_dir, f'{_cleaned_slug(k)}.md')
