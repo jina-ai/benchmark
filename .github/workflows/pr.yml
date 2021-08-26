@@ -39,3 +39,35 @@ jobs:
           python scripts/site_generator.py
           git status
           git diff-index --quiet HEAD -- || exit 1
+
+  generate-site:
+    runs-on: ubuntu-latest
+    if: ${{ failure() }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: site generation
+        run: |
+          pip install requests==2.26.0 packaging==21.0
+          python scripts/site_generator.py
+
+      - name: Commit files
+        run: |
+          git config user.name "Jina Dev Bot"
+          git config user.email bot@jina.ai
+          git add -A
+          git commit -m "chore: added generated site"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.JINA_DEV_BOT }}
+          branch: ${{ github.head_ref }}

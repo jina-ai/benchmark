@@ -10,9 +10,7 @@ from packaging.version import parse
 
 def __get_latest_version(owner: str, repo: str) -> str:
     """Return latest released version of Jina Core."""
-    res = requests.get(
-        "https://api.github.com/repos/{}/{}/releases/latest".format(owner, repo)
-    )
+    res = requests.get(f"https://api.github.com/repos/{owner}/{repo}/releases/latest")
     res_data = res.json()
 
     return res_data["tag_name"].replace('v', '')
@@ -30,12 +28,16 @@ def __get_last_benchmarked_version(version_list: List[str]) -> str:
 
 
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
-    delta = (1 - (mean_time / master_mean_time)) * 100
+    try:
+        delta = (1 - (mean_time / master_mean_time)) * 100
 
-    if delta > 0:
-        return "+{}%".format(round(delta, 2))
-    else:
-        return "{}%".format(round(delta, 2))
+        if delta > 0:
+            return f"+{round(delta, 2)}%"
+        else:
+            return f"{round(delta, 2)}%"
+
+    except ZeroDivisionError:
+        return "N/A"
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -48,12 +50,24 @@ def _cleaned_slug(raw_heading: str) -> str:
     return raw_heading.replace('test_', '').replace('_', '-')
 
 
-def _get_metadata_items(raw_metadata: Dict[str, Any]) -> Tuple[str, str]:
+def __get_metadata_titles(raw_data: Dict[str, Any]) -> Tuple[str, str]:
     """Return metadata table title and table separator."""
-    _keys = raw_metadata.keys()
-    title = ' | '.join(_cleaned_title(k) for k in _keys)
-    separator = ' | '.join([':---:'] * len(_keys))
-    return title, separator
+    if 'metadata' in raw_data:
+        _keys = raw_data['metadata'].keys()
+        title = ' | '.join(_cleaned_title(k) for k in _keys)
+        separator = ' | '.join([':---:'] * len(_keys))
+        return title, separator
+    else:
+        return 'Metadata', ':---:'
+
+
+def __get_metadata_values(raw_data: Dict[str, Any]) -> str:
+    """Return metadata table values."""
+    if 'metadata' in raw_data:
+        values = ' | '.join(str(v) for v in raw_data['metadata'].values())
+        return values
+    else:
+        return 'N/A'
 
 
 def _get_version_list(artifacts_dir: str) -> List[str]:
@@ -155,17 +169,18 @@ def generate_docs(
     last_benchmarked_version: str = __get_last_benchmarked_version(version_list)
 
     for k in cum_data:
-        output_file = os.path.join(output_dir, '{}.md'.format(_cleaned_slug(k)))
+        output_file = os.path.join(output_dir, f'{_cleaned_slug(k)}.md')
 
         with open(output_file, 'w') as fp:
             fp.write('---\n')
-            fp.write('title: {}\n'.format(_cleaned_title(k)))
+            fp.write(f'title: {_cleaned_title(k)}\n')
             fp.write('---\n')
-            fp.write('# {}\n\n'.format(_cleaned_title(k)))
+            fp.write(f'# {_cleaned_title(k)}\n\n')
 
             for v in cum_data[k]:
-                raw_metadata = list(cum_data[k][v].values())[0]['metadata']
-                title, separator = _get_metadata_items(raw_metadata)
+                title, separator = __get_metadata_titles(
+                    list(cum_data[k][v].values())[0]
+                )
 
                 mean_time_unit_by_version = {}
                 common_unit = 's'
@@ -187,30 +202,21 @@ def generate_docs(
                     )
 
                 report_unit = common_unit
-                fp.write('## {}\n\n'.format(_cleaned_title(v)))
+                fp.write(f'## {_cleaned_title(v)}\n\n')
                 fp.write(
                     f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. {last_benchmarked_version} | {title} | Iterations |\n'
                 )
-                fp.write(
-                    '| :---: | :---: | :---: | :---: | {} | :---: |\n'.format(separator)
-                )
+                fp.write(f'| :---: | :---: | :---: | :---: | {separator} | :---: |\n')
 
                 for version, _data in cum_data[k][v].items():
-                    mean_time = _data['mean_time']
                     std_time = _data['std_time']
+                    mean_time = _data['mean_time']
+                    wrt_mean_time = cum_data[k][v][last_benchmarked_version][
+                        'mean_time'
+                    ]
 
                     fp.write(
-                        '| {} | {} | {} | {} | {} | {} |\n'.format(
-                            version,
-                            round(mean_time, 6),
-                            round(std_time, 6),
-                            __get_delta(
-                                _data['mean_time'],
-                                cum_data[k][v][last_benchmarked_version]['mean_time'],
-                            ),
-                            ' | '.join(str(v) for v in _data['metadata'].values()),
-                            _data['iterations'],
-                        )
+                        f'| {version} | {round(mean_time, 6)} | {round(std_time, 6)} | {__get_delta(mean_time, wrt_mean_time)} | {__get_metadata_values(_data)} | {_data["iterations"]} |\n'
                     )
 
 
