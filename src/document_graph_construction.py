@@ -44,21 +44,27 @@ def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer
 @pytest.mark.parametrize('n_edges', [10_000, 20_000])
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_edges_assuming_all_nodes_present(n_nodes, n_edges, json_writer):
+    def _setup():
+        docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
+        sources = [random.choice(docs) for i in range(n_edges)]
+        targets = [random.choice(docs) for i in range(n_edges)]
+        edge_features = [
+            {'text': f'I connect Doc{i} and Doc{j}'} for i, j in zip(sources, targets)
+        ]
+        graph = GraphDocument()
+        graph.add_nodes(docs)
+        return (), dict(
+            graph=graph, sources=sources, targets=targets, edge_features=edge_features
+        )
 
-    docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
-    sources = [random.choice(docs) for i in range(n_edges)]
-    targets = [random.choice(docs) for i in range(n_edges)]
-    edge_features = [
-        {'text': f'I connect Doc{i} and Doc{j}'} for i, j in zip(sources, targets)
-    ]
-    graph = GraphDocument()
-    graph.add_nodes(docs)
-
-    def _build_graph_doc():
+    def _build_graph_doc(graph, sources, targets, edge_features):
         graph.add_edges(sources, targets, edge_features=edge_features)
-        return graph
 
-    mean_time, std_time = benchmark_time(func=_build_graph_doc, n=NUM_REPETITIONS)
+    mean_time, std_time = benchmark_time(
+        setup=_setup,
+        func=_build_graph_doc,
+        n=NUM_REPETITIONS,
+    )
 
     json_writer.append(
         dict(
