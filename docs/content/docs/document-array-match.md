@@ -18,4 +18,5 @@ title: Document Array Match
 | 2.0.18 | 8.66 | 0.1 | +99.34% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
 | 2.0.17 | 8.81 | 0.07 | +99.33% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
 | 2.0.14 | 1488 | 19.33 | -13.41% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
+| 2.0.13 | 2175.4 | 23.09 | -65.81% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.12 | 2140.4 | 29.58 | -63.14% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
