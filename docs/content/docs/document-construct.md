@@ -17,6 +17,7 @@ title: Document Construct
 | 2.0.17 | 0.011968 | 0.004266 | +20.21% | 10000 | 1000 |
 | 2.0.16 | 0.009115 | 0.003213 | +39.24% | 10000 | 1000 |
 | 2.0.15 | 0.009331 | 0.005598 | +37.79% | 10000 | 1000 |
+| 2.0.12 | 0.055 | 0.228094 | -266.67% | 10000 | 1000 |
 ## Construct Blob
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
@@ -31,6 +32,7 @@ title: Document Construct
 | 2.0.17 | 0.04527 | 0.008216 | +16.17% | 2 | 1000 |
 | 2.0.16 | 0.024614 | 0.004933 | +54.42% | 2 | 1000 |
 | 2.0.15 | 0.024722 | 0.006404 | +54.22% | 2 | 1000 |
+| 2.0.12 | 0.306 | 0.46106 | -466.67% | 2 | 1000 |
 ## Construct Buffer
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
@@ -45,6 +47,7 @@ title: Document Construct
 | 2.0.17 | 0.01062 | 0.003709 | +37.53% | 10000 | 1000 |
 | 2.0.16 | 0.008316 | 0.002704 | +51.08% | 10000 | 1000 |
 | 2.0.15 | 0.008483 | 0.003905 | +50.1% | 10000 | 1000 |
+| 2.0.12 | 0.057 | 0.231959 | -235.29% | 10000 | 1000 |
 ## Construct Bytes Origin Text
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
@@ -59,6 +62,7 @@ title: Document Construct
 | 2.0.17 | 0.012441 | 0.001073 | +4.3% | 10000 | 1000 |
 | 2.0.16 | 0.011577 | 0.001056 | +10.95% | 10000 | 1000 |
 | 2.0.15 | 0.012147 | 0.001508 | +6.56% | 10000 | 1000 |
+| 2.0.12 | 0.071 | 0.256953 | -446.15% | 10000 | 1000 |
 ## Construct Bytes Origin Blob
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
@@ -73,6 +77,7 @@ title: Document Construct
 | 2.0.17 | 0.023873 | 0.001757 | -25.65% | 2 | 1000 |
 | 2.0.16 | 0.022759 | 0.001677 | -19.79% | 2 | 1000 |
 | 2.0.15 | 0.024992 | 0.001643 | -31.54% | 2 | 1000 |
+| 2.0.12 | 0.272 | 0.445213 | -1331.58% | 2 | 1000 |
 ## Construct Bytes Origin Buffer
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
@@ -87,6 +92,7 @@ title: Document Construct
 | 2.0.17 | 0.011876 | 0.000856 | +1.03% | 10000 | 1000 |
 | 2.0.16 | 0.011078 | 0.001016 | +7.68% | 10000 | 1000 |
 | 2.0.15 | 0.011417 | 0.00108 | +4.86% | 10000 | 1000 |
+| 2.0.12 | 0.073 | 0.260267 | -508.33% | 10000 | 1000 |
 ## Construct Str Json Origin Text
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
@@ -101,6 +107,7 @@ title: Document Construct
 | 2.0.17 | 0.443311 | 0.921139 | -9.19% | 10000 | 1000 |
 | 2.0.16 | 0.41308 | 0.008928 | -1.74% | 10000 | 1000 |
 | 2.0.15 | 0.413645 | 0.009737 | -1.88% | 10000 | 1000 |
+| 2.0.12 | 0.472 | 0.499465 | -16.26% | 10000 | 1000 |
 ## Construct Str Json Origin Blob
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
@@ -115,6 +122,7 @@ title: Document Construct
 | 2.0.17 | 2.449057 | 0.028172 | -17.12% | 2 | 1000 |
 | 2.0.16 | 0.887802 | 0.051625 | +57.54% | 2 | 1000 |
 | 2.0.15 | 1.686884 | 0.021758 | +19.33% | 2 | 1000 |
+| 2.0.12 | 2.408 | 0.491709 | -15.16% | 2 | 1000 |
 ## Construct Str Json Origin Buffer
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
@@ -129,6 +137,7 @@ title: Document Construct
 | 2.0.17 | 0.126435 | 0.008674 | +6.34% | 10000 | 1000 |
 | 2.0.16 | 0.125214 | 0.007627 | +7.25% | 10000 | 1000 |
 | 2.0.15 | 0.127169 | 0.010559 | +5.8% | 10000 | 1000 |
+| 2.0.12 | 0.204 | 0.403171 | -51.11% | 10000 | 1000 |
 ## Construct Dict Origin Text
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
@@ -143,6 +152,7 @@ title: Document Construct
 | 2.0.17 | 0.393499 | 0.011793 | -4.1% | 10000 | 1000 |
 | 2.0.16 | 0.391532 | 0.008607 | -3.58% | 10000 | 1000 |
 | 2.0.15 | 0.392198 | 0.009661 | -3.76% | 10000 | 1000 |
+| 2.0.12 | 0.442 | 0.496873 | -16.93% | 10000 | 1000 |
 ## Construct Dict Origin Blob
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
@@ -157,6 +167,7 @@ title: Document Construct
 | 2.0.17 | 0.680544 | 0.015569 | +30.77% | 2 | 1000 |
 | 2.0.16 | 1.557266 | 0.02227 | -58.42% | 2 | 1000 |
 | 2.0.15 | 1.850624 | 0.024971 | -88.26% | 2 | 1000 |
+| 2.0.12 | 1.484 | 0.499994 | -50.97% | 2 | 1000 |
 ## Construct Dict Origin Buffer
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
@@ -171,6 +182,7 @@ title: Document Construct
 | 2.0.17 | 0.1018 | 0.009066 | +4.86% | 10000 | 1000 |
 | 2.0.16 | 0.100401 | 0.006278 | +6.17% | 10000 | 1000 |
 | 2.0.15 | 0.101619 | 0.008027 | +5.03% | 10000 | 1000 |
+| 2.0.12 | 0.179 | 0.383544 | -67.29% | 10000 | 1000 |
 ## Construct Document Origin Text
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Copy | Iterations |
@@ -185,6 +197,7 @@ title: Document Construct
 | 2.0.17 | 0.004123 | 0.0006 | +17.55% | 10000 | False | 1000 |
 | 2.0.16 | 0.002738 | 0.000468 | +45.24% | 10000 | False | 1000 |
 | 2.0.15 | 0.002806 | 0.00073 | +43.88% | 10000 | False | 1000 |
+| 2.0.12 | 0.061 | 0.23945 | -1120.0% | 10000 | False | 1000 |
 ## Construct Document Origin Blob
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Copy | Iterations |
@@ -199,6 +212,7 @@ title: Document Construct
 | 2.0.17 | 0.00417 | 0.000677 | +53.67% | 2 | False | 1000 |
 | 2.0.16 | 0.002743 | 0.000244 | +69.52% | 2 | False | 1000 |
 | 2.0.15 | 0.0028 | 0.000519 | +68.89% | 2 | False | 1000 |
+| 2.0.12 | 0.548 | 0.49794 | -5988.89% | 2 | False | 1000 |
 ## Construct Document Origin Buffer
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Copy | Iterations |
@@ -213,6 +227,7 @@ title: Document Construct
 | 2.0.17 | 0.004141 | 0.000401 | +58.59% | 10000 | False | 1000 |
 | 2.0.16 | 0.002821 | 0.001082 | +71.79% | 10000 | False | 1000 |
 | 2.0.15 | 0.00277 | 0.000467 | +72.3% | 10000 | False | 1000 |
+| 2.0.12 | 0.059 | 0.235743 | -490.0% | 10000 | False | 1000 |
 ## Construct Document Origin Text Proto
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Copy | Iterations |
@@ -227,6 +242,7 @@ title: Document Construct
 | 2.0.17 | 0.003699 | 0.000493 | +63.01% | 10000 | False | 1000 |
 | 2.0.16 | 0.00233 | 0.000426 | +76.7% | 10000 | False | 1000 |
 | 2.0.15 | 0.002402 | 0.000176 | +75.98% | 10000 | False | 1000 |
+| 2.0.12 | 0.062 | 0.241276 | -520.0% | 10000 | False | 1000 |
 ## Construct Document Origin Blob Proto
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Copy | Iterations |
@@ -241,6 +257,7 @@ title: Document Construct
 | 2.0.17 | 0.003666 | 0.000706 | +59.27% | 2 | False | 1000 |
 | 2.0.16 | 0.002326 | 0.000381 | +74.16% | 2 | False | 1000 |
 | 2.0.15 | 0.002292 | 0.000183 | +74.53% | 2 | False | 1000 |
+| 2.0.12 | 0.174 | 0.379299 | -1833.33% | 2 | False | 1000 |
 ## Construct Document Origin Buffer Proto
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Copy | Iterations |
@@ -255,3 +272,4 @@ title: Document Construct
 | 2.0.17 | 0.003761 | 0.000956 | +5.97% | 10000 | False | 1000 |
 | 2.0.16 | 0.002357 | 0.000539 | +41.07% | 10000 | False | 1000 |
 | 2.0.15 | 0.00234 | 0.000592 | +41.49% | 10000 | False | 1000 |
+| 2.0.12 | 0.055 | 0.228094 | -1275.0% | 10000 | False | 1000 |
