@@ -4,8 +4,6 @@ import json
 import os
 from typing import Any, Dict, List, Tuple
 
-from packaging.version import parse
-
 
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
     try:
@@ -16,8 +14,25 @@ def __get_delta(mean_time: float, master_mean_time: float) -> str:
         else:
             return f"{round(delta, 2)}%"
 
-    except ZeroDivisionError:
+    except:
         return "N/A"
+
+
+def __get_cleaned_data(data: Dict[str, Any], wrt_mean_time: float) -> Dict[str, Any]:
+    """Return cleaned data"""
+    cleaned_data: Dict[str, Any] = dict()
+
+    cleaned_data['mean_time'] = (
+        round(data['mean_time'], 2) if data.get('mean_time', None) else 'N/A'
+    )
+    cleaned_data['std_time'] = (
+        round(data['std_time'], 2) if data.get('std_time', None) else 'N/A'
+    )
+    cleaned_data['delta'] = __get_delta(data.get('mean_time', None), wrt_mean_time)
+    cleaned_data['metadata_values'] = __get_metadata_values(data)
+    cleaned_data['iterations'] = data.get('iterations', 'N/A')
+
+    return cleaned_data
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -84,9 +99,17 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
 
     for version in version_list:
         report_file = os.path.join(artifacts_dir, version, 'report.json')
+        searchers_compare_file = os.path.join(
+            artifacts_dir, version, 'searchers_compare.json'
+        )
+
         if os.path.isfile(report_file):
             with open(report_file) as fp:
                 _raw_data = json.load(fp)
+
+            if os.path.isfile(searchers_compare_file):
+                with open(searchers_compare_file) as fp:
+                    _raw_data.extend(json.load(fp))
 
             for i in _raw_data:
                 k, v = i['name'].split('/')
@@ -155,14 +178,17 @@ def generate_docs(
                 fp.write(f'| :---: | :---: | :---: | :---: | {separator} | :---: |\n')
 
                 for version, _data in cum_data[k][v].items():
-                    std_time = _data['std_time']
-                    mean_time = _data['mean_time']
-                    wrt_mean_time = cum_data[k][v][last_benchmarked_version][
-                        'mean_time'
-                    ]
+                    try:
+                        wrt_mean_time = cum_data[k][v][last_benchmarked_version][
+                            'mean_time'
+                        ]
+                    except KeyError:
+                        wrt_mean_time = None
+
+                    _data = __get_cleaned_data(_data, wrt_mean_time)
 
                     fp.write(
-                        f'| {version} | {round(mean_time, 2)} | {round(std_time, 2)} | {__get_delta(mean_time, wrt_mean_time)} | {__get_metadata_values(_data)} | {_data["iterations"]} |\n'
+                        f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {_data["delta"]} | {_data["metadata_values"]} | {_data["iterations"]} |\n'
                     )
 
 
