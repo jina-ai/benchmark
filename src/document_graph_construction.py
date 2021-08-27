@@ -31,7 +31,7 @@ def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer
 
     json_writer.append(
         dict(
-            name='document_graph_construction/test_graph_creation_time',
+            name='document_graph_construction/test_graph_add_edges_assuming_no_nodes_present',
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -55,7 +55,6 @@ def test_graph_add_edges_assuming_all_nodes_present(n_nodes, n_edges, json_write
     graph.add_nodes(docs)
 
     def _build_graph_doc():
-
         graph.add_edges(sources, targets, edge_features=edge_features)
         return graph
 
@@ -63,7 +62,7 @@ def test_graph_add_edges_assuming_all_nodes_present(n_nodes, n_edges, json_write
 
     json_writer.append(
         dict(
-            name='document_graph_construction/test_graph_creation_time',
+            name='document_graph_construction/test_graph_add_edges_assuming_all_nodes_present',
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -88,7 +87,7 @@ def test_graph_node_additions(n_nodes, n_edges, json_writer):
 
     json_writer.append(
         dict(
-            name='document_graph_construction/test_graph_creation_time',
+            name='document_graph_construction/test_graph_node_additions',
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
