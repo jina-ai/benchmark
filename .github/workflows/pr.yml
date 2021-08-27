@@ -23,6 +23,7 @@ jobs:
 
   check-site-generation:
     runs-on: ubuntu-latest
+    needs: check-black
     steps:
       - uses: actions/checkout@v2
         with:
