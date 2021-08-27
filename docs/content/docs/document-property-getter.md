@@ -43,7 +43,7 @@ title: Document Property Getter
 | 2.0.12 | 0.02 | 0.15 | -2.7% | 2 | 10000 |
 ## Get Content Buffer
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Buffer Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 0.0 | 0.03 | 0.0% | 10000 | 10000 |
 | 2.0.21.dev36 | 0.0 | 0.04 | -62.5% | 10000 | 10000 |
