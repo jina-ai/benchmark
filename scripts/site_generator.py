@@ -192,7 +192,7 @@ def generate_docs(
                     ]
 
                     fp.write(
-                        f'| {version} | {round(mean_time, 6)} | {round(std_time, 6)} | {__get_delta(mean_time, wrt_mean_time)} | {__get_metadata_values(_data)} | {_data["iterations"]} |\n'
+                        f'| {version} | {round(mean_time, 2)} | {round(std_time, 2)} | {__get_delta(mean_time, wrt_mean_time)} | {__get_metadata_values(_data)} | {_data["iterations"]} |\n'
                     )
 
 
