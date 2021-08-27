@@ -12,6 +12,7 @@ title: Flow
 | 2.0.21.dev35 | 1025.4 | 93.641871 | -3.22% | wide | 10 | 5 |
 | 2.0.21.dev33 | 1010.4 | 75.79116 | -1.71% | wide | 10 | 5 |
 | 2.0.20 | 961 | 11.379807 | +3.26% | wide | 10 | 5 |
+| 2.0.13 | 929.4 | 8.443933 | +6.44% | wide | 10 | 5 |
 ## Local Flow Close
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Flow | Num Pods | Iterations |
@@ -21,6 +22,7 @@ title: Flow
 | 2.0.21.dev35 | 594.8 | 5.932959 | -5.27% | wide | 10 | 5 |
 | 2.0.21.dev33 | 603.2 | 9.418068 | -6.76% | wide | 10 | 5 |
 | 2.0.20 | 599.2 | 3.271085 | -6.05% | wide | 10 | 5 |
+| 2.0.13 | 639.2 | 10.568822 | -13.13% | wide | 10 | 5 |
 ## Flow Load Config
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Flow | Num Pods | Iterations |
@@ -30,3 +32,4 @@ title: Flow
 | 2.0.21.dev35 | 38.2 | 0.447214 | -9.14% | wide | 10 | 5 |
 | 2.0.21.dev33 | 37.8 | 0.447214 | -8.0% | wide | 10 | 5 |
 | 2.0.20 | 38.6 | 0.547723 | -10.29% | wide | 10 | 5 |
+| 2.0.13 | 37.4 | 0.894427 | -6.86% | wide | 10 | 5 |

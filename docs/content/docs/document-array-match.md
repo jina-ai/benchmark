@@ -15,3 +15,4 @@ title: Document Array Match
 | 2.0.19 | 8148.593423 | 28.660659 | -521.08% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
 | 2.0.18 | 8659.391482 | 100.068332 | -560.01% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
 | 2.0.17 | 8813.086167 | 68.035104 | -571.73% | 1000 | 100000 | True | False | 256 | False | euclidean | 100 | 5 |
+| 2.0.13 | 2175.4 | 23.093289 | -65.81% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |

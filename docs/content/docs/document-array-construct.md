@@ -17,6 +17,7 @@ title: Document Array Construct
 | 2.0.17 | 9.179101 | 0.47966 | -27.49% | 10000 | 5 |
 | 2.0.16 | 7.581278 | 0.359788 | -5.3% | 10000 | 5 |
 | 2.0.15 | 9.119651 | 0.557174 | -26.66% | 10000 | 5 |
+| 2.0.13 | 0.2 | 0.447214 | +97.22% | 10000 | 5 |
 ## Construct Document Array From Another Documentarray
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Docs | Iterations |
@@ -31,6 +32,7 @@ title: Document Array Construct
 | 2.0.17 | 3.637446 | 0.390031 | -29.91% | 10000 | 5 |
 | 2.0.16 | 2.760573 | 0.612682 | +1.41% | 10000 | 5 |
 | 2.0.15 | 3.145842 | 0.35053 | -12.35% | 10000 | 5 |
+| 2.0.13 | 0 | 0.0 | +100.0% | 10000 | 5 |
 ## Construct Document Array From List Of Documents
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Docs | Iterations |
@@ -45,6 +47,7 @@ title: Document Array Construct
 | 2.0.17 | 5.257065 | 0.778707 | -5.14% | 10000 | 5 |
 | 2.0.16 | 5.064382 | 0.698753 | -1.29% | 10000 | 5 |
 | 2.0.15 | 5.603919 | 0.417934 | -12.08% | 10000 | 5 |
+| 2.0.13 | 2 | 0.0 | +60.0% | 10000 | 5 |
 ## Construct Document Array From Tuple Of Documents
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Docs | Iterations |
@@ -73,6 +76,7 @@ title: Document Array Construct
 | 2.0.17 | 565.818552 | 10.879119 | +11.15% | 10000 | 5 |
 | 2.0.16 | 533.859434 | 2.396492 | +16.17% | 10000 | 5 |
 | 2.0.15 | 536.691576 | 13.137948 | +15.72% | 10000 | 5 |
+| 2.0.13 | 991 | 16.416455 | -55.62% | 10000 | 5 |
 ## Construct Document Array From Another Documentarray Memmap
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Docs | Iterations |
@@ -87,3 +91,4 @@ title: Document Array Construct
 | 2.0.17 | 117.873108 | 2.102757 | +7.91% | 10000 | 5 |
 | 2.0.16 | 158.136815 | 2.683477 | -23.54% | 10000 | 5 |
 | 2.0.15 | 160.805226 | 2.820718 | -25.63% | 10000 | 5 |
+| 2.0.13 | 592.4 | 14.741099 | -362.81% | 10000 | 5 |

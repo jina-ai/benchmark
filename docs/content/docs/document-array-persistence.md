@@ -17,6 +17,7 @@ title: Document Array Persistence
 | 2.0.17 | 334.78437 | 1.396529 | -5.15% | 100000 | binary | 5 |
 | 2.0.16 | 336.825288 | 1.66647 | -5.79% | 100000 | binary | 5 |
 | 2.0.15 | 337.995949 | 1.661098 | -6.15% | 100000 | binary | 5 |
+| 2.0.13 | 451.2 | 0.83666 | -41.71% | 100000 | binary | 5 |
 ## Document Array Load
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Docs Append | File Format | Iterations |
@@ -31,3 +32,4 @@ title: Document Array Persistence
 | 2.0.17 | 187.10597 | 1.358603 | -5.47% | 100000 | binary | 5 |
 | 2.0.16 | 184.667713 | 1.285244 | -4.1% | 100000 | binary | 5 |
 | 2.0.15 | 197.358013 | 2.151581 | -11.25% | 100000 | binary | 5 |
+| 2.0.13 | 154.8 | 1.643168 | +12.74% | 100000 | binary | 5 |
