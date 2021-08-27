@@ -132,16 +132,6 @@ def generate_docs(
         cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo docs directory.
     """
-
-    def _convert_to_unit(time, time_unit, target_unit):
-        if time_unit == target_unit:
-            return time
-        else:
-            if time_unit == 's' and target_unit == 'ms':
-                return time * 1000
-            elif time_unit == 'ms' and target_unit == 's':
-                return time / 1000
-
     last_benchmarked_version: str = version_list[0]
 
     for k in cum_data:
@@ -158,29 +148,9 @@ def generate_docs(
                     list(cum_data[k][v].values())[0]
                 )
 
-                mean_time_unit_by_version = {}
-                common_unit = 's'
-                for version, data in cum_data[k][v].items():
-                    version_unit = data.get('unit', 's')
-                    common_unit = version_unit if version_unit == 'ms' else common_unit
-                    mean_time_unit_by_version[version] = {
-                        'unit': data.get('unit', 's'),
-                        'time': data['mean_time'],
-                    }  # default to 's' because previously it was all 's'
-
-                for version, data in cum_data[k][v].items():
-                    version_unit = data.get('unit', 's')
-                    data['mean_time'] = _convert_to_unit(
-                        data['mean_time'], version_unit, common_unit
-                    )
-                    data['std_time'] = _convert_to_unit(
-                        data['std_time'], version_unit, common_unit
-                    )
-
-                report_unit = common_unit
                 fp.write(f'## {_cleaned_title(v)}\n\n')
                 fp.write(
-                    f'| Version | Mean Time ({report_unit}) | Std Time ({report_unit}) | Delta w.r.t. {last_benchmarked_version} | {title} | Iterations |\n'
+                    f'| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. {last_benchmarked_version} | {title} | Iterations |\n'
                 )
                 fp.write(f'| :---: | :---: | :---: | :---: | {separator} | :---: |\n')
 

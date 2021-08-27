@@ -5,7 +5,7 @@ title: Document Get Attributes
 
 ## Get Attributes Text
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Text Length | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 0.0 | 0.05 | 0.0% | 10000 | 10000 |
 | 2.0.21.dev36 | 0.0 | 0.05 | -4.55% | 10000 | 10000 |
@@ -18,7 +18,7 @@ title: Document Get Attributes
 | 2.0.12 | 0.0 | 0.04 | +18.18% | 10000 | 10000 |
 ## Get Attribute Blob
 
-| Version | Mean Time (s) | Std Time (s) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.21.dev38 | Num Dims | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.21.dev38 | 0.01 | 0.1 | 0.0% | 2 | 10000 |
 | 2.0.21.dev36 | 0.02 | 0.13 | -68.57% | 2 | 10000 |
