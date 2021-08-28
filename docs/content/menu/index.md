@@ -16,3 +16,4 @@ headless: true
 - [Document Set Attributes]({{< relref "/docs/document-set-attributes.md" >}})
 - [Executor]({{< relref "/docs/executor.md" >}})
 - [Flow]({{< relref "/docs/flow.md" >}})
+- [Document Graph Construction]({{< relref "/docs/document-graph-construction.md" >}})
