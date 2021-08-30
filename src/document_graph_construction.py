@@ -14,7 +14,7 @@ NUM_DOCS = 1000
 @pytest.mark.parametrize('n_edges', [2000, 20_000])
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer):
-
+  
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         sources = [random.choice(docs) for i in range(n_edges)]
