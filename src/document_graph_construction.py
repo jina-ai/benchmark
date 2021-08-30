@@ -15,19 +15,25 @@ NUM_DOCS = 1000
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer):
 
-    docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
-    sources = [random.choice(docs) for i in range(n_edges)]
-    targets = [random.choice(docs) for i in range(n_edges)]
-    edge_features = [
-        {'text': f'I connect Doc{i} and Doc{j}'} for i, j in zip(sources, targets)
-    ]
+    def _setup():
+        docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
+        sources = [random.choice(docs) for i in range(n_edges)]
+        targets = [random.choice(docs) for i in range(n_edges)]
+        edge_features = [
+            {'text': f'I connect Doc{i} and Doc{j}'} for i, j in zip(sources, targets)
+        ]
+        return (), dict(sources=sources, targets=targets, edge_features=edge_features
+        )
 
-    def _build_graph_doc():
+    def _build_graph_doc(sources, targets, edge_features):
         graph = GraphDocument()
         graph.add_edges(sources, targets, edge_features=edge_features)
-        return graph
 
-    mean_time, std_time = benchmark_time(func=_build_graph_doc, n=NUM_REPETITIONS)
+    mean_time, std_time = benchmark_time(
+        setup=_setup,
+        func=_build_graph_doc,
+        n=NUM_REPETITIONS,
+    )
 
     json_writer.append(
         dict(
@@ -44,6 +50,7 @@ def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer
 @pytest.mark.parametrize('n_edges', [2000, 20_000])
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_edges_assuming_all_nodes_present(n_nodes, n_edges, json_writer):
+
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         sources = [random.choice(docs) for i in range(n_edges)]
@@ -84,8 +91,6 @@ def test_graph_add_single_edge_assuming_all_nodes_present(
     n_nodes, n_edges, json_writer
 ):
 
-    docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
-
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         sources = [random.choice(docs) for i in range(n_edges)]
@@ -119,8 +124,6 @@ def test_graph_add_single_edge_assuming_all_nodes_present(
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_single_edge_assuming_no_nodes_present(n_nodes, n_edges, json_writer):
 
-    docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
-
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         sources = [random.choice(docs) for i in range(n_edges)]
@@ -151,6 +154,7 @@ def test_graph_add_single_edge_assuming_no_nodes_present(n_nodes, n_edges, json_
 
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_single_node(n_nodes, json_writer):
+
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         graph = GraphDocument()
@@ -180,6 +184,7 @@ def test_graph_add_single_node(n_nodes, json_writer):
 
 @pytest.mark.parametrize('n_nodes', [1000, 10_000])
 def test_graph_add_nodes(n_nodes, json_writer):
+
     def _setup():
         docs = [Document(text=f'Document{i}') for i in range(n_nodes)]
         graph = GraphDocument()
