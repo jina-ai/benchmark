@@ -16,6 +16,7 @@ title: Document Array Get Attributes
 | 2.0.21.dev30 | 31.6 | 20.14 | +3.66% | 1000 | embedding | True | 5 |
 | 2.0.20 | 33.2 | 24.44 | -1.22% | 1000 | embedding | True | 5 |
 | 2.0.19 | 76.8 | 34.35 | -134.15% | 1000 | embedding | True | 5 |
+| 2.0.18 | 9.2 | 0.45 | +71.95% | 1000 | embedding | True | 5 |
 | 2.0.17 | 8.6 | 0.55 | +73.78% | 1000 | embedding | True | 5 |
 | 2.0.16 | 33 | N/A | -0.61% | 1000 | embedding | True | 5 |
 | 2.0.15 | 35.6 | 0.55 | -8.54% | 1000 | embedding | True | 5 |
