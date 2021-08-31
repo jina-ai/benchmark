@@ -5,8 +5,9 @@ title: Document Array Traverse
 
 ## Document Array Traverse Flat
 
-| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22.dev9 | Num Docs | Num Matches | Num Chunks | Traversal Paths | Memmap | Iterations |
+| Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22.dev12 | Num Docs | Num Matches | Num Chunks | Traversal Paths | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 2.0.22.dev12 | N/A | N/A | N/A | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.22.dev9 | N/A | N/A | N/A | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.21 | 0.2 | 0.45 | N/A | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.21.dev38 | N/A | N/A | N/A | 100 | 1000 | 1000 | ['m'] | True | 5 |
