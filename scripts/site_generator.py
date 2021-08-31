@@ -2,6 +2,7 @@
 
 import json
 import os
+from distutils.version import LooseVersion
 from typing import Any, Dict, List, Tuple
 
 
@@ -73,15 +74,29 @@ def _get_version_list(artifacts_dir: str) -> List[str]:
 
     Return: List of versions found in reports.
     """
-    version_list: List[str] = []
+    lv = []
 
     for folder in os.listdir(artifacts_dir):
         if os.path.isfile(os.path.join(artifacts_dir, folder, 'report.json')):
-            version_list.append(folder)
+            lv.append(LooseVersion(folder))
 
-    version_list.sort(
-        key=lambda s: [int(u.replace('dev', '')) for u in s.split('.')], reverse=True
-    )
+    lv.sort()
+    sorted_dev = [v.vstring for v in lv]
+
+    import re
+
+    p = re.compile('dev\\d+$')
+
+    i = 0
+    while i + 1 < len(sorted_dev):
+        tmp = sorted_dev[i]
+        m = p.search(sorted_dev[i + 1])
+        if m and sorted_dev[i + 1].startswith(tmp):
+            sorted_dev[i] = sorted_dev[i + 1]
+            sorted_dev[i + 1] = tmp
+        i += 1
+
+    version_list = [sorted_dev[i - 1] for i in range(len(sorted_dev), 1, -1)]
 
     return version_list
 
