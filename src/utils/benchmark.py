@@ -65,6 +65,7 @@ def benchmark_time(
 
     m = mean(results)
     s = stdev(results) if len(results) > 1 else None
+    print(f'----> mean_time={round(m,3)}, std_time={round(s,3)}')
 
     if len(mean_profiles) > 0:
         return m, s, mean_profiles
