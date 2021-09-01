@@ -40,3 +40,21 @@ jobs:
           python scripts/site_generator.py
           git status
           git diff-index --quiet HEAD -- || exit 1
+
+  automerge:
+    runs-on: ubuntu-latest
+    needs:
+      - check-black
+      - check-site-generation
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.14.2"
+        with:
+          MERGE_LABELS: automerge
+          MERGE_METHOD: merge
+          MERGE_COMMIT_MESSAGE: automatic
+          MERGE_FILTER_AUTHOR: jina-bot
+          MERGE_FORKS: false
+          MERGE_DELETE_BRANCH: true
+        env:
+          GITHUB_TOKEN: "${{ secrets.JINA_DEV_BOT }}"
