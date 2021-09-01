@@ -146,3 +146,6 @@ outputs/
 
 # pycharm
 .idea/
+
+# custom
+docs/content/
