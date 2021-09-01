@@ -3,6 +3,7 @@
 import json
 import os
 from distutils.version import LooseVersion
+from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 
@@ -172,6 +173,7 @@ def generate_homepage(output_dir: str) -> None:
     """
     src = os.path.join(os.getcwd(), 'README.md')
     dst = os.path.join(output_dir, '_index.md')
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     if os.path.isfile(src):
         with open(src) as f:
@@ -196,6 +198,7 @@ def generate_docs(
         output_dir: Absolute path to Hugo docs directory.
     """
     last_benchmarked_version: str = version_list[0]
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     for k in cum_data:
         output_file = os.path.join(output_dir, f'{_cleaned_slug(k)}.md')
@@ -239,7 +242,9 @@ def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
         cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo menus directory.
     """
-    menu_index = os.path.join(output_dir, 'menu/index.md')
+    menu_dir = os.path.join(output_dir, 'menu')
+    menu_index = os.path.join(menu_dir, 'index.md')
+    Path(menu_dir).mkdir(parents=True, exist_ok=True)
 
     with open(menu_index, 'w') as fp:
         fp.write('---\n')
