@@ -11,6 +11,7 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 23359.8 | 944.25 | -13.32% | 10000 | 20000 | 5 |
 | 2.0.22.dev9 | 20613.8 | 139.7 | 0.0% | 10000 | 20000 | 5 |
 | 2.0.21 | 45811 | 233.36 | -122.23% | 10000 | 20000 | 1000 |
+| 2.0.21.dev48 | 39452.2 | 356.24 | -91.39% | 10000 | 20000 | 5 |
 ## Graph Add Edges Assuming All Nodes Present
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | N Nodes | N Edges | Iterations |
@@ -19,6 +20,7 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 272 | 2.35 | -7.42% | 10000 | 20000 | 5 |
 | 2.0.22.dev9 | 257.6 | 5.73 | -1.74% | 10000 | 20000 | 5 |
 | 2.0.21 | 259.4 | 3.29 | -2.45% | 10000 | 20000 | 1000 |
+| 2.0.21.dev48 | 277 | 1.58 | -9.4% | 10000 | 20000 | 5 |
 ## Graph Add Single Edge Assuming All Nodes Present
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | N Nodes | N Edges | Iterations |
@@ -27,6 +29,7 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 6500.2 | 21.17 | +3.14% | 10000 | 20000 | 5 |
 | 2.0.22.dev9 | 6578.6 | 47.1 | +1.97% | 10000 | 20000 | 5 |
 | 2.0.21 | 6383.4 | 82.74 | +4.88% | 10000 | 20000 | 1000 |
+| 2.0.21.dev48 | 7106.8 | 60.02 | -5.9% | 10000 | 20000 | 5 |
 ## Graph Add Single Edge Assuming No Nodes Present
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | N Nodes | N Edges | Iterations |
@@ -35,6 +38,7 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 29763.6 | 376.5 | -6.5% | 10000 | 20000 | 5 |
 | 2.0.22.dev9 | 28243.2 | 137.88 | -1.06% | 10000 | 20000 | 5 |
 | 2.0.21 | 57585.2 | 2169.4 | -106.05% | 10000 | 20000 | 1000 |
+| 2.0.21.dev48 | 47091.4 | 1590.57 | -68.5% | 10000 | 20000 | 5 |
 ## Graph Add Single Node
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | N Nodes | Iterations |
@@ -43,6 +47,7 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 21146.4 | 865.56 | -3.42% | 10000 | 5 |
 | 2.0.22.dev9 | 20514.2 | 397.42 | -0.33% | 10000 | 5 |
 | 2.0.21 | 42926.2 | 331.25 | -109.95% | 10000 | 1000 |
+| 2.0.21.dev48 | 37884 | 322.51 | -85.29% | 10000 | 5 |
 ## Graph Add Nodes
 
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | N Nodes | Iterations |
@@ -51,3 +56,4 @@ title: Document Graph Construction
 | 2.0.22.dev12 | 38.4 | 0.89 | -0.52% | 10000 | 5 |
 | 2.0.22.dev9 | 37.6 | 0.89 | +1.57% | 10000 | 5 |
 | 2.0.21 | 34 | N/A | +10.99% | 10000 | 1000 |
+| 2.0.21.dev48 | 35.6 | 0.55 | +6.81% | 10000 | 5 |
