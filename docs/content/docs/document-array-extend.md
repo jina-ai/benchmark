@@ -8,8 +8,10 @@ title: Document Array Extend
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs | Label | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 15.08 | 0.28 | 0.0% | 1000 | buffer | True | 25 |
+| 2.0.22.dev20 | 14.56 | 0.51 | +3.45% | 1000 | buffer | True | 25 |
 | 2.0.22.dev14 | 15 | 0.41 | +0.53% | 1000 | buffer | True | 25 |
 | 2.0.22.dev12 | 14.84 | 0.37 | +1.59% | 1000 | buffer | True | 25 |
+| 2.0.22.dev10 | 14.24 | 0.44 | +5.57% | 1000 | buffer | True | 25 |
 | 2.0.22.dev9 | 15.4 | 0.5 | -2.12% | 1000 | buffer | True | 25 |
 | 2.0.21 | 14.96 | 0.2 | +0.8% | 1000 | buffer | True | 25 |
 | 2.0.21.dev38 | 13.64 | 0.49 | +9.55% | 1000 | buffer | True | 25 |
