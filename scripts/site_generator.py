@@ -9,15 +9,16 @@ from typing import Any, Dict, List, Tuple, Union
 def __format(data: Union[int, float]) -> Any:
     if isinstance(data, int) or isinstance(data, float):
         if data >= 1000:
+            _data = data
             i = 0
-            while abs(data) >= 1000:
+            while abs(_data) >= 1000:
                 i += 1
-                data /= 1000
+                _data /= 1000
 
             if isinstance(data, int):
-                return '%d%s' % (data, ['', 'K', 'M', 'G', 'T', 'P'][i])
+                return '%d%s' % (_data, ['', 'K', 'M', 'G', 'T', 'P'][i])
             else:
-                return '%.2f%s' % (data, ['', 'K', 'M', 'G', 'T', 'P'][i])
+                return '%.2f%s' % (_data, ['', 'K', 'M', 'G', 'T', 'P'][i])
         else:
             i = 1
             _data = round(data, i)
