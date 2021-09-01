@@ -3,7 +3,31 @@
 import json
 import os
 from distutils.version import LooseVersion
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
+
+
+def __format(data: Union[int, float]) -> Any:
+    if isinstance(data, int) or isinstance(data, float):
+        if data >= 1000:
+            i = 0
+            while abs(data) >= 1000:
+                i += 1
+                data /= 1000
+
+            if isinstance(data, int):
+                return '%d%s' % (data, ['', 'K', 'M', 'G', 'T', 'P'][i])
+            else:
+                return '%.2f%s' % (data, ['', 'K', 'M', 'G', 'T', 'P'][i])
+        else:
+            i = 1
+            _data = round(data, i)
+            while _data == 0 and i <= 5:
+                i += 1
+                _data = round(data, i)
+
+            return _data
+    else:
+        return data
 
 
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
@@ -11,9 +35,9 @@ def __get_delta(mean_time: float, master_mean_time: float) -> str:
         delta = (1 - (mean_time / master_mean_time)) * 100
 
         if delta > 0:
-            return f"+{round(delta, 2)}%"
+            return f"+{__format(delta)}%"
         else:
-            return f"{round(delta, 2)}%"
+            return f"{__format(delta)}%"
 
     except:
         return "N/A"
@@ -24,14 +48,14 @@ def __get_cleaned_data(data: Dict[str, Any], wrt_mean_time: float) -> Dict[str, 
     cleaned_data: Dict[str, Any] = dict()
 
     cleaned_data['mean_time'] = (
-        round(data['mean_time'], 2) if data.get('mean_time', None) else 'N/A'
+        __format(data['mean_time']) if data.get('mean_time', None) else 'N/A'
     )
     cleaned_data['std_time'] = (
-        round(data['std_time'], 2) if data.get('std_time', None) else 'N/A'
+        __format(data['std_time']) if data.get('std_time', None) else 'N/A'
     )
     cleaned_data['delta'] = __get_delta(data.get('mean_time', None), wrt_mean_time)
     cleaned_data['metadata_values'] = __get_metadata_values(data)
-    cleaned_data['iterations'] = data.get('iterations', 'N/A')
+    cleaned_data['iterations'] = __format(data.get('iterations', 'N/A'))
 
     return cleaned_data
 
@@ -60,7 +84,7 @@ def __get_metadata_titles(raw_data: Dict[str, Any]) -> Tuple[str, str]:
 def __get_metadata_values(raw_data: Dict[str, Any]) -> str:
     """Return metadata table values."""
     if 'metadata' in raw_data:
-        values = ' | '.join(str(v) for v in raw_data['metadata'].values())
+        values = ' | '.join(str(__format(v)) for v in raw_data['metadata'].values())
         return values
     else:
         return 'N/A'
