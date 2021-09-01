@@ -8,7 +8,9 @@ title: Document Array Traverse
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs | Num Matches | Num Chunks | Traversal Paths | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 0.4 | 0.55 | 0.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
+| 2.0.22.dev20 | N/A | N/A | +100.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.22.dev12 | N/A | N/A | +100.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
+| 2.0.22.dev10 | N/A | N/A | +100.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.22.dev9 | N/A | N/A | +100.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.22.dev7 | N/A | N/A | +100.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |
 | 2.0.21 | 0.2 | 0.45 | +50.0% | 100 | 1000 | 1000 | ['m'] | True | 5 |

@@ -8,7 +8,9 @@ title: Document Array Persistence
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs Append | File Format | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 335.8 | 1.3 | 0.0% | 100000 | binary | 5 |
+| 2.0.22.dev20 | 317.2 | 0.45 | +5.54% | 100000 | binary | 5 |
 | 2.0.22.dev12 | 333.4 | 1.52 | +0.71% | 100000 | binary | 5 |
+| 2.0.22.dev10 | 319.6 | 2.41 | +4.82% | 100000 | binary | 5 |
 | 2.0.22.dev9 | 336 | 2.55 | -0.06% | 100000 | binary | 5 |
 | 2.0.22.dev7 | 322.4 | 1.52 | +3.99% | 100000 | binary | 5 |
 | 2.0.21 | 324.4 | 2.79 | +3.39% | 100000 | binary | 5 |
@@ -31,7 +33,9 @@ title: Document Array Persistence
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs Append | File Format | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 191.6 | 1.52 | 0.0% | 100000 | binary | 5 |
+| 2.0.22.dev20 | 176.6 | 0.89 | +7.83% | 100000 | binary | 5 |
 | 2.0.22.dev12 | 185.2 | 0.84 | +3.34% | 100000 | binary | 5 |
+| 2.0.22.dev10 | 178.6 | 1.14 | +6.78% | 100000 | binary | 5 |
 | 2.0.22.dev9 | 193 | 2.35 | -0.73% | 100000 | binary | 5 |
 | 2.0.22.dev7 | 183.6 | 0.89 | +4.18% | 100000 | binary | 5 |
 | 2.0.21 | 185.6 | 2.07 | +3.13% | 100000 | binary | 5 |
