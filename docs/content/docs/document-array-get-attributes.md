@@ -8,6 +8,7 @@ title: Document Array Get Attributes
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs | Field | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 30.2 | 18.57 | 0.0% | 1000 | embedding | True | 5 |
+| 2.0.22.dev20 | 88 | 33.71 | -191.39% | 1000 | embedding | True | 5 |
 | 2.0.22.dev12 | 38.8 | 29.47 | -28.48% | 1000 | embedding | True | 5 |
 | 2.0.22.dev9 | 36.8 | 26.74 | -21.85% | 1000 | embedding | True | 5 |
 | 2.0.21 | 32.8 | 21.23 | -8.61% | 1000 | embedding | True | 5 |
@@ -30,6 +31,7 @@ title: Document Array Get Attributes
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Num Docs | Memmap | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 16.2 | 0.84 | 0.0% | 1000 | True | 5 |
+| 2.0.22.dev20 | 38 | 27.42 | -134.57% | 1000 | True | 5 |
 | 2.0.22.dev12 | 16.6 | 0.55 | -2.47% | 1000 | True | 5 |
 | 2.0.22.dev9 | 17.2 | 0.45 | -6.17% | 1000 | True | 5 |
 | 2.0.21 | 16.8 | 1.3 | -3.7% | 1000 | True | 5 |

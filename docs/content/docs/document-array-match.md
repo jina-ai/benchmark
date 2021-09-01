@@ -8,6 +8,7 @@ title: Document Array Match
 | Version | Mean Time (ms) | Std Time (ms) | Delta w.r.t. 2.0.22 | Size X | Size Y | Dam X | Dam Y | Emb Size | Use Scipy | Metric | Top K | Iterations |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 2.0.22 | 1358.2 | 21.3 | 0.0% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
+| 2.0.22.dev20 | 1306 | 10.7 | +3.84% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.22.dev12 | 1336.4 | 10.48 | +1.61% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.22.dev9 | 1336.4 | 23.42 | +1.61% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.21 | 1319.4 | 5.98 | +2.86% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
