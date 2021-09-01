@@ -10,6 +10,7 @@ title: Document Array Match
 | 2.0.22 | 1358.2 | 21.3 | 0.0% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.22.dev12 | 1336.4 | 10.48 | +1.61% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.22.dev9 | 1336.4 | 23.42 | +1.61% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
+| 2.0.22.dev7 | 1333.8 | 11.34 | +1.8% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.21 | 1319.4 | 5.98 | +2.86% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.21.dev38 | 1312 | 9.03 | +3.4% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
 | 2.0.21.dev36 | 1369.8 | 21.34 | -0.85% | 10 | 100000 | False | False | 256 | False | euclidean | 3 | 5 |
