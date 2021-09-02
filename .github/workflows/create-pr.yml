@@ -1,0 +1,22 @@
+name: Create PR
+
+on:
+  push:
+    branches:
+      - "benchmark-*"
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'jina-bot' }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: create PR
+        id: open-pr
+        uses: repo-sync/pull-request@v2
+        with:
+          pr_label: automerge
+          destination_branch: "main"
+          pr_body: "This is an automated PR."
+          github_token: ${{ secrets.JINA_DEV_BOT }}
