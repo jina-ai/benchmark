@@ -1,4 +1,4 @@
-name: Create PR
+name: Benchmark PR
 
 on:
   push:
@@ -6,15 +6,23 @@ on:
       - "benchmark-*.*.*"
 
 jobs:
-  create-pr:
+  pull-request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: pull-request
+      - name: create PR
+        id: open-pr
         uses: repo-sync/pull-request@v2
         with:
-          destination_branch: "main"
           pr_label: automerge
+          destination_branch: "main"
           pr_body: "This is an automated PR."
           github_token: ${{ secrets.JINA_DEV_BOT }}
+
+      - name: merge PR
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+         merge-method: merge
+         token: ${{ secrets.JINA_DEV_BOT }}
+         pull-request-number: ${{steps.open-pr.outputs.pr_number}}
