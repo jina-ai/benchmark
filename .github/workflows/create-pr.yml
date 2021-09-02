@@ -1,0 +1,20 @@
+name: Create PR
+
+on:
+  push:
+    branches:
+      - "benchmark-*"
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main"
+          pr_label: automerge
+          pr_body: "This is an automated PR."
+          github_token: ${{ secrets.JINA_DEV_BOT }}
