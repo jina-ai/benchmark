@@ -3,7 +3,7 @@ name: Create PR
 on:
   push:
     branches:
-      - "benchmark-*"
+      - "benchmark-*.*.*"
 
 jobs:
   create-pr:
