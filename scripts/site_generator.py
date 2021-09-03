@@ -59,7 +59,6 @@ def __get_cleaned_data_list(data_list: List[Dict[str, Any]]) -> List[Dict[str, A
             __format(data['std_time']) if data.get('std_time', None) else 'N/A'
         )
         cleaned_data['metadata'] = data.get('metadata', None)
-        cleaned_data['metadata_values'] = __get_metadata_values(data)
         cleaned_data['iterations'] = __format(data.get('iterations', 'N/A'))
 
         cleaned_data_list.append(cleaned_data)
@@ -88,10 +87,10 @@ def __get_metadata_titles(raw_data: Dict[str, Any]) -> Tuple[str, str]:
         return 'Metadata', ':---:'
 
 
-def __get_metadata_values(raw_data: Dict[str, Any]) -> str:
+def __get_metadata_values(metadata: Dict[str, Any]) -> str:
     """Return metadata table values."""
-    if 'metadata' in raw_data:
-        values = ' | '.join(str(__format(v)) for v in raw_data['metadata'].values())
+    if metadata:
+        values = ' | '.join(str(__format(v)) for v in metadata.values())
         return values
     else:
         return 'N/A'
@@ -246,9 +245,12 @@ def generate_docs(
                             wrt_mean_time = None
 
                         delta = __get_delta(_data.get('mean_time', None), wrt_mean_time)
+                        metadata_values = __get_metadata_values(
+                            _data.get('metadata', None)
+                        )
 
                         fp.write(
-                            f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {delta} | {_data["metadata_values"]} | {_data["iterations"]} |\n'
+                            f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {delta} | {metadata_values} | {_data["iterations"]} |\n'
                         )
 
 
