@@ -234,26 +234,34 @@ def generate_docs(
                 for version, _data_list in cum_data[k][v].items():
                     _data_list = __get_cleaned_data_list(_data_list)
 
-                    for _data in _data_list:
+                    for i in range(0, len(_data_list)):
                         try:
                             for lbv_data in cum_data[k][v][last_benchmarked_version]:
                                 if (
-                                    lbv_data['metadata'] == _data['metadata']
-                                    and lbv_data['iterations'] == _data['iterations']
+                                    lbv_data['metadata'] == _data_list[i]['metadata']
+                                    and lbv_data['iterations']
+                                    == _data_list[i]['iterations']
                                 ):
                                     wrt_mean_time = lbv_data['mean_time']
                                     break
                         except KeyError:
                             wrt_mean_time = None
 
-                        delta = __get_delta(_data.get('mean_time', None), wrt_mean_time)
+                        delta = __get_delta(
+                            _data_list[i].get('mean_time', None), wrt_mean_time
+                        )
                         metadata_values = __get_metadata_values(
-                            _data.get('metadata', None)
+                            _data_list[i].get('metadata', None)
                         )
 
-                        fp.write(
-                            f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {delta} | {metadata_values} | {_data["iterations"]} |\n'
-                        )
+                        if i == 0:
+                            fp.write(
+                                f'| {version} | {_data_list[i]["mean_time"]} | {_data_list[i]["std_time"]} | {delta} | {metadata_values} | {_data_list[i]["iterations"]} |\n'
+                            )
+                        else:
+                            fp.write(
+                                f'| | {_data_list[i]["mean_time"]} | {_data_list[i]["std_time"]} | {delta} | {metadata_values} | {_data_list[i]["iterations"]} |\n'
+                            )
 
 
 def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
