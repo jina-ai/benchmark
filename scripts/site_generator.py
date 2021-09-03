@@ -8,7 +8,9 @@ from typing import Any, Dict, List, Tuple, Union
 
 
 def __format(data: Union[int, float]) -> Any:
-    if isinstance(data, int) or isinstance(data, float):
+    if isinstance(data, bool):
+        return str(data)
+    elif isinstance(data, int) or isinstance(data, float):
         if data >= 1000:
             _data = data
             i = 0
@@ -34,7 +36,7 @@ def __format(data: Union[int, float]) -> Any:
 
 def __get_delta(mean_time: float, master_mean_time: float) -> str:
     try:
-        delta = (1 - (mean_time / master_mean_time)) * 100
+        delta = (1 - (float(mean_time) / float(master_mean_time))) * 100
 
         if delta > 0:
             return f"+{__format(delta)}%"
@@ -45,21 +47,25 @@ def __get_delta(mean_time: float, master_mean_time: float) -> str:
         return "N/A"
 
 
-def __get_cleaned_data(data: Dict[str, Any], wrt_mean_time: float) -> Dict[str, Any]:
+def __get_cleaned_data_list(data_list: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Return cleaned data"""
-    cleaned_data: Dict[str, Any] = dict()
+    cleaned_data_list: List[Dict[str, Any]] = []
 
-    cleaned_data['mean_time'] = (
-        __format(data['mean_time']) if data.get('mean_time', None) else 'N/A'
-    )
-    cleaned_data['std_time'] = (
-        __format(data['std_time']) if data.get('std_time', None) else 'N/A'
-    )
-    cleaned_data['delta'] = __get_delta(data.get('mean_time', None), wrt_mean_time)
-    cleaned_data['metadata_values'] = __get_metadata_values(data)
-    cleaned_data['iterations'] = __format(data.get('iterations', 'N/A'))
+    for data in data_list:
+        cleaned_data = dict()
 
-    return cleaned_data
+        cleaned_data['mean_time'] = (
+            __format(data['mean_time']) if data.get('mean_time', None) else 'N/A'
+        )
+        cleaned_data['std_time'] = (
+            __format(data['std_time']) if data.get('std_time', None) else 'N/A'
+        )
+        cleaned_data['metadata'] = data.get('metadata', None)
+        cleaned_data['iterations'] = __format(data.get('iterations', 'N/A'))
+
+        cleaned_data_list.append(cleaned_data)
+
+    return cleaned_data_list
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -83,10 +89,10 @@ def __get_metadata_titles(raw_data: Dict[str, Any]) -> Tuple[str, str]:
         return 'Metadata', ':---:'
 
 
-def __get_metadata_values(raw_data: Dict[str, Any]) -> str:
+def __get_metadata_values(metadata: Dict[str, Any]) -> str:
     """Return metadata table values."""
-    if 'metadata' in raw_data:
-        values = ' | '.join(str(__format(v)) for v in raw_data['metadata'].values())
+    if metadata:
+        values = ' | '.join(str(__format(v)) for v in metadata.values())
         return values
     else:
         return 'N/A'
@@ -156,11 +162,16 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
                 k, v = i['name'].split('/')
                 if k in data:
                     if v in data[k]:
-                        data[k][v][version] = i
+                        if version in data[k][v]:
+                            temp = data[k][v][version]
+                            temp.append(i)
+                            data[k][v][version] = temp
+                        else:
+                            data[k][v][version] = [i]
                     else:
-                        data[k][v] = {version: i}
+                        data[k][v] = {version: [i]}
                 else:
-                    data[k] = {v: {version: i}}
+                    data[k] = {v: {version: [i]}}
 
     return data
 
@@ -211,7 +222,7 @@ def generate_docs(
 
             for v in cum_data[k]:
                 title, separator = __get_metadata_titles(
-                    list(cum_data[k][v].values())[0]
+                    cum_data[k][v][last_benchmarked_version][0]
                 )
 
                 fp.write(f'## {_cleaned_title(v)}\n\n')
@@ -220,19 +231,29 @@ def generate_docs(
                 )
                 fp.write(f'| :---: | :---: | :---: | :---: | {separator} | :---: |\n')
 
-                for version, _data in cum_data[k][v].items():
-                    try:
-                        wrt_mean_time = cum_data[k][v][last_benchmarked_version][
-                            'mean_time'
-                        ]
-                    except KeyError:
-                        wrt_mean_time = None
+                for version, _data_list in cum_data[k][v].items():
+                    _data_list = __get_cleaned_data_list(_data_list)
 
-                    _data = __get_cleaned_data(_data, wrt_mean_time)
+                    for _data in _data_list:
+                        try:
+                            for lbv_data in cum_data[k][v][last_benchmarked_version]:
+                                if (
+                                    lbv_data['metadata'] == _data['metadata']
+                                    and lbv_data['iterations'] == _data['iterations']
+                                ):
+                                    wrt_mean_time = lbv_data['mean_time']
+                                    break
+                        except KeyError:
+                            wrt_mean_time = None
 
-                    fp.write(
-                        f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {_data["delta"]} | {_data["metadata_values"]} | {_data["iterations"]} |\n'
-                    )
+                        delta = __get_delta(_data.get('mean_time', None), wrt_mean_time)
+                        metadata_values = __get_metadata_values(
+                            _data.get('metadata', None)
+                        )
+
+                        fp.write(
+                            f'| {version} | {_data["mean_time"]} | {_data["std_time"]} | {delta} | {metadata_values} | {_data["iterations"]} |\n'
+                        )
 
 
 def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:
