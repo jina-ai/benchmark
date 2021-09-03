@@ -221,7 +221,7 @@ def generate_docs(
 
             for v in cum_data[k]:
                 title, separator = __get_metadata_titles(
-                    list(cum_data[k][v].values())[0]
+                    cum_data[k][v][last_benchmarked_version][0]
                 )
 
                 fp.write(f'## {_cleaned_title(v)}\n\n')
