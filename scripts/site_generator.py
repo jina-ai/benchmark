@@ -8,7 +8,9 @@ from typing import Any, Dict, List, Tuple, Union
 
 
 def __format(data: Union[int, float]) -> Any:
-    if isinstance(data, int) or isinstance(data, float):
+    if isinstance(data, bool):
+        return str(data)
+    elif isinstance(data, int) or isinstance(data, float):
         if data >= 1000:
             _data = data
             i = 0
