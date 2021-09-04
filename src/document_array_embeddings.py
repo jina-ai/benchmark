@@ -7,11 +7,6 @@ from .utils.benchmark import benchmark_time
 
 NUM_REPETITIONS = 10
 
-# IMPORTANT: This benchmark currently is covered by
-# - document_array_save_binary_load_binary.py
-# - document_array_save_json_load_json.py
-# Only relevant if for future releases `.save` expands to other methods
-
 
 @pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
 @pytest.mark.parametrize('num_feat', [128, 256])
