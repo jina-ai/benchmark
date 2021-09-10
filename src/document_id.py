@@ -10,10 +10,10 @@ NUM_REPETITIONS = 5
 
 random_identity(use_uuid1=True)
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-@pytest.mark.parametrize('use_uuid1', [True, False])
-def test_document_document_generate_id(num_docs, use_uuid1, json_writer):
 
+@pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
+@pytest.mark.parametrize("use_uuid1", [True, False])
+def test_document_document_generate_id(num_docs, use_uuid1, json_writer):
     def _generate_id():
         for _ in range(num_docs):
             random_identity(use_uuid1)
@@ -22,20 +22,24 @@ def test_document_document_generate_id(num_docs, use_uuid1, json_writer):
 
     json_writer.append(
         dict(
-            name='document_embedding/test_document_document_generate_id',
+            name="document_embedding/test_document_document_generate_id",
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            unit='ms',
+            unit="ms",
             metadata=dict(num_docs=num_docs),
         )
     )
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
+
+@pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
 def test_document_document_get_id(num_docs, json_writer):
     def _input_docs():
-        return (), dict(
-            docs=DocumentArray([Document(text='hey here') for _ in range(num_docs)])
+        return (
+            (),
+            dict(
+                docs=DocumentArray([Document(text="hey here") for _ in range(num_docs)])
+            ),
         )
 
     def _get_id(docs):
@@ -48,12 +52,11 @@ def test_document_document_get_id(num_docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_embedding/test_document_document_get_id',
+            name="document_embedding/test_document_document_get_id",
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            unit='ms',
+            unit="ms",
             metadata=dict(num_docs=num_docs),
         )
     )
-
