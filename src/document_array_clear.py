@@ -3,12 +3,13 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 10
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_clear(num_docs, json_writer):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_da_clear(name, num_docs, json_writer):
     def _setup():
         da = DocumentArray([Document(text=f"doc{i}") for i in range(num_docs)])
         return (), dict(da=da)
@@ -24,7 +25,8 @@ def test_da_clear(num_docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_clear',
+            name=name,
+            page=Pages.DA_CLEAR,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -34,8 +36,8 @@ def test_da_clear(num_docs, json_writer):
     )
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_memmap_clear(num_docs, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_dam_clear(name, num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         dam = DocumentArrayMemmap((f'{str(ephemeral_tmpdir)}/memmap'))
         dam.extend([Document(text=f"doc{i}") for i in range(num_docs)])
@@ -58,7 +60,8 @@ def test_da_memmap_clear(num_docs, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_memmap_clear',
+            name=name,
+            page=Pages.DA_CLEAR,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

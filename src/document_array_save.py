@@ -3,6 +3,7 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 10
 
@@ -12,8 +13,8 @@ NUM_REPETITIONS = 10
 # Only relevant if for future releases `.save` expands to other methods
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_save(num_docs, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_da_save(name, num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         da = DocumentArray([Document(text=f"doc{i}") for i in range(num_docs)])
         return (), dict(da=da)
@@ -40,7 +41,8 @@ def test_da_save(num_docs, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_save',
+            name=name,
+            page=Pages.DA_CLEAR,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -50,8 +52,8 @@ def test_da_save(num_docs, json_writer, ephemeral_tmpdir):
     )
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_memmap_save(num_docs, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_dam_save(name, num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         dam = DocumentArrayMemmap((f'{str(ephemeral_tmpdir)}/memmap'))
         dam.extend([Document(text=f"doc{i}") for i in range(num_docs)])
@@ -74,7 +76,8 @@ def test_da_memmap_save(num_docs, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_memmap_save',
+            name=name,
+            page=Pages.DA_CLEAR,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

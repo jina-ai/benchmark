@@ -8,8 +8,10 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 fake = Faker()
+Faker.seed(42)
 NUM_REPETITIONS = 5
 NUM_DOCS = 1000
 CHARS = tuple(string.ascii_uppercase + string.digits)
@@ -59,10 +61,10 @@ def embedding_docs(num_docs):
 )
 @pytest.mark.parametrize(
     'num_docs',
-    [10, 100, 1000],
+    [100, 10000],
 )
 def test_da_get_attributes(
-    field, docs_get_fn, memmap, num_docs, json_writer, ephemeral_tmpdir
+    name, field, docs_get_fn, memmap, num_docs, json_writer, ephemeral_tmpdir
 ):
     def _get_attributes(da):
         da.get_attributes(*[field])
@@ -92,10 +94,12 @@ def test_da_get_attributes(
         n=NUM_REPETITIONS,
         kwargs=dict(memmap=memmap, docs=docs_get_fn(num_docs)),
     )
-
+    if memmap:
+        name = name.replace('_da_', '_dam_')
     json_writer.append(
         dict(
-            name='document_array_get_attributes/test_da_get_attributes',
+            name=name,
+            page=Pages.DA_GET_ATTRIBUTE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -108,9 +112,9 @@ def test_da_get_attributes(
 @pytest.mark.parametrize('memmap', [False, True])
 @pytest.mark.parametrize(
     'num_docs',
-    [10, 100, 1000],
+    [100, 10000],
 )
-def test_embeddings_property(memmap, num_docs, json_writer, ephemeral_tmpdir):
+def test_da_embeddings_property(name, memmap, num_docs, json_writer, ephemeral_tmpdir):
     def _get_embeddings(da):
         da.embeddings
 
@@ -139,10 +143,12 @@ def test_embeddings_property(memmap, num_docs, json_writer, ephemeral_tmpdir):
         n=NUM_REPETITIONS,
         kwargs=dict(memmap=memmap),
     )
-
+    if memmap:
+        name = name.replace('_da_', '_dam_')
     json_writer.append(
         dict(
-            name='document_array_get_attributes/test_embeddings_property',
+            name=name,
+            page=Pages.DA_GET_ATTRIBUTE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

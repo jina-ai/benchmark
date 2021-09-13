@@ -3,10 +3,11 @@ import string
 
 import numpy as np
 import pytest
-from jina import Document, DocumentArray, __version__
+from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 25
 NUM_DOCS = 1000
@@ -51,7 +52,7 @@ def buffer_docs():
         (buffer_docs(), 'buffer'),
     ],
 )
-def test_da_extend(docs, label, memmap, json_writer, ephemeral_tmpdir):
+def test_da_extend(name, docs, label, memmap, json_writer, ephemeral_tmpdir):
     def _extend(da):
         da.extend(docs)
 
@@ -81,7 +82,8 @@ def test_da_extend(docs, label, memmap, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_extend/test_da_extend',
+            name=name,
+            page=Pages.DA_EXTEND,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

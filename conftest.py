@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 from jina import __version__
@@ -38,3 +39,12 @@ def ephemeral_tmpdir(tmpdir):
     import shutil
 
     shutil.rmtree(str(tmpdir))
+
+
+@pytest.fixture()
+def name():
+    test = os.environ['PYTEST_CURRENT_TEST']
+    removed_head = test.split('::')[-1]
+    removed_tail = removed_head.split('[')[0].split(' (')[0]
+
+    return removed_tail

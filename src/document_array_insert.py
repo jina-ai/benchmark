@@ -2,12 +2,13 @@ import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 10
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_insert(num_docs, json_writer):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_da_insert(name, num_docs, json_writer):
     def _setup():
         docs = [Document(text=f"doc{i}") for i in range(num_docs)]
         da = DocumentArray()
@@ -25,7 +26,8 @@ def test_da_insert(num_docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_insert/test_da_insert',
+            name=name,
+            page=Pages.DA_INSERT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

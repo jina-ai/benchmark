@@ -2,6 +2,7 @@ import pytest
 from jina import Flow
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 5
 NUM_PODS = 10
@@ -26,7 +27,7 @@ def _wide_flow():
 @pytest.mark.parametrize(
     'flow, ftype', [(_long_flow(), 'long'), (_wide_flow(), 'wide')]
 )
-def test_local_flow_start(flow, ftype, json_writer):
+def test_local_flow_start(name, flow, ftype, json_writer):
     def _start():
         flow.start()
 
@@ -39,7 +40,8 @@ def test_local_flow_start(flow, ftype, json_writer):
 
     json_writer.append(
         dict(
-            name='flow/test_local_flow_start',
+            name=name,
+            page=Pages.FLOW,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -52,7 +54,7 @@ def test_local_flow_start(flow, ftype, json_writer):
 @pytest.mark.parametrize(
     'flow, ftype', [(_long_flow(), 'long'), (_wide_flow(), 'wide')]
 )
-def test_local_flow_close(flow, ftype, json_writer):
+def test_local_flow_close(name, flow, ftype, json_writer):
     def _start():
         flow.start()
         return (), {}
@@ -64,7 +66,8 @@ def test_local_flow_close(flow, ftype, json_writer):
 
     json_writer.append(
         dict(
-            name='flow/test_local_flow_close',
+            name=name,
+            page=Pages.FLOW,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -141,7 +144,7 @@ pods:
 
 
 @pytest.mark.parametrize('config, ftype', [(yaml_long, 'long'), (yaml_wide, 'wide')])
-def test_flow_load_config(config, ftype, json_writer):
+def test_flow_load_config(name, config, ftype, json_writer):
     def _build():
         Flow.load_config(config)
 
@@ -149,7 +152,8 @@ def test_flow_load_config(config, ftype, json_writer):
 
     json_writer.append(
         dict(
-            name='flow/test_flow_load_config',
+            name=name,
+            page=Pages.FLOW,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

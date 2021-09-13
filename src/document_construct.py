@@ -3,9 +3,10 @@ import string
 
 import numpy as np
 import pytest
-from jina import Document, __version__
+from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 def _generate_random_text(text_length):
@@ -60,7 +61,7 @@ NUM_DOCS = 1000
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_text(text_length, json_writer):
+def test_construct_text(name, text_length, json_writer):
     def _doc_build(text):
         Document(text=text)
 
@@ -70,7 +71,8 @@ def test_construct_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_text',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -81,7 +83,7 @@ def test_construct_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_blob(num_dims, json_writer):
+def test_construct_blob(name, num_dims, json_writer):
     def _doc_build(blob):
         Document(blob=blob)
 
@@ -91,7 +93,8 @@ def test_construct_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_blob',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -101,8 +104,8 @@ def test_construct_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_buffer(name, buffer_length, json_writer):
     def _doc_build(buffer):
         Document(buffer=buffer)
 
@@ -112,7 +115,8 @@ def test_construct_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_buffer',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -123,7 +127,7 @@ def test_construct_buffer(buffer_length, json_writer):
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_btyes_origin_text(text_length, json_writer):
+def test_construct_btyes_origin_text(name, text_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -139,7 +143,8 @@ def test_construct_btyes_origin_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_bytes_origin_text',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -150,7 +155,7 @@ def test_construct_btyes_origin_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_btyes_origin_blob(num_dims, json_writer):
+def test_construct_btyes_origin_blob(name, num_dims, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -166,7 +171,8 @@ def test_construct_btyes_origin_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_bytes_origin_blob',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -176,8 +182,8 @@ def test_construct_btyes_origin_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_btyes_origin_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_btyes_origin_buffer(name, buffer_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -193,7 +199,8 @@ def test_construct_btyes_origin_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_bytes_origin_buffer',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -204,7 +211,7 @@ def test_construct_btyes_origin_buffer(buffer_length, json_writer):
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_str_json_origin_text(text_length, json_writer):
+def test_construct_str_json_origin_text(name, text_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -218,7 +225,8 @@ def test_construct_str_json_origin_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_str_json_origin_text',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -229,7 +237,7 @@ def test_construct_str_json_origin_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_str_json_origin_blob(num_dims, json_writer):
+def test_construct_str_json_origin_blob(name, num_dims, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -241,7 +249,8 @@ def test_construct_str_json_origin_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_str_json_origin_blob',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -251,8 +260,8 @@ def test_construct_str_json_origin_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_str_json_origin_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_str_json_origin_buffer(name, buffer_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -266,7 +275,8 @@ def test_construct_str_json_origin_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_str_json_origin_buffer',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -277,7 +287,7 @@ def test_construct_str_json_origin_buffer(buffer_length, json_writer):
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_dict_origin_text(text_length, json_writer):
+def test_construct_dict_origin_text(name, text_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -291,7 +301,8 @@ def test_construct_dict_origin_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_dict_origin_text',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -302,7 +313,7 @@ def test_construct_dict_origin_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_dict_origin_blob(num_dims, json_writer):
+def test_construct_dict_origin_blob(name, num_dims, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -314,7 +325,8 @@ def test_construct_dict_origin_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_dict_origin_blob',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -324,8 +336,8 @@ def test_construct_dict_origin_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_dict_origin_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_dict_origin_buffer(name, buffer_length, json_writer):
     def _doc_build(b):
         Document(document=b)
 
@@ -339,7 +351,8 @@ def test_construct_dict_origin_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_dict_origin_buffer',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -351,7 +364,7 @@ def test_construct_dict_origin_buffer(buffer_length, json_writer):
 
 @pytest.mark.parametrize('copy', [True, False])
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_document_origin_text(copy, text_length, json_writer):
+def test_construct_document_origin_text(name, copy, text_length, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -363,7 +376,8 @@ def test_construct_document_origin_text(copy, text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_text',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -375,7 +389,7 @@ def test_construct_document_origin_text(copy, text_length, json_writer):
 
 @pytest.mark.parametrize('copy', [True, False])
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_document_origin_blob(copy, num_dims, json_writer):
+def test_construct_document_origin_blob(name, copy, num_dims, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -387,7 +401,8 @@ def test_construct_document_origin_blob(copy, num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_blob',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -398,8 +413,8 @@ def test_construct_document_origin_blob(copy, num_dims, json_writer):
 
 
 @pytest.mark.parametrize('copy', [True, False])
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_document_origin_buffer(copy, buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_document_origin_buffer(name, copy, buffer_length, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -411,7 +426,8 @@ def test_construct_document_origin_buffer(copy, buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_buffer',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -423,7 +439,7 @@ def test_construct_document_origin_buffer(copy, buffer_length, json_writer):
 
 @pytest.mark.parametrize('copy', [True, False])
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_construct_document_origin_text_proto(copy, text_length, json_writer):
+def test_construct_document_origin_text_proto(name, copy, text_length, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -435,7 +451,8 @@ def test_construct_document_origin_text_proto(copy, text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_text_proto',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -447,7 +464,7 @@ def test_construct_document_origin_text_proto(copy, text_length, json_writer):
 
 @pytest.mark.parametrize('copy', [True, False])
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_construct_document_origin_blob_proto(copy, num_dims, json_writer):
+def test_construct_document_origin_blob_proto(name, copy, num_dims, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -459,7 +476,8 @@ def test_construct_document_origin_blob_proto(copy, num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_blob_proto',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -470,8 +488,8 @@ def test_construct_document_origin_blob_proto(copy, num_dims, json_writer):
 
 
 @pytest.mark.parametrize('copy', [True, False])
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_construct_document_origin_buffer_proto(copy, buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_construct_document_origin_buffer_proto(name, copy, buffer_length, json_writer):
     def _doc_build(d):
         Document(document=d, copy=copy)
 
@@ -485,7 +503,8 @@ def test_construct_document_origin_buffer_proto(copy, buffer_length, json_writer
 
     json_writer.append(
         dict(
-            name='document_construct/test_construct_document_origin_buffer_proto',
+            name=name,
+            page=Pages.DOCUMENT_CONSTRUCT,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,

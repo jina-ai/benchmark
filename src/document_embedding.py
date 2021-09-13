@@ -3,6 +3,7 @@ import pytest
 from jina import Document, DocumentArray, Executor, requests
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 5
 NUM_DOCS = 100
@@ -28,7 +29,7 @@ def executor():
 
 
 @pytest.mark.skip()
-def test_document_encoder_executor(executor, input_docs, json_writer):
+def test_document_encoder_executor(name, executor, input_docs, json_writer):
     def _function(**kwargs):
         executor.encode(input_docs)
 
@@ -41,7 +42,8 @@ def test_document_encoder_executor(executor, input_docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_embedding/test_document_encoder_executor',
+            name=name,
+            page=Pages.DOCUMENT_EMBEDDING,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

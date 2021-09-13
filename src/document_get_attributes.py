@@ -6,6 +6,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 def _generate_random_text(text_length):
@@ -30,7 +31,7 @@ NUM_DOCS = 10000
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_get_attributes_text(text_length, json_writer):
+def test_get_attributes_text(name, text_length, json_writer):
     def _doc_get(doc):
         _ = doc.get_attributes(*['text'])
 
@@ -42,7 +43,8 @@ def test_get_attributes_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_get_attributes/test_get_attributes_text',
+            name=name,
+            page=Pages.DOCUMENT_GET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -52,7 +54,7 @@ def test_get_attributes_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_get_attribute_blob(num_dims, json_writer):
+def test_get_attribute_blob(name, num_dims, json_writer):
     def _doc_get(doc):
         _ = doc.get_attributes(*['blob'])
 
@@ -64,7 +66,8 @@ def test_get_attribute_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_get_attributes/test_get_attribute_blob',
+            name=name,
+            page=Pages.DOCUMENT_GET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -73,8 +76,8 @@ def test_get_attribute_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_get_attribute_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_get_attribute_buffer(name, buffer_length, json_writer):
     def _doc_get(doc):
         _ = doc.get_attributes(*['buffer'])
 
@@ -86,7 +89,8 @@ def test_get_attribute_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_get_attributes/test_get_attribute_buffer',
+            name=name,
+            page=Pages.DOCUMENT_GET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,

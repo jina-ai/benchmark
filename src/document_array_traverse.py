@@ -3,6 +3,7 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 5
 
@@ -22,25 +23,20 @@ def _build_da(num_docs, num_matches, num_chunks):
     return da
 
 
-@pytest.mark.parametrize('num_docs', [10, 100, 1000])
-@pytest.mark.parametrize('num_matches', [10, 100, 1000])
-@pytest.mark.parametrize('num_chunks', [10, 100, 1000])
 @pytest.mark.parametrize(
-    'traversal_paths',
+    'num_docs,num_matches,num_chunks',
     [
-        [
-            'r',
-        ],
-        [
-            'c',
-        ],
-        [
-            'm',
-        ],
+        (10, 10, 10, ['r', 'c', 'm']),
+        (100, 100, 100, ['r', 'c', 'm']),
+        (1000, 1000, 1000, ['r', 'c', 'm']),
+        (1000, 10, 10, ['r']),
+        (1000, 10, 1000, ['c']),
+        (1000, 1000, 10, ['m']),
     ],
 )
 @pytest.mark.parametrize('memmap', [False, True])
-def test_document_array_traverse_flat(
+def test_da_traverse_flat(
+    name,
     num_docs,
     num_matches,
     num_chunks,
@@ -75,10 +71,12 @@ def test_document_array_traverse_flat(
     mean_time, std_time = benchmark_time(
         setup=_build_da, func=_traverse_flat, n=NUM_REPETITIONS
     )
-
+    if memmap:
+        name = name.replace('_da_', '_dam_')
     json_writer.append(
         dict(
-            name='document_array_traverse/test_document_array_traverse_flat',
+            name=name,
+            page=Pages.DA_TRAVERSE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

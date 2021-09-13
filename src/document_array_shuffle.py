@@ -3,13 +3,14 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 5
 
 
 @pytest.mark.parametrize('memmap', [False, True])
 @pytest.mark.parametrize("n_docs", [1000, 10_000])
-def test_da_shuffle(memmap, n_docs, ephemeral_tmpdir, json_writer):
+def test_da_shuffle(name, memmap, n_docs, ephemeral_tmpdir, json_writer):
     def _setup(memmap, n_docs):
         docs = [Document(text=f"Document{i}") for i in range(n_docs)]
         da = (
@@ -37,10 +38,12 @@ def test_da_shuffle(memmap, n_docs, ephemeral_tmpdir, json_writer):
         n=NUM_REPETITIONS,
         kwargs=dict(memmap=memmap, n_docs=n_docs),
     )
-
+    if memmap:
+        name = name.replace('_da_', '_dam_')
     json_writer.append(
         dict(
-            name="document_array_shuffle/test_da_shuffle",
+            name=name,
+            page=Pages.DA_SHUFFLE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

@@ -1,11 +1,13 @@
 import pytest
 from faker import Faker
-from jina import Document, DocumentArray, __version__
+from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 fake = Faker()
+Faker.seed(42)
 NUM_DOCS = 10000
 NUM_REPETITIONS = 5
 
@@ -40,7 +42,9 @@ def doc_array_memmap(docs, ephemeral_tmpdir):
     return dam
 
 
-def test_construct_document_array_from_repeated_container(doc_with_chunks, json_writer):
+def test_construct_document_array_from_repeated_container(
+    name, doc_with_chunks, json_writer
+):
     def _construct():
         DocumentArray(doc_with_chunks.chunks)
 
@@ -48,7 +52,8 @@ def test_construct_document_array_from_repeated_container(doc_with_chunks, json_
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_repeated_container',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -58,7 +63,9 @@ def test_construct_document_array_from_repeated_container(doc_with_chunks, json_
     )
 
 
-def test_construct_document_array_from_another_documentarray(doc_array, json_writer):
+def test_construct_document_array_from_another_documentarray(
+    name, doc_array, json_writer
+):
     def _construct():
         DocumentArray(doc_array)
 
@@ -66,7 +73,8 @@ def test_construct_document_array_from_another_documentarray(doc_array, json_wri
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_another_documentarray',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -76,7 +84,7 @@ def test_construct_document_array_from_another_documentarray(doc_array, json_wri
     )
 
 
-def test_construct_document_array_from_list_of_documents(docs, json_writer):
+def test_construct_document_array_from_list_of_documents(name, docs, json_writer):
     def _construct():
         DocumentArray(docs)
 
@@ -84,7 +92,8 @@ def test_construct_document_array_from_list_of_documents(docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_list_of_documents',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -94,7 +103,9 @@ def test_construct_document_array_from_list_of_documents(docs, json_writer):
     )
 
 
-def test_construct_document_array_from_tuple_of_documents(tuple_docs, json_writer):
+def test_construct_document_array_from_tuple_of_documents(
+    name, tuple_docs, json_writer
+):
     def _construct():
         DocumentArray(tuple_docs)
 
@@ -102,7 +113,8 @@ def test_construct_document_array_from_tuple_of_documents(tuple_docs, json_write
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_tuple_of_documents',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -112,7 +124,7 @@ def test_construct_document_array_from_tuple_of_documents(tuple_docs, json_write
     )
 
 
-def test_construct_document_array_from_generator(json_writer):
+def test_construct_document_array_from_generator(name, json_writer):
     def _yield_documents():
         """Used to benchmark construct DocumentArray from a document generator."""
         for idx in range(NUM_DOCS):
@@ -125,7 +137,8 @@ def test_construct_document_array_from_generator(json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_generator',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -136,7 +149,7 @@ def test_construct_document_array_from_generator(json_writer):
 
 
 def test_construct_document_array_from_another_documentarray_memmap(
-    doc_array_memmap, json_writer
+    name, doc_array_memmap, json_writer
 ):
     def _construct():
         DocumentArray(doc_array_memmap)
@@ -145,7 +158,8 @@ def test_construct_document_array_from_another_documentarray_memmap(
 
     json_writer.append(
         dict(
-            name='document_array_construct/test_construct_document_array_from_another_documentarray_memmap',
+            name=name,
+            page=Pages.DA_CONSTRUCT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

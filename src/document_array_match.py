@@ -6,6 +6,7 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 5
 
@@ -67,6 +68,7 @@ def _prepare_inputs_standard(
 @pytest.mark.parametrize('metric', ['euclidean'])
 @pytest.mark.parametrize('top_k', [3])
 def test_match(
+    name,
     size_X: int,
     size_Y: int,
     dam_x: bool,
@@ -96,7 +98,8 @@ def test_match(
 
     json_writer.append(
         dict(
-            name='document_array_match/test_match',
+            name=name,
+            page=Pages.DA_MATCH,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

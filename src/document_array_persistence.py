@@ -2,6 +2,7 @@ import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_DOCS = 100000
 
@@ -16,7 +17,7 @@ def doc_array():
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_document_array_save(doc_array, file_format, json_writer, ephemeral_tmpdir):
+def test_da_save(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
     file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
@@ -34,7 +35,8 @@ def test_document_array_save(doc_array, file_format, json_writer, ephemeral_tmpd
 
     json_writer.append(
         dict(
-            name='document_array_persistence/test_document_array_save',
+            name=name,
+            page=Pages.DA_PERSISTENCE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -45,7 +47,7 @@ def test_document_array_save(doc_array, file_format, json_writer, ephemeral_tmpd
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_document_array_load(doc_array, file_format, json_writer, ephemeral_tmpdir):
+def test_da_load(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
     file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
@@ -67,7 +69,8 @@ def test_document_array_load(doc_array, file_format, json_writer, ephemeral_tmpd
 
     json_writer.append(
         dict(
-            name='document_array_persistence/test_document_array_load',
+            name=name,
+            page=Pages.DA_PERSISTENCE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
