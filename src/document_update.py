@@ -7,12 +7,18 @@ from .utils.benchmark import benchmark_time
 NUM_REPETITIONS = 5
 
 
-
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
-def test_document_document_update_embedding(num_docs,  json_writer):
+def test_document_document_update_embedding(num_docs, json_writer):
     def _input_docs():
-        return ( (), {'docs': [Document( embedding=np.array([1,2,3])) for _ in range(num_docs)],
-                      'new_doc': Document(embedding=np.array([4,5,6]))})
+        return (
+            (),
+            {
+                "docs": [
+                    Document(embedding=np.array([1, 2, 3])) for _ in range(num_docs)
+                ],
+                "new_doc": Document(embedding=np.array([4, 5, 6])),
+            },
+        )
 
     def _update_embedding(docs, new_doc):
         for d in docs:
@@ -33,13 +39,16 @@ def test_document_document_update_embedding(num_docs,  json_writer):
     )
 
 
-
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
-def test_document_document_update_text(num_docs,  json_writer):
+def test_document_document_update_text(num_docs, json_writer):
     def _input_docs():
-        return ( (), {'docs': [Document( text='original text') for _ in range(num_docs)],
-                      'new_doc': Document(text='new text')})
-
+        return (
+            (),
+            {
+                "docs": [Document(text="original text") for _ in range(num_docs)],
+                "new_doc": Document(text="new text"),
+            },
+        )
 
     def _update_text(docs, new_doc):
         for d in docs:
@@ -58,4 +67,3 @@ def test_document_document_update_text(num_docs,  json_writer):
             metadata=dict(num_docs=num_docs),
         )
     )
-
