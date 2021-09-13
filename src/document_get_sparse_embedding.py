@@ -9,7 +9,7 @@ NUM_REPETITIONS = 5
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
-def test_document_document_get_sparse_blob_scipy(num_docs, json_writer):
+def test_document_document_get_sparse_embedding_scipy(num_docs, json_writer):
     def _input_docs():
         return (
             (),
@@ -23,7 +23,7 @@ def test_document_document_get_sparse_blob_scipy(num_docs, json_writer):
 
     def _get_sparse_blob(docs):
         for d in docs:
-            d.get_sparse_blob(SparseScipy)
+            d.get_sparse_embedding(SparseScipy)
 
     mean_time, std_time = benchmark_time(
         setup=_input_docs, func=_get_sparse_blob, n=NUM_REPETITIONS
@@ -31,7 +31,7 @@ def test_document_document_get_sparse_blob_scipy(num_docs, json_writer):
 
     json_writer.append(
         dict(
-            name="document_get_sparse_blob/test_document_document_get_sparse_blob_scipy",
+            name="document_get_sparse_embedding/test_document_document_get_sparse_embedding_scipy",
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
