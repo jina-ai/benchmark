@@ -3,9 +3,10 @@ import string
 
 import numpy as np
 import pytest
-from jina import Document, __version__
+from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 def _generate_random_text(text_length):
@@ -30,7 +31,7 @@ NUM_DOCS = 10000
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_set_attribute_text(text_length, json_writer):
+def test_set_attribute_text(name, text_length, json_writer):
     def _set_doc(doc):
         doc.set_attributes(text=_generate_random_text(text_length))
 
@@ -42,7 +43,8 @@ def test_set_attribute_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_set_attributes/test_set_attribute_text',
+            name=name,
+            page=Pages.DOCUMENT_SET_ATTIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -53,7 +55,7 @@ def test_set_attribute_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_set_attribute_blob(num_dims, json_writer):
+def test_set_attribute_blob(name, num_dims, json_writer):
     def _set_doc(doc):
         doc.set_attributes(blob=_generate_random_blob(num_dims))
 
@@ -65,7 +67,8 @@ def test_set_attribute_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_set_attributes/test_set_attribute_blob',
+            name=name,
+            page=Pages.DOCUMENT_SET_ATTIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -75,8 +78,8 @@ def test_set_attribute_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_set_attribute_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_set_attribute_buffer(name, buffer_length, json_writer):
     def _set_doc(doc):
         doc.set_attributes(buffer=_generate_random_buffer(buffer_length))
 
@@ -88,7 +91,8 @@ def test_set_attribute_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_set_attributes/test_set_attribute_buffer',
+            name=name,
+            page=Pages.DOCUMENT_SET_ATTIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,

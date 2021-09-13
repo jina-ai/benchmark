@@ -3,9 +3,10 @@ import string
 
 import numpy as np
 import pytest
-from jina import Document, __version__
+from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 def _generate_random_text(text_length):
@@ -21,7 +22,6 @@ def _generate_random_buffer(buffer_length):
 
 def _generate_random_blob(num_dims):
     # 1 and 3 can cover from audio signals to images. 3 dimensions make the memory too high
-    shape_length = random.randint(1, 2)
     shape = [random.randint(100, 200)] * num_dims
 
     return np.random.rand(*shape)
@@ -31,7 +31,7 @@ NUM_DOCS = 10000
 
 
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
-def test_get_content_text(text_length, json_writer):
+def test_get_content_text(name, text_length, json_writer):
     def _doc_get(doc):
         _ = doc.text
 
@@ -43,7 +43,8 @@ def test_get_content_text(text_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_property_getter/test_get_content_text',
+            name=name,
+            page=Pages.DOCUMENT_PROPERTY_GETTER,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -54,7 +55,7 @@ def test_get_content_text(text_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_get_content_blob(num_dims, json_writer):
+def test_get_content_blob(name, num_dims, json_writer):
     def _doc_get(doc):
         _ = doc.blob
 
@@ -66,7 +67,8 @@ def test_get_content_blob(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_property_getter/test_get_content_blob',
+            name=name,
+            page=Pages.DOCUMENT_PROPERTY_GETTER,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -76,8 +78,8 @@ def test_get_content_blob(num_dims, json_writer):
     )
 
 
-@pytest.mark.parametrize('buffer_length', [10, 100, 1000, 10000])
-def test_get_content_buffer(buffer_length, json_writer):
+@pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
+def test_get_content_buffer(name, buffer_length, json_writer):
     def _doc_get(doc):
         _ = doc.buffer
 
@@ -89,7 +91,8 @@ def test_get_content_buffer(buffer_length, json_writer):
 
     json_writer.append(
         dict(
-            name='document_property_getter/test_get_content_buffer',
+            name=name,
+            page=Pages.DOCUMENT_PROPERTY_GETTER,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -99,7 +102,7 @@ def test_get_content_buffer(buffer_length, json_writer):
 
 
 @pytest.mark.parametrize('num_dims', [1, 2])
-def test_get_embedding(num_dims, json_writer):
+def test_get_embedding(name, num_dims, json_writer):
     def _doc_get(doc):
         _ = doc.embedding
 
@@ -111,7 +114,8 @@ def test_get_embedding(num_dims, json_writer):
 
     json_writer.append(
         dict(
-            name='document_property_getter/test_get_embedding',
+            name=name,
+            page=Pages.DOCUMENT_PROPERTY_GETTER,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,

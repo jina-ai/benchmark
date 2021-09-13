@@ -1,6 +1,7 @@
 from jina import Executor, requests
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 100
 
@@ -26,7 +27,7 @@ metas:
 '''
 
 
-def test_executor_load_config(json_writer):
+def test_executor_load_config(name, json_writer):
     def _build():
         _ = Executor.load_config(executor_yaml)
 
@@ -34,7 +35,8 @@ def test_executor_load_config(json_writer):
 
     json_writer.append(
         dict(
-            name='executor/test_executor_load_config',
+            name=name,
+            page=Pages.EXECUTOR,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

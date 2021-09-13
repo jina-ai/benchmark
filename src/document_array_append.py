@@ -1,11 +1,13 @@
 import pytest
 from faker import Faker
-from jina import Document, DocumentArray, __version__
+from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 fake = Faker()
+Faker.seed(42)
 NUM_DOCS = 10000
 NUM_REPETITIONS = 5
 
@@ -15,7 +17,7 @@ def docs():
     return [Document(text=fake.text()) for _ in range(NUM_DOCS)]
 
 
-def test_docarray_append(docs, json_writer):
+def test_da_append(name, docs, json_writer):
     def _append(da):
         for doc in docs:
             da.append(doc)
@@ -27,7 +29,8 @@ def test_docarray_append(docs, json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_append/test_docarray_append',
+            name=name,
+            page=Pages.DA_APPEND,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -38,7 +41,7 @@ def test_docarray_append(docs, json_writer):
 
 
 @pytest.mark.parametrize('flush', [True, False])
-def test_document_array_memmap_append(docs, flush, json_writer, ephemeral_tmpdir):
+def test_dam_append(name, docs, flush, json_writer, ephemeral_tmpdir):
     def _append(da):
         for doc in docs:
             da.append(doc, flush=flush)
@@ -57,7 +60,8 @@ def test_document_array_memmap_append(docs, flush, json_writer, ephemeral_tmpdir
 
     json_writer.append(
         dict(
-            name='document_array_append/test_document_array_memmap_append',
+            name=name,
+            page=Pages.DA_APPEND,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

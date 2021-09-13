@@ -2,12 +2,13 @@ import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 10
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_save_binary(num_docs, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_da_save_binary(name, num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         docs = [Document(text=f"doc{i}") for i in range(num_docs)]
         da = DocumentArray(docs)
@@ -30,7 +31,8 @@ def test_da_save_binary(num_docs, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_insert/test_da_save_binary',
+            name=name,
+            page=Pages.DA_INSERT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -40,8 +42,8 @@ def test_da_save_binary(num_docs, json_writer, ephemeral_tmpdir):
     )
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_load_binary(num_docs, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize('num_docs', [100, 10_000])
+def test_da_load_binary(name, num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         docs = [Document(text=f"doc{i}") for i in range(num_docs)]
         da = DocumentArray(docs)
@@ -65,7 +67,8 @@ def test_da_load_binary(num_docs, json_writer, ephemeral_tmpdir):
 
     json_writer.append(
         dict(
-            name='document_array_insert/test_da_save_binary',
+            name=name,
+            page=Pages.DA_INSERT,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

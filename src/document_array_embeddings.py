@@ -4,13 +4,15 @@ from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 NUM_REPETITIONS = 10
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-@pytest.mark.parametrize('num_feat', [128, 256])
-def test_da_embeddings(num_docs, num_feat, json_writer):
+@pytest.mark.parametrize(
+    'num_docs,num_feat', [(100, 128), (10_000, 128), (10_000, 256)]
+)
+def test_da_embeddings(name, num_docs, num_feat, json_writer):
     def _setup():
         da = DocumentArray(
             [Document(embedding=np.random.random(num_feat)) for i in range(num_docs)]
@@ -28,19 +30,21 @@ def test_da_embeddings(num_docs, num_feat, json_writer):
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_embeddings',
+            name=name,
+            page=Pages.DA_GET_ATTRIBUTE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
             unit='ms',
-            metadata=dict(num_docs=num_docs),
+            metadata=dict(num_docs=num_docs, num_feat=num_feat),
         )
     )
 
 
-@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-@pytest.mark.parametrize('num_feat', [128, 256])
-def test_da_memmap_embeddings(num_docs, num_feat, json_writer, ephemeral_tmpdir):
+@pytest.mark.parametrize(
+    'num_docs,num_feat', [(100, 128), (10_000, 128), (10_000, 256)]
+)
+def test_dam_embeddings(name, num_docs, num_feat, json_writer, ephemeral_tmpdir):
     def _setup():
         dam = DocumentArrayMemmap((f'{str(ephemeral_tmpdir)}/memmap'))
         dam.extend(
@@ -65,11 +69,12 @@ def test_da_memmap_embeddings(num_docs, num_feat, json_writer, ephemeral_tmpdir)
 
     json_writer.append(
         dict(
-            name='document_array_clear/test_da_memmap_embeddings',
+            name=name,
+            page=Pages.DA_GET_ATTRIBUTE,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
             unit='ms',
-            metadata=dict(num_docs=num_docs),
+            metadata=dict(num_docs=num_docs, num_feat=num_feat),
         )
     )
