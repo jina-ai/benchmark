@@ -1,5 +1,6 @@
 import pytest
 from jina import Document
+from jina.types.document.graph import GraphDocument
 
 from .utils.benchmark import benchmark_time
 
@@ -14,16 +15,15 @@ def test_empty_document_graph_adjacency(json_writer):
         _ = gdoc.adjacency
 
     mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_doc_get_adjacency, n=NUM_REPETITIONS
+        setup=_input_graphdoc, func=_doc_get_adjacency, n=NUM_REPETITIONS
     )
 
     json_writer.append(
         dict(
             name="document_graph_adjacency/test_empty_document_graph_adjacency",
-            iterations=num_docs,
+            iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs=num_docs),
         )
     )
 
@@ -41,15 +41,14 @@ def test_document_graph_adjacency(json_writer):
         _ = gdoc.adjacency
 
     mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_doc_get_adjacency, n=NUM_REPETITIONS
+        setup=_input_graphdoc, func=_doc_get_adjacency, n=NUM_REPETITIONS
     )
 
     json_writer.append(
         dict(
             name="document_graph_adjacency/test_empty_document_graph_adjacency",
-            iterations=num_docs,
+            iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            metadata=dict(num_docs=num_docs),
         )
     )
