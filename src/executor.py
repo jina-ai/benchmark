@@ -41,5 +41,6 @@ def test_executor_load_config(name, json_writer):
             mean_time=mean_time,
             std_time=std_time,
             unit='ms',
+            metadata={},
         )
     )

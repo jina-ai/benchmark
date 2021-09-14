@@ -44,7 +44,7 @@ def test_set_attribute_text(name, text_length, json_writer):
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DOCUMENT_SET_ATTIBUTES,
+            page=Pages.DOCUMENT_SET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -68,7 +68,7 @@ def test_set_attribute_blob(name, num_dims, json_writer):
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DOCUMENT_SET_ATTIBUTES,
+            page=Pages.DOCUMENT_SET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
@@ -92,7 +92,7 @@ def test_set_attribute_buffer(name, buffer_length, json_writer):
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DOCUMENT_SET_ATTIBUTES,
+            page=Pages.DOCUMENT_SET_ATTRIBUTES,
             iterations=NUM_DOCS,
             mean_time=mean_time,
             std_time=std_time,
