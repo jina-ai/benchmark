@@ -18,20 +18,20 @@ def _build_da(num_docs, num_matches, num_chunks):
         if num_matches > 0:
             doc.matches.extend(_get_docs(num_matches))
         if num_chunks > 0:
-            doc.chunks.extend(_get_docs(num_matches))
+            doc.chunks.extend(_get_docs(num_chunks))
 
     return da
 
 
 @pytest.mark.parametrize(
-    'num_docs,num_matches,num_chunks',
+    'num_docs,num_matches,num_chunks,traversal_paths',
     [
         (10, 10, 10, ['r', 'c', 'm']),
         (100, 100, 100, ['r', 'c', 'm']),
-        (1000, 1000, 1000, ['r', 'c', 'm']),
+        (1000, 100, 100, ['r', 'c', 'm']),
         (1000, 10, 10, ['r']),
-        (1000, 10, 1000, ['c']),
-        (1000, 1000, 10, ['m']),
+        (1000, 10, 100, ['c']),
+        (1000, 100, 10, ['m']),
     ],
 )
 @pytest.mark.parametrize('memmap', [False, True])
@@ -57,7 +57,7 @@ def test_da_traverse_flat(
             if num_matches > 0:
                 doc.matches.extend(_get_docs(num_matches))
             if num_chunks > 0:
-                doc.chunks.extend(_get_docs(num_matches))
+                doc.chunks.extend(_get_docs(num_chunks))
 
         da = (
             DocumentArray()

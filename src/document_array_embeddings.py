@@ -31,7 +31,7 @@ def test_da_embeddings(name, num_docs, num_feat, json_writer):
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DA_GET_ATTRIBUTE,
+            page=Pages.DA_GET_ATTRIBUTES,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -70,7 +70,7 @@ def test_dam_embeddings(name, num_docs, num_feat, json_writer, ephemeral_tmpdir)
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DA_GET_ATTRIBUTE,
+            page=Pages.DA_GET_ATTRIBUTES,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

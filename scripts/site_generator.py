@@ -23,8 +23,10 @@ COLOR_NAN = '#8483a7'
 
 NOT_A_NUMBER = 'N/A'
 
+STD_MEAN_THRESHOLD = 0.5
 
-def __format(data: Union[int, float]) -> Any:
+
+def _format(data: Union[int, float]) -> Any:
     if isinstance(data, bool):
         return str(data)
     elif isinstance(data, int) or isinstance(data, float):
@@ -51,17 +53,6 @@ def __format(data: Union[int, float]) -> Any:
         return data
 
 
-def _get_delta(mean_time: float, master_mean_time: float) -> str:
-    try:
-        delta = (1 - (float(mean_time) / float(master_mean_time))) * 100
-        delta_string = f"{delta:+7.2f}%".replace(' ', '&nbsp;&nbsp;')
-        if delta < 0:
-            delta_string = '&nbsp;' + delta_string
-        return delta_string
-    except:
-        return NOT_A_NUMBER
-
-
 def _get_background(mean_time, master_mean_time):
     if mean_time is None or mean_time == NOT_A_NUMBER or master_mean_time == 0:
         return COLOR_NAN
@@ -71,25 +62,13 @@ def _get_background(mean_time, master_mean_time):
     return COLOR_VALUES[bucket]
 
 
-def _get_cleaned_data(data: Dict[str, Any]) -> Dict[str, Any]:
+def _get_cleaned_mean_time(data: Dict[str, Any]) -> str:
     """Return cleaned data"""
 
-    cleaned_data = dict()
-
-    cleaned_data['mean_time'] = (
-        f'{float(data["mean_time"]):7.2f}'
-        if data.get('mean_time', None)
-        else NOT_A_NUMBER
-    )
-    cleaned_data['std_time'] = (
-        f'{float(data["std_time"]):5.2f}'
-        if data.get('std_time', None)
-        else '&nbsp;&nbsp;&nbsp;N/A'
-    )
-    cleaned_data['metadata'] = data.get('metadata', None)
-    cleaned_data['iterations'] = __format(data.get('iterations', NOT_A_NUMBER))
-
-    return cleaned_data
+    if data.get('mean_time', None):
+        return f'{float(data["mean_time"]):8.2f}'
+    else:
+        return NOT_A_NUMBER
 
 
 def _cleaned_title(raw_heading: str) -> str:
@@ -97,34 +76,39 @@ def _cleaned_title(raw_heading: str) -> str:
     return raw_heading.replace('test_', '').replace('_', ' ').title()
 
 
-def _get_metadata_titles(raw_data: List[Dict[str, Any]]) -> Tuple[str, str]:
+def get_std_warning(run_stats):
+    if (
+        run_stats.get('std_time', 0.0) / run_stats.get('mean_time', 1e20)
+        > STD_MEAN_THRESHOLD
+    ):
+        return '&#9888;'
+    else:
+        return ''
+
+
+def _get_table_header(raw_data: List[Dict[str, Any]]) -> Tuple[str, str]:
     """Return metadata table title and table separator."""
-    titles = []
+    titles = {}
+    for test_run in raw_data:
+        if 'metadata' in test_run:
+            for name in test_run['metadata']:
+                titles[name] = []
+            break
     separators = []
     for result in raw_data:
-        if 'metadata' in result:
-            formatted_metadata = [
-                f'{parameter}: {value}'
-                for parameter, value in result['metadata'].items()
-            ]
-            content = '<br>'.join(formatted_metadata)
+        separators.append('---:')
+        for field in titles:
+            if 'metadata' in result:
+                value = result['metadata'].get(field, 'N/A')
+                titles[field].append(f'**{value}**')
 
-            titles.append(f'<span style="font-size:0.6em;">{content}</span>')
-            separators.append('---:')
-
-        else:
-            titles.append(result['name'])
-            separators.append('---:')
-    return ' | '.join(titles), ' | '.join(separators)
-
-
-def __get_metadata_values(metadata: Dict[str, Any]) -> str:
-    """Return metadata table values."""
-    if metadata:
-        values = ' | '.join(str(__format(v)) for v in metadata.values())
-        return values
-    else:
-        return NOT_A_NUMBER
+            else:
+                titles[field].append('**N/A**')
+    final = []
+    for title, values in titles.items():
+        final.append(f'| **{title}** | {" | ".join(values)} |\n')
+    header = f'{final[0]}| :---: | {" | ".join(separators)} |\n{"".join(final[1:])}'
+    return header
 
 
 def _get_version_list(artifacts_dir: str) -> List[str]:
@@ -192,7 +176,7 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
             for i in _raw_data:
                 page = i['page']
                 test_name = i['name']
-                metadata_hash = hash_run(i)
+                metadata_hash = _hash_run(i)
 
                 data[page][test_name][version][metadata_hash] = i
 
@@ -221,7 +205,7 @@ def generate_homepage(output_dir: str) -> None:
             fp.write(data)
 
 
-def hash_run(d):
+def _hash_run(d):
     tmp_dict = copy.deepcopy(d)
     del tmp_dict['mean_time']
     del tmp_dict['std_time']
@@ -234,7 +218,7 @@ def _get_stats(test_data, last_benchmarked_version):
     for version, test_results in test_data.items():
         for test_result in test_results.values():
             if 'metadata' in test_result:
-                parameter_hash = hash_run(test_result)
+                parameter_hash = _hash_run(test_result)
                 results[parameter_hash]['min'] = min(
                     results[parameter_hash].get('min', 1e10), test_result['mean_time']
                 )
@@ -250,13 +234,6 @@ def _get_stats(test_data, last_benchmarked_version):
                     ]
 
     return list(results.values())
-
-
-def get_header_entry(metadata):
-    paramater_strings = [
-        f'{parameter}: {value}' for parameter, value in metadata.items()
-    ]
-    return '<br>'.join(paramater_strings)
 
 
 def generate_docs(
@@ -284,31 +261,25 @@ def generate_docs(
             for test_name, single_test_data in cum_data[page].items():
                 stats = _get_stats(single_test_data, last_benchmarked_version)
 
-                title, separator = _get_metadata_titles(stats)
+                header = _get_table_header(stats)
 
-                fp.write(f'## {_cleaned_title(test_name)}\n\n')
-                fp.write(f'| Version | {title} |\n')
-                fp.write(f'| :---: | {separator} |\n')
+                fp.write(f'## {_cleaned_title(test_name)}\n')
+                fp.write(
+                    f'&#9888; => standard deviation / mean > {STD_MEAN_THRESHOLD}\n\n'
+                )
+                fp.write(header)
 
                 for version, data_dict in single_test_data.items():
                     fp.write(f'| {version} |')
                     for run in stats:
-                        run_hash = run['parameter_hash']
-                        _data_point = _get_cleaned_data(data_dict[run_hash])
+                        run_data = data_dict[run['parameter_hash']]
 
-                        wrt_mean_time = run.get('last_version_mean', 100)
-                        delta = _get_delta(
-                            _data_point.get('mean_time', None), wrt_mean_time
-                        )
-                        mean_time = _data_point["mean_time"].replace(
-                            ' ', '&nbsp;&nbsp;'
-                        )
-                        std_time = _data_point["std_time"].replace(' ', '&nbsp;&nbsp;')
-                        background_color = _get_background(
-                            _data_point.get('mean_time', None), run['min']
-                        )
+                        mean_time = _get_cleaned_mean_time(run_data)
+                        std_warning = get_std_warning(run_data)
+                        background_color = _get_background(mean_time, run['min'])
+
                         fp.write(
-                            f' <span style="background-color:{background_color};">{mean_time} ± {std_time}</span> |'
+                            f' <span style="background-color:{background_color};">{std_warning}{mean_time}</span> |'
                         )
                     fp.write('\n')
                 fp.write('\n')
