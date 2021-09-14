@@ -25,7 +25,7 @@ def test_document_uri(num_docs, json_writer):
     json_writer.append(
         dict(
             name="document_uri/test_document_uri",
-            iterations=num_docs,
+            iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
             metadata=dict(num_docs=num_docs),

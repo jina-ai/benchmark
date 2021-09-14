@@ -25,7 +25,7 @@ def test_document_get_content_type(num_docs, json_writer):
     json_writer.append(
         dict(
             name="document_content_type/test_document_get_content_type",
-            iterations=num_docs,
+            iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
             metadata=dict(num_docs=num_docs),
