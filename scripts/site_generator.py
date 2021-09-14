@@ -77,10 +77,8 @@ def _cleaned_title(raw_heading: str) -> str:
 
 
 def get_std_warning(run_stats):
-    if (
-        run_stats.get('std_time', 0.0) / run_stats.get('mean_time', 1e20)
-        > STD_MEAN_THRESHOLD
-    ):
+    mean = run_stats.get('mean_time', 1e20)
+    if mean != 0 and run_stats.get('std_time', 0.0) / mean > STD_MEAN_THRESHOLD:
         return '&#9888;'
     else:
         return ''
@@ -141,7 +139,7 @@ def _get_version_list(artifacts_dir: str) -> List[str]:
             sorted_dev[i + 1] = tmp
         i += 1
 
-    version_list = [sorted_dev[i - 1] for i in range(len(sorted_dev), 1, -1)]
+    version_list = [sorted_dev[i - 1] for i in range(len(sorted_dev), 0, -1)]
 
     return version_list
 
@@ -217,21 +215,21 @@ def _get_stats(test_data, last_benchmarked_version):
     results = defaultdict(dict)
     for version, test_results in test_data.items():
         for test_result in test_results.values():
-            if 'metadata' in test_result:
-                parameter_hash = _hash_run(test_result)
-                results[parameter_hash]['min'] = min(
-                    results[parameter_hash].get('min', 1e10), test_result['mean_time']
-                )
-                results[parameter_hash]['max'] = max(
-                    results[parameter_hash].get('max', 0), test_result['mean_time']
-                )
-                results[parameter_hash]['metadata'] = test_result['metadata']
-                results[parameter_hash]['parameter_hash'] = parameter_hash
+            parameter_hash = _hash_run(test_result)
+            results[parameter_hash]['metadata'] = test_result.get(
+                'metadata', {'name': test_result['name']}
+            )
 
-                if version == last_benchmarked_version:
-                    results[parameter_hash]['last_version_mean'] = test_result[
-                        'mean_time'
-                    ]
+            results[parameter_hash]['min'] = min(
+                results[parameter_hash].get('min', 1e10), test_result['mean_time']
+            )
+            results[parameter_hash]['max'] = max(
+                results[parameter_hash].get('max', 0), test_result['mean_time']
+            )
+            results[parameter_hash]['parameter_hash'] = parameter_hash
+
+            if version == last_benchmarked_version:
+                results[parameter_hash]['last_version_mean'] = test_result['mean_time']
 
     return list(results.values())
 
@@ -279,7 +277,7 @@ def generate_docs(
                         background_color = _get_background(mean_time, run['min'])
 
                         fp.write(
-                            f' <span style="background-color:{background_color};">{std_warning}{mean_time}</span> |'
+                            f' {std_warning} <span style="background-color:{background_color};">{mean_time}</span> |'
                         )
                     fp.write('\n')
                 fp.write('\n')

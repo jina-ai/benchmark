@@ -1,4 +1,6 @@
 import pytest
+import shutil
+
 from jina import Document, DocumentArray
 from jina.types.arrays.memmap import DocumentArrayMemmap
 
@@ -49,7 +51,8 @@ def test_da_traverse_flat(
         pytest.skip('problems with memory')
 
     def _traverse_flat(da):
-        da.traverse_flat(traversal_paths)
+        for d in da.traverse_flat(traversal_paths):
+            pass
 
     def _build_da():
         docs = _get_docs(num_docs)
@@ -68,8 +71,14 @@ def test_da_traverse_flat(
 
         return (), dict(da=da)
 
+    def _teardown():
+        try:
+            shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
+        except FileNotFoundError:
+            pass
+
     mean_time, std_time = benchmark_time(
-        setup=_build_da, func=_traverse_flat, n=NUM_REPETITIONS
+        setup=_build_da, func=_traverse_flat, teardown=_teardown, n=NUM_REPETITIONS
     )
     if memmap:
         name = name.replace('_da_', '_dam_')
