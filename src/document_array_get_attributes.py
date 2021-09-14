@@ -99,7 +99,7 @@ def test_da_get_attributes(
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DA_GET_ATTRIBUTE,
+            page=Pages.DA_GET_ATTRIBUTES,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
@@ -148,7 +148,7 @@ def test_da_embeddings_property(name, memmap, num_docs, json_writer, ephemeral_t
     json_writer.append(
         dict(
             name=name,
-            page=Pages.DA_GET_ATTRIBUTE,
+            page=Pages.DA_GET_ATTRIBUTES,
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,

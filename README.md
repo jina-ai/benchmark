@@ -10,6 +10,7 @@ We are currenty considering time metrics to benchmark Jina features and using [p
 pip install -r requirements.txt
 pip install pre-commit==2.13.0
 pre-commit install
+git submodule update --init
 ```
 
 ### Run Locally
@@ -24,6 +25,14 @@ pytest
 JINA_VER=master
 docker build --build-arg JINA_VER=$JINA_VER -t bechmark .
 docker run -v $(pwd):/app bechmark:latest
+```
+
+### Generate docs locally and run server
+
+```bash
+python scripts/site_generator.py
+cd docs
+hugo server -D
 ```
 
 ## Machine

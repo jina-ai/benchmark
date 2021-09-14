@@ -1,7 +1,4 @@
-from enum import Enum
-
-
-class PAGES(Enum):
+class Pages:
     DA_APPEND = 'document_array_append'
     DA_CLEAR = 'document_array_clear'
     DA_CONSTRUCT = 'document_array_construct'
