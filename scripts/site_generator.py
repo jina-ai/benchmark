@@ -172,7 +172,7 @@ def _get_cum_data(version_list: List[str], artifacts_dir: str) -> Dict[Any, Any]
                     _raw_data.extend(json.load(fp))
 
             for i in _raw_data:
-                page = i['page']
+                page = i.get('page', 'unsorted_tests')
                 test_name = i['name']
                 metadata_hash = _hash_run(i)
 
