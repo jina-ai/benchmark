@@ -88,10 +88,9 @@ def _get_table_header(raw_data: List[Dict[str, Any]]) -> Tuple[str, str]:
     """Return metadata table title and table separator."""
     titles = {}
     for test_run in raw_data:
-        if 'metadata' in test_run:
-            for name in test_run['metadata']:
-                titles[name] = []
-            break
+        for name in test_run['metadata']:
+            titles[name] = []
+        break
     separators = []
     for result in raw_data:
         separators.append('---:')
@@ -216,9 +215,10 @@ def _get_stats(test_data, last_benchmarked_version):
     for version, test_results in test_data.items():
         for test_result in test_results.values():
             parameter_hash = _hash_run(test_result)
-            results[parameter_hash]['metadata'] = test_result.get(
-                'metadata', {'name': test_result['name']}
-            )
+            metadata = test_result.get('metadata', {})
+            if not metadata:
+                metadata = {'name': test_result['name']}
+            results[parameter_hash]['metadata'] = metadata
 
             results[parameter_hash]['min'] = min(
                 results[parameter_hash].get('min', 1e10), test_result['mean_time']
