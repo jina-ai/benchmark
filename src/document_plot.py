@@ -16,18 +16,16 @@ def test_document_plot(num_docs, json_writer, ephemeral_tmpdir):
     def _input_docs():
         return (
             (),
-            dict(
-                docs=[
-                    Document(text="doc") for _ in range(num_docs)
-                ]
-            ),
+            dict(docs=[Document(text="doc") for _ in range(num_docs)]),
         )
 
     def _plot(docs):
         for d in docs:
-            d.plot(output=os.path.join(ephemeral_tmpdir, 'doc.svg'))
+            d.plot(output=os.path.join(ephemeral_tmpdir, "doc.svg"))
 
-    mean_time, std_time = benchmark_time(setup=_input_docs, func=_plot, n=NUM_REPETITIONS)
+    mean_time, std_time = benchmark_time(
+        setup=_input_docs, func=_plot, n=NUM_REPETITIONS
+    )
 
     json_writer.append(
         dict(
@@ -39,4 +37,3 @@ def test_document_plot(num_docs, json_writer, ephemeral_tmpdir):
             metadata=dict(num_docs=num_docs),
         )
     )
-
