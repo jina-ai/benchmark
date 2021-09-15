@@ -412,3 +412,37 @@ def test_document_convert_blob_to_buffer(num_docs, json_writer):
             metadata=dict(num_docs=num_docs),
         )
     )
+
+
+
+@pytest.mark.parametrize("num_docs", [1, 100, 1000])
+def test_document_convert_blob_to_buffer(num_docs, json_writer):
+    def _input_docs():
+        return (
+            (),
+            dict(
+                docs=[
+                    Document(content=np.random.randint(0, 255, 32 * 28))
+                    for _ in range(num_docs)
+                ]
+            ),
+        )
+
+    def _convert_buffer_to_uri(docs):
+        for doc in docs:
+            _ = doc.convert_blob_to_buffer()
+
+    mean_time, std_time = benchmark_time(
+        setup=_input_docs, func=_convert_buffer_to_uri, n=NUM_REPETITIONS
+    )
+
+    json_writer.append(
+        dict(
+            name="document_conversions_blob_image_uri_text/test_document_convert_blob_to_buffer",
+            iterations=NUM_REPETITIONS,
+            mean_time=mean_time,
+            std_time=std_time,
+            unit="ms",
+            metadata=dict(num_docs=num_docs),
+        )
+    )
