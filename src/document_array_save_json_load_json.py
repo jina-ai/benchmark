@@ -8,9 +8,9 @@ NUM_REPETITIONS = 10
 
 
 @pytest.mark.parametrize('num_docs', [100, 10_000])
-def test_da_save_json(name, num_docs, json_writer, ephemeral_tmpdir):
+def test_da_save_json(num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
-        docs = [Document(text=f"doc{i}") for i in range(num_docs)]
+        docs = [Document(text=f'doc{i}') for i in range(num_docs)]
         da = DocumentArray(docs)
         return (), dict(da=da)
 
@@ -22,7 +22,7 @@ def test_da_save_json(name, num_docs, json_writer, ephemeral_tmpdir):
 
         os.remove(f'{str(ephemeral_tmpdir)}/docarray.json')
 
-    mean_time, std_time = benchmark_time(
+    result = benchmark_time(
         setup=_setup,
         func=_da_save_json,
         teardown=_teardown,
@@ -30,22 +30,16 @@ def test_da_save_json(name, num_docs, json_writer, ephemeral_tmpdir):
     )
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_INSERT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        page=Pages.DA_INSERT,
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
 
 
 @pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
-def test_da_load_json(name, num_docs, json_writer, ephemeral_tmpdir):
+def test_da_load_json(num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
-        docs = [Document(text=f"doc{i}") for i in range(num_docs)]
+        docs = [Document(text=f'doc{i}') for i in range(num_docs)]
         da = DocumentArray(docs)
         da.save_json(f'{str(ephemeral_tmpdir)}/docarray.json')
         return (), dict(da=da)
@@ -58,21 +52,12 @@ def test_da_load_json(name, num_docs, json_writer, ephemeral_tmpdir):
 
         os.remove(f'{str(ephemeral_tmpdir)}/docarray.json')
 
-    mean_time, std_time = benchmark_time(
-        setup=_setup,
-        func=_da_load_json,
-        teardown=_teardown,
-        n=NUM_REPETITIONS,
+    result = benchmark_time(
+        setup=_setup, func=_da_load_json, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_INSERT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        page=Pages.DA_INSERT,
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )

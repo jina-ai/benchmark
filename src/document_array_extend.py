@@ -52,7 +52,7 @@ def buffer_docs():
         (buffer_docs(), 'buffer'),
     ],
 )
-def test_da_extend(name, docs, label, memmap, json_writer, ephemeral_tmpdir):
+def test_da_extend(docs, label, memmap, json_writer, ephemeral_tmpdir):
     def _extend(da):
         da.extend(docs)
 
@@ -72,7 +72,7 @@ def test_da_extend(name, docs, label, memmap, json_writer, ephemeral_tmpdir):
         if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
             shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
-    mean_time, std_time = benchmark_time(
+    result = benchmark_time(
         setup=_build_da,
         func=_extend,
         teardown=_teardown,
@@ -81,13 +81,7 @@ def test_da_extend(name, docs, label, memmap, json_writer, ephemeral_tmpdir):
     )
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_EXTEND,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=len(docs), label=label, memmap=memmap),
-        )
+        page=Pages.DA_EXTEND,
+        result=result,
+        metadata=dict(num_docs=len(docs), label=label, memmap=memmap),
     )

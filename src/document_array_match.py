@@ -8,8 +8,6 @@ from jina.types.arrays.memmap import DocumentArrayMemmap
 from .utils.benchmark import benchmark_time
 from .pages import Pages
 
-NUM_REPETITIONS = 5
-
 
 def _generate_docs_with_embs(
     n_docs: int, emb_size: int
@@ -68,7 +66,6 @@ def _prepare_inputs_standard(
 @pytest.mark.parametrize('metric', ['euclidean'])
 @pytest.mark.parametrize('top_k', [3])
 def test_match(
-    name,
     size_X: int,
     size_Y: int,
     dam_x: bool,
@@ -80,9 +77,8 @@ def test_match(
     ephemeral_tmpdir,
     json_writer,
 ):
-    mean_time, std_time = benchmark_time(
+    result = benchmark_time(
         match_arrays,
-        NUM_REPETITIONS,
         kwargs=_prepare_inputs_standard(
             size1=size_X,
             size2=size_Y,
@@ -97,22 +93,16 @@ def test_match(
     )
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_MATCH,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(
-                size_X=size_X,
-                size_Y=size_Y,
-                dam_x=dam_x,
-                dam_y=dam_y,
-                emb_size=emb_size,
-                use_scipy=use_scipy,
-                metric=metric,
-                top_k=top_k,
-            ),
-        )
+        page=Pages.DA_MATCH,
+        result=result,
+        metadata=dict(
+            size_X=size_X,
+            size_Y=size_Y,
+            dam_x=dam_x,
+            dam_y=dam_y,
+            emb_size=emb_size,
+            use_scipy=use_scipy,
+            metric=metric,
+            top_k=top_k,
+        ),
     )

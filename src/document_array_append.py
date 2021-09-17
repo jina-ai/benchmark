@@ -9,7 +9,6 @@ from .pages import Pages
 fake = Faker()
 Faker.seed(42)
 NUM_DOCS = 10000
-NUM_REPETITIONS = 5
 
 
 @pytest.fixture
@@ -17,7 +16,7 @@ def docs():
     return [Document(text=fake.text()) for _ in range(NUM_DOCS)]
 
 
-def test_da_append(name, docs, json_writer):
+def test_da_append(docs, json_writer):
     def _append(da):
         for doc in docs:
             da.append(doc)
@@ -25,23 +24,17 @@ def test_da_append(name, docs, json_writer):
     def _setup(**kwargs):
         return (), dict(da=DocumentArray())
 
-    mean_time, std_time = benchmark_time(setup=_setup, func=_append, n=NUM_REPETITIONS)
+    result = benchmark_time(setup=_setup, func=_append)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_APPEND,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs_append=NUM_DOCS),
-        )
+        page=Pages.DA_APPEND,
+        result=result,
+        metadata=dict(num_docs_append=NUM_DOCS),
     )
 
 
 @pytest.mark.parametrize('flush', [True, False])
-def test_dam_append(name, docs, flush, json_writer, ephemeral_tmpdir):
+def test_dam_append(docs, flush, json_writer, ephemeral_tmpdir):
     def _append(da):
         for doc in docs:
             da.append(doc, flush=flush)
@@ -54,18 +47,10 @@ def test_dam_append(name, docs, flush, json_writer, ephemeral_tmpdir):
 
         shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
-    mean_time, std_time = benchmark_time(
-        setup=_setup, func=_append, teardown=_teardown, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_setup, func=_append, teardown=_teardown)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_APPEND,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs_append=NUM_DOCS, flush=flush),
-        )
+        page=Pages.DA_APPEND,
+        result=result,
+        metadata=dict(num_docs_append=NUM_DOCS, flush=flush),
     )

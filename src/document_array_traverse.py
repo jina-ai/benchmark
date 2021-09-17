@@ -7,8 +7,6 @@ from jina.types.arrays.memmap import DocumentArrayMemmap
 from .utils.benchmark import benchmark_time
 from .pages import Pages
 
-NUM_REPETITIONS = 5
-
 
 def _get_docs(num_docs):
     return [Document(text=f'This is the document number: {i}') for i in range(num_docs)]
@@ -77,25 +75,18 @@ def test_da_traverse_flat(
         except FileNotFoundError:
             pass
 
-    mean_time, std_time = benchmark_time(
-        setup=_build_da, func=_traverse_flat, teardown=_teardown, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_build_da, func=_traverse_flat, teardown=_teardown)
     if memmap:
         name = name.replace('_da_', '_dam_')
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_TRAVERSE,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(
-                num_docs=num_docs,
-                num_matches=num_matches,
-                num_chunks=num_chunks,
-                traversal_paths=traversal_paths,
-                memmap=memmap,
-            ),
-        )
+        name=name,
+        page=Pages.DA_TRAVERSE,
+        result=result,
+        metadata=dict(
+            num_docs=num_docs,
+            num_matches=num_matches,
+            num_chunks=num_chunks,
+            traversal_paths=traversal_paths,
+            memmap=memmap,
+        ),
     )

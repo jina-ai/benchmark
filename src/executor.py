@@ -27,20 +27,14 @@ metas:
 '''
 
 
-def test_executor_load_config(name, json_writer):
+def test_executor_load_config(json_writer):
     def _build():
         _ = Executor.load_config(executor_yaml)
 
-    mean_time, std_time = benchmark_time(func=_build, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_build)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.EXECUTOR,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata={},
-        )
+        page=Pages.EXECUTOR,
+        result=result,
+        metadata={},
     )

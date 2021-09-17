@@ -1,4 +1,5 @@
 from contextlib import ExitStack
+from collections import namedtuple
 from statistics import mean, stdev
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
@@ -6,9 +7,14 @@ from .profiler import Profiler, merge_profiles
 from .timecontext import TimeContext
 
 
+BenchmarkResult = namedtuple(
+    'BenchmarkResult', ['mean', 'std', 'iterations', 'profiles']
+)
+
+
 def benchmark_time(
     func: Callable[[Any], Any],
-    n: int,
+    n: int = 5,
     setup: Optional[Callable[[Any], Optional[Tuple[Iterable, Dict[str, Any]]]]] = None,
     teardown: Optional[Callable[[None], None]] = None,
     profile_cls: Optional[List[type]] = [],
@@ -37,37 +43,36 @@ def benchmark_time(
 
     profiles_by_cls = {_cls: [] for _cls in profile_cls}
 
-    for i in range(n):
+    with TimeContext() as test_timer:
+        while test_timer.time_since_start() < 2e9 or len(results) < n:
+            if setup is not None:
+                new_args, new_kwargs = setup(*args, **kwargs)
+            else:
+                new_args, new_kwargs = args, kwargs
 
-        if setup is not None:
-            new_args, new_kwargs = setup(*args, **kwargs)
-        else:
-            new_args, new_kwargs = args, kwargs
+            ctx_manager = ExitStack()
 
-        ctx_manager = ExitStack()
+            profiles = [ctx_manager.enter_context(Profiler(cls)) for cls in profile_cls]
+            with ctx_manager:
+                with TimeContext() as t:
+                    func(*new_args, **new_kwargs)
 
-        profiles = [ctx_manager.enter_context(Profiler(cls)) for cls in profile_cls]
-        with ctx_manager:
-            with TimeContext() as t:
-                func(*new_args, **new_kwargs)
+            for p in profiles:
+                profiles_by_cls[p._cls].append(p.profile)
 
-        for p in profiles:
-            profiles_by_cls[p._cls].append(p.profile)
+            if teardown is not None:
+                teardown()
 
-        if teardown is not None:
-            teardown()
-
-        results.append(t.duration)
+            results.append(t.duration)
 
     mean_profiles = []
     for profile_cls, profile_list in profiles_by_cls.items():
         mean_profiles.append(merge_profiles(profile_list))
 
-    m = mean(results)
-    s = stdev(results) if len(results) > 1 else None
-    print(f'----> mean_time={round(m,3)}, std_time={round(s,3)}')
+    m = int(mean(results))
+    s = int(stdev(results)) if len(results) > 1 else None
+    print(
+        f'----> mean_time={round(m,3)}, std_time={round(s,3)}, iterations={len(results)}'
+    )
 
-    if len(mean_profiles) > 0:
-        return m, s, mean_profiles
-    else:
-        return m, s
+    return BenchmarkResult(m, s, len(results), mean_profiles)

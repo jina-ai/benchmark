@@ -6,8 +6,6 @@ from .pages import Pages
 
 NUM_DOCS = 100000
 
-NUM_REPETITIONS = 5
-
 
 @pytest.fixture
 def doc_array():
@@ -17,7 +15,7 @@ def doc_array():
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_da_save(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
+def test_da_save(doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
     file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
@@ -29,25 +27,17 @@ def test_da_save(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
 
         os.remove(file)
 
-    mean_time, std_time = benchmark_time(
-        func=_save, teardown=_teardown, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(func=_save, teardown=_teardown)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_PERSISTENCE,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
-        )
+        page=Pages.DA_PERSISTENCE,
+        result=result,
+        metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
     )
 
 
 @pytest.mark.parametrize('file_format', ['json', 'binary'])
-def test_da_load(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
+def test_da_load(doc_array, file_format, json_writer, ephemeral_tmpdir):
     extension = 'bin' if file_format == 'binary' else 'json'
     file = f'{str(ephemeral_tmpdir)}/doc_array.{extension}'
 
@@ -63,18 +53,10 @@ def test_da_load(name, doc_array, file_format, json_writer, ephemeral_tmpdir):
 
         os.remove(file)
 
-    mean_time, std_time = benchmark_time(
-        setup=_save, func=_load, teardown=_teardown, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_save, func=_load, teardown=_teardown)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_PERSISTENCE,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
-        )
+        page=Pages.DA_PERSISTENCE,
+        result=result,
+        metadata=dict(num_docs_append=NUM_DOCS, file_format=file_format),
     )

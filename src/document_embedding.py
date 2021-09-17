@@ -5,7 +5,6 @@ from jina import Document, DocumentArray, Executor, requests
 from .utils.benchmark import benchmark_time
 from .pages import Pages
 
-NUM_REPETITIONS = 5
 NUM_DOCS = 100
 
 
@@ -29,30 +28,22 @@ def executor():
 
 
 @pytest.mark.skip()
-def test_document_encoder_executor(name, executor, input_docs, json_writer):
+def test_document_encoder_executor(executor, input_docs, json_writer):
     def _function(**kwargs):
         executor.encode(input_docs)
 
-    mean_time, std_time, profiles = benchmark_time(
-        profile_cls=[Document, DocumentArray], func=_function, n=NUM_REPETITIONS
-    )
-
+    result = benchmark_time(profile_cls=[Document, DocumentArray], func=_function)
+    profiles = result.profiles
     document_profile = profiles[0]
     document_array_profile = profiles[1]
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DOCUMENT_EMBEDDING,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(
-                profiles=dict(
-                    Document=document_profile, DocumentArray=document_array_profile
-                ),
-                num_docs=NUM_DOCS,
+        page=Pages.DOCUMENT_EMBEDDING,
+        result=result,
+        metadata=dict(
+            profiles=dict(
+                Document=document_profile, DocumentArray=document_array_profile
             ),
-        )
+            num_docs=NUM_DOCS,
+        ),
     )
