@@ -4,7 +4,6 @@ from jina import Flow
 from .utils.benchmark import benchmark_time
 from .pages import Pages
 
-NUM_REPETITIONS = 5
 NUM_PODS = 10
 
 
@@ -27,34 +26,26 @@ def _wide_flow():
 @pytest.mark.parametrize(
     'flow, ftype', [(_long_flow(), 'long'), (_wide_flow(), 'wide')]
 )
-def test_local_flow_start(name, flow, ftype, json_writer):
+def test_local_flow_start(flow, ftype, json_writer):
     def _start():
         flow.start()
 
     def _close():
         flow.close()
 
-    mean_time, std_time = benchmark_time(
-        func=_start, teardown=_close, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(func=_start, teardown=_close)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.FLOW,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(flow=ftype, num_pods=NUM_PODS),
-        )
+        page=Pages.FLOW,
+        result=result,
+        metadata=dict(flow=ftype, num_pods=NUM_PODS),
     )
 
 
 @pytest.mark.parametrize(
     'flow, ftype', [(_long_flow(), 'long'), (_wide_flow(), 'wide')]
 )
-def test_local_flow_close(name, flow, ftype, json_writer):
+def test_local_flow_close(flow, ftype, json_writer):
     def _start():
         flow.start()
         return (), {}
@@ -62,18 +53,12 @@ def test_local_flow_close(name, flow, ftype, json_writer):
     def _close():
         flow.close()
 
-    mean_time, std_time = benchmark_time(setup=_start, func=_close, n=NUM_REPETITIONS)
+    result = benchmark_time(setup=_start, func=_close)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.FLOW,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(flow=ftype, num_pods=NUM_PODS),
-        )
+        page=Pages.FLOW,
+        result=result,
+        metadata=dict(flow=ftype, num_pods=NUM_PODS),
     )
 
 
@@ -144,20 +129,14 @@ pods:
 
 
 @pytest.mark.parametrize('config, ftype', [(yaml_long, 'long'), (yaml_wide, 'wide')])
-def test_flow_load_config(name, config, ftype, json_writer):
+def test_flow_load_config(config, ftype, json_writer):
     def _build():
         Flow.load_config(config)
 
-    mean_time, std_time = benchmark_time(func=_build, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_build)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.FLOW,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(flow=ftype, num_pods=NUM_PODS),
-        )
+        page=Pages.FLOW,
+        result=result,
+        metadata=dict(flow=ftype, num_pods=NUM_PODS),
     )

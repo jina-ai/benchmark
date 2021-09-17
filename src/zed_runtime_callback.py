@@ -11,7 +11,6 @@ from jina.types.request import Request
 
 from .utils.benchmark import benchmark_time
 
-NUM_REPETITIONS = 5
 NUM_DOCS = 100
 
 
@@ -47,31 +46,26 @@ def test_zed_runtime_callback(runtime, process_message, json_writer):
     def _function(**kwargs):
         runtime._callback(process_message)
 
-    mean_time, std_time, profiles = benchmark_time(
+    result = benchmark_time(
         profile_cls=[Document, DocumentArray, Message, Request],
         func=_function,
-        n=NUM_REPETITIONS,
     )
-
+    profiles = result.profiles
     document_profile = profiles[0]
     document_array_profile = profiles[1]
     message_profile = profiles[2]
     request_profile = profiles[3]
 
     json_writer.append(
-        dict(
-            name='zed_runtime_callback/test_zed_runtime_callback',
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            metadata=dict(
-                profiles=dict(
-                    Document=document_profile,
-                    DocumentArray=document_array_profile,
-                    Message=message_profile,
-                    Request=request_profile,
-                ),
-                num_docs=NUM_DOCS,
+        name='zed_runtime_callback/test_zed_runtime_callback',
+        result=result,
+        metadata=dict(
+            profiles=dict(
+                Document=document_profile,
+                DocumentArray=document_array_profile,
+                Message=message_profile,
+                Request=request_profile,
             ),
-        )
+            num_docs=NUM_DOCS,
+        ),
     )

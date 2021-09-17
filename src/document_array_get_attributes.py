@@ -12,7 +12,6 @@ from .pages import Pages
 
 fake = Faker()
 Faker.seed(42)
-NUM_REPETITIONS = 5
 NUM_DOCS = 1000
 CHARS = tuple(string.ascii_uppercase + string.digits)
 
@@ -87,25 +86,19 @@ def test_da_get_attributes(
         if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
             shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
-    mean_time, std_time = benchmark_time(
+    result = benchmark_time(
         setup=_build_da,
         func=_get_attributes,
         teardown=_teardown,
-        n=NUM_REPETITIONS,
         kwargs=dict(memmap=memmap, docs=docs_get_fn(num_docs)),
     )
     if memmap:
         name = name.replace('_da_', '_dam_')
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_GET_ATTRIBUTES,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs, field=field, memmap=memmap),
-        )
+        name=name,
+        page=Pages.DA_GET_ATTRIBUTES,
+        result=result,
+        metadata=dict(num_docs=num_docs, field=field, memmap=memmap),
     )
 
 
@@ -136,23 +129,17 @@ def test_da_embeddings_property(name, memmap, num_docs, json_writer, ephemeral_t
         if os.path.exists(f'{str(ephemeral_tmpdir)}/memmap'):
             shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
-    mean_time, std_time = benchmark_time(
+    result = benchmark_time(
         setup=_build_da,
         func=_get_embeddings,
         teardown=_teardown,
-        n=NUM_REPETITIONS,
         kwargs=dict(memmap=memmap),
     )
     if memmap:
         name = name.replace('_da_', '_dam_')
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_GET_ATTRIBUTES,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs, memmap=memmap),
-        )
+        name=name,
+        page=Pages.DA_GET_ATTRIBUTES,
+        result=result,
+        metadata=dict(num_docs=num_docs, memmap=memmap),
     )

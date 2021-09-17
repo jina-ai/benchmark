@@ -9,7 +9,6 @@ from .pages import Pages
 fake = Faker()
 Faker.seed(42)
 NUM_DOCS = 10000
-NUM_REPETITIONS = 5
 
 
 @pytest.fixture
@@ -42,89 +41,59 @@ def doc_array_memmap(docs, ephemeral_tmpdir):
     return dam
 
 
-def test_construct_document_array_from_repeated_container(
-    name, doc_with_chunks, json_writer
-):
+def test_construct_document_array_from_repeated_container(doc_with_chunks, json_writer):
     def _construct():
         DocumentArray(doc_with_chunks.chunks)
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_chunks=NUM_DOCS),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_chunks=NUM_DOCS),
     )
 
 
-def test_construct_document_array_from_another_documentarray(
-    name, doc_array, json_writer
-):
+def test_construct_document_array_from_another_documentarray(doc_array, json_writer):
     def _construct():
         DocumentArray(doc_array)
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=len(doc_array)),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_docs=len(doc_array)),
     )
 
 
-def test_construct_document_array_from_list_of_documents(name, docs, json_writer):
+def test_construct_document_array_from_list_of_documents(docs, json_writer):
     def _construct():
         DocumentArray(docs)
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=len(docs)),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_docs=len(docs)),
     )
 
 
-def test_construct_document_array_from_tuple_of_documents(
-    name, tuple_docs, json_writer
-):
+def test_construct_document_array_from_tuple_of_documents(tuple_docs, json_writer):
     def _construct():
         DocumentArray(tuple_docs)
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=len(tuple_docs)),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_docs=len(tuple_docs)),
     )
 
 
-def test_construct_document_array_from_generator(name, json_writer):
+def test_construct_document_array_from_generator(json_writer):
     def _yield_documents():
         """Used to benchmark construct DocumentArray from a document generator."""
         for idx in range(NUM_DOCS):
@@ -133,37 +102,25 @@ def test_construct_document_array_from_generator(name, json_writer):
     def _construct():
         DocumentArray(_yield_documents())
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=NUM_DOCS),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_docs=NUM_DOCS),
     )
 
 
 def test_construct_document_array_from_another_documentarray_memmap(
-    name, doc_array_memmap, json_writer
+    doc_array_memmap, json_writer
 ):
     def _construct():
         DocumentArray(doc_array_memmap)
 
-    mean_time, std_time = benchmark_time(func=_construct, n=NUM_REPETITIONS)
+    result = benchmark_time(func=_construct)
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CONSTRUCT,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=len(doc_array_memmap)),
-        )
+        page=Pages.DA_CONSTRUCT,
+        result=result,
+        metadata=dict(num_docs=len(doc_array_memmap)),
     )

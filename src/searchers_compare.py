@@ -11,7 +11,6 @@ from pympler import asizeof, tracker
 
 from .utils.timecontext import TimeContext
 
-NUM_REPETITIONS = 5
 NUM_REQUESTS = 5
 
 
@@ -158,7 +157,6 @@ def test_search_compare(
             std_memory=None,
             mean_indexer_memory=None,
             std_indexer_memory=None,
-            unit='ms',
             metadata=dict(
                 number_of_indexed_documents=number_of_indexed_documents,
                 embedding_size=emb_size,
@@ -233,16 +231,13 @@ def test_search_compare(
     result.update(
         dict(
             name='searchers_compare/test_search_compare',
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
+            result=result,
             mean_memory=get_readable_size(mean_memory),
             std_memory=get_readable_size(std_memory) if std_memory else None,
             mean_indexer_memory=get_readable_size(mean_indexer_memory),
             std_indexer_memory=get_readable_size(std_indexer_memory)
             if std_indexer_memory
             else None,
-            unit='ms',
             metadata=dict(
                 number_of_indexed_documents=number_of_indexed_documents,
                 embedding_size=emb_size,

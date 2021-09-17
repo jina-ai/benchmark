@@ -10,20 +10,35 @@ from typing import Any, Dict, List, Tuple, Union
 
 
 COLOR_VALUES = [
-    '#88cf96',
-    '#a4d2ac',
-    '#bed5c1',
-    '#d7d7d7',
-    '#dcbfbe',
-    '#dea7a6',
-    '#de8e8e',
+    '#10a100',
+    '#7ead14',
+    '#bab73c',
+    '#e8c268',
+    '#e59838',
+    '#e36717',
+    '#de1414',
 ]
 
-COLOR_NAN = '#8483a7'
+COLOR_NAN = '#9b00a1'
 
 NOT_A_NUMBER = 'N/A'
 
 STD_MEAN_THRESHOLD = 0.5
+
+COLOR_LEGEND = ' | '.join(
+    [
+        f'<span style="color:{color};">{i*10} - {(i+1)*10}%</span>'
+        for i, color in enumerate(COLOR_VALUES)
+    ]
+)
+
+LEGEND = f"""
+The following data should be read as follows:
+
+- Colors of cells display the percentage of the minimum value in the column:\n
+  {COLOR_LEGEND}
+- <s>1337</s>: unstable tests with "standard deviation / mean > {STD_MEAN_THRESHOLD}"
+"""
 
 
 def _format(data: Union[int, float]) -> Any:
@@ -53,7 +68,7 @@ def _format(data: Union[int, float]) -> Any:
         return data
 
 
-def _get_background(mean_time, master_mean_time):
+def _get_color(mean_time, master_mean_time):
     if mean_time is None or mean_time == NOT_A_NUMBER or master_mean_time == 0:
         return COLOR_NAN
     raw_bucket = int((float(mean_time) / float(master_mean_time) - 1) * 10)
@@ -62,11 +77,11 @@ def _get_background(mean_time, master_mean_time):
     return COLOR_VALUES[bucket]
 
 
-def _get_cleaned_mean_time(data: Dict[str, Any]) -> str:
+def _get_cleaned_mean_time(data: Dict[str, Any], scaling: int) -> str:
     """Return cleaned data"""
 
     if data.get('mean_time', None):
-        return f'{float(data["mean_time"]):8.2f}'
+        return str(int(int(data["mean_time"]) / scaling))
     else:
         return NOT_A_NUMBER
 
@@ -76,12 +91,9 @@ def _cleaned_title(raw_heading: str) -> str:
     return raw_heading.replace('test_', '').replace('_', ' ').title()
 
 
-def get_std_warning(run_stats):
+def is_test_unstable(run_stats):
     mean = run_stats.get('mean_time', 1e20)
-    if mean != 0 and run_stats.get('std_time', 0.0) / mean > STD_MEAN_THRESHOLD:
-        return '&#9888;'
-    else:
-        return ''
+    return mean != 0 and run_stats.get('std_time', 0.0) / mean > STD_MEAN_THRESHOLD
 
 
 def _get_table_header(raw_data: List[Dict[str, Any]]) -> Tuple[str, str]:
@@ -221,7 +233,7 @@ def _get_stats(test_data, last_benchmarked_version):
             results[parameter_hash]['metadata'] = metadata
 
             results[parameter_hash]['min'] = min(
-                results[parameter_hash].get('min', 1e10), test_result['mean_time']
+                results[parameter_hash].get('min', 1e20), test_result['mean_time']
             )
             results[parameter_hash]['max'] = max(
                 results[parameter_hash].get('max', 0), test_result['mean_time']
@@ -231,7 +243,25 @@ def _get_stats(test_data, last_benchmarked_version):
             if version == last_benchmarked_version:
                 results[parameter_hash]['last_version_mean'] = test_result['mean_time']
 
-    return list(results.values())
+    stats = list(results.values())
+    _add_scaling(stats)
+    return stats
+
+
+def _add_scaling(stats):
+    for run_stats in stats:
+        if run_stats['min'] > 10_000_000_000:
+            run_stats['scaling'] = 1_000_000_000
+            run_stats['metadata']['unit'] = 's'
+        if run_stats['min'] > 10_000_000:
+            run_stats['scaling'] = 1_000_000
+            run_stats['metadata']['unit'] = 'ms'
+        elif run_stats['min'] > 10_000:
+            run_stats['scaling'] = 1_000
+            run_stats['metadata']['unit'] = 'μs'
+        else:
+            run_stats['scaling'] = 1
+            run_stats['metadata']['unit'] = 'ns'
 
 
 def generate_docs(
@@ -256,15 +286,15 @@ def generate_docs(
             fp.write('---\n')
             fp.write(f'# {_cleaned_title(page)}\n\n')
 
+            fp.write(f'{LEGEND}\n')
+
             for test_name, single_test_data in cum_data[page].items():
                 stats = _get_stats(single_test_data, last_benchmarked_version)
 
                 header = _get_table_header(stats)
 
                 fp.write(f'## {_cleaned_title(test_name)}\n')
-                fp.write(
-                    f'&#9888; => standard deviation / mean > {STD_MEAN_THRESHOLD}\n\n'
-                )
+
                 fp.write(header)
 
                 for version, data_dict in single_test_data.items():
@@ -272,13 +302,13 @@ def generate_docs(
                     for run in stats:
                         run_data = data_dict[run['parameter_hash']]
 
-                        mean_time = _get_cleaned_mean_time(run_data)
-                        std_warning = get_std_warning(run_data)
-                        background_color = _get_background(mean_time, run['min'])
+                        mean_time = _get_cleaned_mean_time(run_data, run['scaling'])
+                        color = _get_color(mean_time, run['min'])
 
-                        fp.write(
-                            f' {std_warning} <span style="background-color:{background_color};">{mean_time}</span> |'
-                        )
+                        if is_test_unstable(run_data):
+                            mean_time = f'<s>{mean_time}</s>'
+
+                        fp.write(f' <span style="color:{color};">{mean_time}</span> |')
                     fp.write('\n')
                 fp.write('\n')
 

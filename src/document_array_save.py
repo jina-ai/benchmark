@@ -14,9 +14,9 @@ NUM_REPETITIONS = 10
 
 
 @pytest.mark.parametrize('num_docs', [100, 10_000])
-def test_da_save(name, num_docs, json_writer, ephemeral_tmpdir):
+def test_da_save(num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
-        da = DocumentArray([Document(text=f"doc{i}") for i in range(num_docs)])
+        da = DocumentArray([Document(text=f'doc{i}') for i in range(num_docs)])
         return (), dict(da=da)
 
     def _da_save(da):
@@ -27,11 +27,8 @@ def test_da_save(name, num_docs, json_writer, ephemeral_tmpdir):
 
         os.remove(f'{str(ephemeral_tmpdir)}/docarray')
 
-    mean_time, std_time = benchmark_time(
-        setup=_setup,
-        func=_da_save,
-        teardown=_teardown,
-        n=NUM_REPETITIONS,
+    result = benchmark_time(
+        setup=_setup, func=_da_save, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     def _teardown():
@@ -40,23 +37,17 @@ def test_da_save(name, num_docs, json_writer, ephemeral_tmpdir):
         shutil.rmtree(f'{str(ephemeral_tmpdir)}/save')
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CLEAR,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        page=Pages.DA_CLEAR,
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
 
 
 @pytest.mark.parametrize('num_docs', [100, 10_000])
-def test_dam_save(name, num_docs, json_writer, ephemeral_tmpdir):
+def test_dam_save(num_docs, json_writer, ephemeral_tmpdir):
     def _setup():
         dam = DocumentArrayMemmap((f'{str(ephemeral_tmpdir)}/memmap'))
-        dam.extend([Document(text=f"doc{i}") for i in range(num_docs)])
+        dam.extend([Document(text=f'doc{i}') for i in range(num_docs)])
         return (), dict(dam=dam)
 
     def _dam_clear(dam):
@@ -67,21 +58,12 @@ def test_dam_save(name, num_docs, json_writer, ephemeral_tmpdir):
 
         shutil.rmtree(f'{str(ephemeral_tmpdir)}/memmap')
 
-    mean_time, std_time = benchmark_time(
-        setup=_setup,
-        func=_dam_clear,
-        teardown=_teardown,
-        n=NUM_REPETITIONS,
+    result = benchmark_time(
+        setup=_setup, func=_dam_clear, teardown=_teardown, n=NUM_REPETITIONS
     )
 
     json_writer.append(
-        dict(
-            name=name,
-            page=Pages.DA_CLEAR,
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        page=Pages.DA_CLEAR,
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
