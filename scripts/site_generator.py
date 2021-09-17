@@ -263,6 +263,8 @@ def _add_scaling(stats):
         else:
             run_stats['scaling'] = 1
             run_stats['metadata']['unit'] = 'ns'
+        run_stats['min'] = int(run_stats['min'] / run_stats['scaling'])
+        run_stats['max'] = int(run_stats['max'] / run_stats['scaling'])
 
 
 def generate_docs(
