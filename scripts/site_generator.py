@@ -218,6 +218,7 @@ def _hash_run(d):
     tmp_dict = copy.deepcopy(d)
     del tmp_dict['mean_time']
     del tmp_dict['std_time']
+    del tmp_dict['iterations']
 
     return json.dumps(tmp_dict, sort_keys=True)
 
