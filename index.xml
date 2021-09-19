@@ -70,4 +70,4 @@ Executor Load Config # name test_executor_load_config unit μs 2.</description><
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
-Local Flow Start # flow wide long num_pods 10 10 unit ms ms 2.</description></item></channel></rss>
+Local Flow Start # flow long wide num_pods 10 10 unit ms ms 2.</description></item></channel></rss>
