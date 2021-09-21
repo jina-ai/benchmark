@@ -6,12 +6,12 @@ from .utils.benchmark import benchmark_time
 NUM_REPETITIONS = 5
 
 
-@pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
+@pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
 def test_document_document_content_hash(num_docs, json_writer):
     def _input_docs():
         return (
             (),
-            {"docs": [Document(text=f"text doc {i}") for i in range(num_docs)]},
+            {'docs': [Document(text=f'text doc {i}') for i in range(num_docs)]},
         )
 
     def _content_hash(docs):
@@ -23,11 +23,11 @@ def test_document_document_content_hash(num_docs, json_writer):
     )
     json_writer.append(
         dict(
-            name="document_content_hash/test_document_document_content_hash",
+            name='document_content_hash/test_document_document_content_hash',
             iterations=NUM_REPETITIONS,
             mean_time=mean_time,
             std_time=std_time,
-            unit="ms",
+            unit='ms',
             metadata=dict(num_docs=num_docs),
         )
     )
