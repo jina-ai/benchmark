@@ -414,7 +414,6 @@ def test_document_convert_blob_to_buffer(num_docs, json_writer):
     )
 
 
-
 @pytest.mark.parametrize("num_docs", [1, 100, 1000])
 def test_document_convert_blob_to_buffer(num_docs, json_writer):
     def _input_docs():

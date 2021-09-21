@@ -10,9 +10,7 @@ NUM_REPETITIONS = 5
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
 def test_document_dict_with_text(num_docs, json_writer):
     def _input_docs():
-        return (), dict(
-            docs=[Document(text='doc' ) for _ in range(num_docs)]
-        )
+        return (), dict(docs=[Document(text='doc') for _ in range(num_docs)])
 
     def _dict(docs):
         for d in docs:
@@ -33,12 +31,11 @@ def test_document_dict_with_text(num_docs, json_writer):
         )
     )
 
+
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
 def test_document_dict_with_array(num_docs, json_writer):
     def _input_docs():
-        return (), dict(
-            docs=[Document(blob=np.array([1,2])) for _ in range(num_docs)]
-        )
+        return (), dict(docs=[Document(blob=np.array([1, 2])) for _ in range(num_docs)])
 
     def _dict(docs):
         for d in docs:
