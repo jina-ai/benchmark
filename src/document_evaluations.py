@@ -13,8 +13,7 @@ def test_document_get_evaluations(num_docs, json_writer):
             (),
             {
                 "docs": [
-                    Document(evaluations={'precision': 0.9})
-                    for i in range(num_docs)
+                    Document(evaluations={'precision': 0.9}) for i in range(num_docs)
                 ]
             },
         )
@@ -45,8 +44,7 @@ def test_document_set_evaluations(num_docs, json_writer):
             (),
             {
                 "docs": [
-                    Document(evaluations={'precision': 0.9})
-                    for i in range(num_docs)
+                    Document(evaluations={'precision': 0.9}) for i in range(num_docs)
                 ]
             },
         )

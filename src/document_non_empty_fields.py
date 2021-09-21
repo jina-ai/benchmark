@@ -10,9 +10,7 @@ NUM_REPETITIONS = 5
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
 def test_document_non_empty_fields(num_docs, json_writer):
     def _input_docs():
-        return (), dict(
-            docs=[Document(text='doc' ) for _ in range(num_docs)]
-        )
+        return (), dict(docs=[Document(text='doc') for _ in range(num_docs)])
 
     def _non_empty_fields(docs):
         for d in docs:
