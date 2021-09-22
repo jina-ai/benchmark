@@ -1,5 +1,5 @@
 import pytest
-from jina import Document, DocumentArray
+from jina import Document
 
 from .utils.benchmark import benchmark_time
 
@@ -11,7 +11,7 @@ def test_document_document_content_hash(num_docs, json_writer):
     def _input_docs():
         return (
             (),
-            {"docs": [Document(text=f"text doc {i}") for i in range(num_docs)],},
+            {"docs": [Document(text=f"text doc {i}") for i in range(num_docs)]},
         )
 
     def _content_hash(docs):
