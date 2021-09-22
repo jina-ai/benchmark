@@ -1,5 +1,8 @@
 import json
 import os
+from pathlib import Path
+
+from collections import defaultdict
 
 import pytest
 from jina import __version__
@@ -10,22 +13,25 @@ def pytest_addoption(parser):
 
 
 class ResultsCollector:
-    def __init__(self):
-        self.results = []
+    def __init__(self, output_dir, default_filename):
+        self.results = defaultdict(list)
+        self.output_dir = output_dir
 
     def get_test_name():
         test = os.environ['PYTEST_CURRENT_TEST']
         removed_head = test.split('::')[-1]
         return removed_head.split('[')[0].split(' (')[0]
 
-    def append(self, page, result, metadata=None, name=None):
+    def append(self, page, result, metadata=None, name=None, target_file=None):
         if metadata is None:
             metadata = {}
 
         if name is None:
             name = ResultsCollector.get_test_name()
+        if target_file is None:
+            target_file = self.default_filename
 
-        self.results.append(
+        self.results[target_file].append(
             dict(
                 name=name,
                 page=page,
@@ -36,32 +42,35 @@ class ResultsCollector:
             )
         )
 
-    def dump(self, filename):
-        with open(filename, 'w+') as file:
-            json.dump(self.results, file)
+    def append_raw(self, dict_, target_file=None):
+        if target_file is None:
+            target_file = self.default_filename
+
+        self.results[target_file].append(dict_)
+        return self.results[target_file]
+
+    def dump(self):
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
+        for filename, content in self.results.items():
+            file_path = f'{self.output_dir}/{filename}'
+            with open(file_path, 'w+') as file:
+                json.dump(content, file)
 
 
 @pytest.fixture(scope='session')
 def json_writer(pytestconfig):
-    collector = ResultsCollector()
-    yield collector
-
-    from os import environ
-    from pathlib import Path
-
-    version = environ.get('JINA_VERSION', __version__)
+    version = os.environ.get('JINA_VERSION', __version__)
 
     if version == 'master':
         version = __version__
     elif version.startswith('v'):
         version = version[1:]
-
     output_dir = f'docs/static/artifacts/{version}'
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    file_name = pytestconfig.getoption('output_file')
+    collector = ResultsCollector(output_dir, pytestconfig.getoption('output_file'))
+    yield collector
 
-    collector.dump(f'{output_dir}/{file_name}')
+    collector.dump()
 
 
 @pytest.fixture()

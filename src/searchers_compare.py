@@ -1,35 +1,20 @@
-import json
 import os
 from statistics import mean, stdev
-from typing import Union
+from collections import defaultdict
+import shutil
 
 import numpy as np
 import pytest
-from jina import Document, DocumentArray, Executor, Flow, __version__, requests
+from jina import Document, DocumentArray, Executor, requests
 from jina.types.arrays.memmap import DocumentArrayMemmap
 from pympler import asizeof, tracker
 
 from .utils.timecontext import TimeContext
+from .pages import Pages
 
-NUM_REQUESTS = 5
-
-
-def get_readable_size(num_bytes: Union[int, float]) -> str:
-    """
-    Transform the bytes into readable value with different units (e.g. 1 KB, 20 MB, 30.1 GB).
-
-    :param num_bytes: Number of bytes.
-    :return: Human readable string representation.
-    """
-    num_bytes = int(num_bytes)
-    if num_bytes < 1024:
-        return f'{num_bytes} Bytes'
-    elif num_bytes < 1024 ** 2:
-        return f'{num_bytes / 1024:.1f} KB'
-    elif num_bytes < 1024 ** 3:
-        return f'{num_bytes / (1024 ** 2):.1f} MB'
-    else:
-        return f'{num_bytes / (1024 ** 3):.1f} GB'
+NUM_REPETITIONS = 5
+NUM_REQUESTS = 100
+TARGET_FILE = 'searchers_compare.json'
 
 
 def _get_docs(number_of_documents, embedding_size):
@@ -40,8 +25,6 @@ def _get_docs(number_of_documents, embedding_size):
 
 
 def _get_dam(number_of_documents, embedding_size, dir_path, **kwargs):
-    import shutil
-
     tmp_path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}_tmp'
     path = f'{dir_path}/memmap_{number_of_documents}_{embedding_size}'
     if os.path.exists(path):
@@ -103,80 +86,38 @@ class DocumentArraySearcher(Executor):
         )
 
 
-@pytest.fixture(scope='module')
-def searchers_compare_writer(pytestconfig):
-    results = []
-    yield results
-
-    from pathlib import Path
-
-    version = os.environ.get('JINA_VERSION', __version__)
-
-    if version == 'master':
-        version = __version__
-    elif version.startswith('v'):
-        version = version[1:]
-
-    output_dir = f'docs/static/artifacts/{version}'
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-    with open(f'{output_dir}/searchers_compare.json', 'w+') as file:
-        json.dump(results, file)
-
-
 @pytest.mark.skipif(
     'JINA_BENCHMARK_SEARCHERS' not in os.environ,
     reason='This test take a lot of time, to be run explicitly and isolated from the rest',
 )
-@pytest.mark.timeout(3600)
-@pytest.mark.parametrize('number_of_indexed_documents', [10000, 100000, 1000000])
-@pytest.mark.parametrize('number_of_documents_request', [1, 32, 64])
-@pytest.mark.parametrize('emb_size', [128, 256, 512, 1024])
-@pytest.mark.parametrize('dam_index', [False, True])
-@pytest.mark.parametrize('warmup', [True, False])
+@pytest.mark.parametrize(
+    'name,indexed_docs,docs_per_request,emb_size',
+    [
+        ('Tiny Index', 100, 1, 128),
+        ('Small Index', 10000, 1, 128),
+        ('Medium Index', 100000, 1, 128),
+        # ('Big Index', 1000000, 1, 128),
+        ('Batch requesting', 100000, 32, 128),
+        ('Big embeddings', 100000, 1, 512),
+    ],
+)
+@pytest.mark.parametrize(
+    'dam_index,warmup', [(False, False), (True, False), (True, True)]
+)
 def test_search_compare(
-    number_of_indexed_documents,
-    number_of_documents_request,
+    name,
+    indexed_docs,
+    docs_per_request,
     emb_size,
     dam_index,
     warmup,
     ephemeral_tmpdir,
-    searchers_compare_writer,
+    json_writer,
 ):
-    if warmup and not dam_index:
-        pytest.skip('Warmup is not relevant for `DocumentArray`')
-
-    # make sure in case of timeout we can see which timedout
-    searchers_compare_writer.append(
-        dict(
-            name='searchers_compare/test_search_compare',
-            iterations=NUM_REPETITIONS,
-            mean_time=None,
-            std_time=None,
-            mean_memory=None,
-            std_memory=None,
-            mean_indexer_memory=None,
-            std_indexer_memory=None,
-            metadata=dict(
-                number_of_indexed_documents=number_of_indexed_documents,
-                embedding_size=emb_size,
-                query_docs=number_of_documents_request * NUM_REQUESTS,
-                query_docs_per_request=number_of_documents_request,
-                mean_docs_per_second=None,
-                latency_per_doc=None,
-                num_batches=NUM_REQUESTS,
-                dam_index=dam_index,
-                warmup_embeddings=warmup,
-            ),
-        )
-    )
-
-    result = searchers_compare_writer[-1]
-
     def _get_indexer():
         path = _get_document_array(
             dam_index=dam_index,
-            number_of_documents=number_of_indexed_documents,
+            number_of_documents=indexed_docs,
             embedding_size=emb_size,
             dir_path=str(ephemeral_tmpdir),
         )
@@ -186,70 +127,74 @@ def test_search_compare(
         )
 
     query_docs = [
-        DocumentArray(_get_docs(number_of_documents_request, embedding_size=emb_size))
+        DocumentArray(_get_docs(docs_per_request, embedding_size=emb_size))
     ] * NUM_REQUESTS
 
+    data_points = defaultdict(list)
+    all_search_timings = []
+
     def _func():
-        with TimeContext() as indexer_ctx:
+        with TimeContext() as indexer_context:
             indexer = _get_indexer()
-        print(f' indexer created/loaded in {indexer_ctx.duration}')
-        indexer_memory = asizeof.asizeof(indexer)
+        print(f' indexer created/loaded in {indexer_context.duration / 1e6} ms')
+        data_points['index_time'].append(indexer_context.duration)
+        data_points['index_memory'].append(asizeof.asizeof(indexer))
 
         tr = tracker.SummaryTracker()
         sum1 = tr.create_summary()
-
-        with TimeContext() as time_context:
-            for i in range(NUM_REQUESTS):
+        timings = []
+        for i in range(NUM_REQUESTS):
+            with TimeContext() as seach_context:
                 indexer.search(query_docs[i])
-
+            timings.append(seach_context.duration)
         sum2 = tr.create_summary()
         diff = tr.diff(sum1, sum2)
-        total_bytes = sum([ob_sum[2] for ob_sum in diff])
+        print(f' search finished in {sum(timings) / 1e6} ms')
+        data_points['search_time'].append(sum(timings))
+        all_search_timings.extend(timings)
+        data_points['search_memory'].append(sum([ob_sum[2] for ob_sum in diff]))
 
-        return time_context.duration, total_bytes, indexer_memory
+        shutil.rmtree(str(ephemeral_tmpdir), ignore_errors=True)
+        os.makedirs(str(ephemeral_tmpdir))
 
-    indexer_memory_measures = []
-    time_measures = []
-    mem_measures = []
-    for _ in range(NUM_REPETITIONS):
-        time_measure, mem_measure, indexer_memory = _func()
-        time_measures.append(time_measure)
-        mem_measures.append(mem_measure)
-        indexer_memory_measures.append(indexer_memory)
+    for i in range(NUM_REPETITIONS):
+        _func()
 
-    mean_time = mean(time_measures)
-    std_time = stdev(time_measures) if len(time_measures) > 1 else None
+    results = {}
 
-    mean_memory = mean(mem_measures)
-    std_memory = stdev(mem_measures) if len(mem_measures) > 1 else None
+    for field in ['index_time', 'index_memory', 'search_time', 'search_memory']:
+        results[f'mean_{field}'], results[f'std_{field}'] = get_mean_and_std(
+            data_points[field]
+        )
 
-    mean_indexer_memory = mean(indexer_memory_measures)
-    std_indexer_memory = (
-        stdev(indexer_memory_measures) if len(indexer_memory_measures) > 1 else None
-    )
+    results['p90'] = get_percentile(all_search_timings, 90)
+    results['p99'] = get_percentile(all_search_timings, 99)
 
-    result.update(
-        dict(
-            name='searchers_compare/test_search_compare',
-            result=result,
-            mean_memory=get_readable_size(mean_memory),
-            std_memory=get_readable_size(std_memory) if std_memory else None,
-            mean_indexer_memory=get_readable_size(mean_indexer_memory),
-            std_indexer_memory=get_readable_size(std_indexer_memory)
-            if std_indexer_memory
-            else None,
+    json_writer.append_raw(
+        target_file=TARGET_FILE,
+        dict_=dict(
+            name=name,
+            page=Pages.INDEXER_COMPARISON,
+            iterations=NUM_REPETITIONS,
+            results=results,
             metadata=dict(
-                number_of_indexed_documents=number_of_indexed_documents,
+                indexed_docs=indexed_docs,
                 embedding_size=emb_size,
-                query_docs=number_of_documents_request * NUM_REQUESTS,
-                query_docs_per_request=number_of_documents_request,
-                mean_docs_per_second=(number_of_documents_request * NUM_REQUESTS)
-                / mean_time,
-                latency_per_doc=mean_time
-                / (number_of_documents_request * NUM_REQUESTS),
-                num_batches=NUM_REQUESTS,
+                docs_per_request=docs_per_request,
+                num_requests=NUM_REQUESTS,
                 dam_index=dam_index,
                 warmup_embeddings=warmup,
             ),
-        )
+        ),
     )
+
+
+def get_mean_and_std(data):
+    mean_ = mean(data)
+    std_ = stdev(data) if len(data) > 1 else None
+    return mean_, std_
+
+
+def get_percentile(timings, percentile):
+    array = np.array(timings)
+    return np.percentile(array, percentile)
