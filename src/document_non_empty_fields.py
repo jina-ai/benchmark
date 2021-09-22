@@ -1,10 +1,7 @@
 import pytest
-import numpy as np
-from jina import Document, DocumentArray
+from jina import Document
 
 from .utils.benchmark import benchmark_time
-
-NUM_REPETITIONS = 5
 
 
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
@@ -16,17 +13,10 @@ def test_document_non_empty_fields(num_docs, json_writer):
         for d in docs:
             aux = d.dict()
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_non_empty_fields, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_docs, func=_non_empty_fields)
 
     json_writer.append(
-        dict(
-            name='document_dict/test_document_non_empty_fields',
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        name='document_dict/test_document_non_empty_fields',
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
