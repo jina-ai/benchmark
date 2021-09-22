@@ -1,4 +1,3 @@
-import os
 import pytest
 from jina import Document
 from jina.helper import random_identity
@@ -20,7 +19,7 @@ def test_document_plot(num_docs, json_writer, ephemeral_tmpdir):
 
     def _plot(docs):
         for d in docs:
-            d.plot(output=os.path.join(ephemeral_tmpdir, "doc.svg"))
+            d.plot()
 
     result = benchmark_time(setup=_input_docs, func=_plot)
 

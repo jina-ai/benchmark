@@ -17,7 +17,7 @@ def test_document_attributes(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_attributes)
 
     json_writer.append(
-        page=Pages.DOCUMENT_ATTRIBUTES,
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

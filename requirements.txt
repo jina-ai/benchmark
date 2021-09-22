@@ -4,3 +4,4 @@ packaging==21.0
 pytest==6.2.4
 pytest-json-report==1.4.0
 scipy==1.7.1
+Pillow==8.3.2
