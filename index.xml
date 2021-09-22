@@ -70,4 +70,5 @@ Executor Load Config # name test_executor_load_config unit μs 2.</description><
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
-Local Flow Start # flow long wide num_pods 10 10 unit ms ms 2.</description></item></channel></rss>
+Local Flow Start # flow long wide num_pods 10 10 unit ms ms 2.</description></item><item><title>Indexer Comparison</title><link>https://benchmark.jina.ai/docs/indexer_comparison/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://benchmark.jina.ai/docs/indexer_comparison/</guid><description>Indexer Comparison # Tiny Index # Tests were performed against Jina 2.1.2.
+indexed_docs 100 100 100 embedding_size 128 128 128 docs_per_request 1 1 1 num_requests 100 100 100 dam_index False True True warmup_embeddings False False True index time in ms 4 6 10 search time in ms 464 574 554 index memory 1.</description></item></channel></rss>
