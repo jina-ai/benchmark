@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [1, 100, 10_000])
@@ -22,7 +23,7 @@ def test_document_merge_from(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_merge_from)
 
     json_writer.append(
-        name="document_mergefrom/test_document_merge_from",
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

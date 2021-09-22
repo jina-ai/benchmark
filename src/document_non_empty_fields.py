@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
@@ -16,7 +17,7 @@ def test_document_non_empty_fields(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_non_empty_fields)
 
     json_writer.append(
-        name='document_dict/test_document_non_empty_fields',
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

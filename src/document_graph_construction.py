@@ -30,7 +30,7 @@ def test_graph_add_edges_assuming_no_nodes_present(n_nodes, n_edges, json_writer
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes, n_edges=n_edges),
     )
@@ -61,7 +61,7 @@ def test_graph_add_edges_assuming_all_nodes_present(n_nodes, n_edges, json_write
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes, n_edges=n_edges),
     )
@@ -88,7 +88,7 @@ def test_graph_add_single_edge_assuming_all_nodes_present(
     result = benchmark_time(setup=_setup, func=_build_graph_doc)
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes, n_edges=n_edges),
     )
@@ -112,7 +112,7 @@ def test_graph_add_single_edge_assuming_no_nodes_present(n_nodes, n_edges, json_
     result = benchmark_time(setup=_setup, func=_build_graph_doc)
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes, n_edges=n_edges),
     )
@@ -135,7 +135,7 @@ def test_graph_add_single_node(n_nodes, json_writer):
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes),
     )
@@ -158,7 +158,7 @@ def test_graph_add_nodes(n_nodes, json_writer):
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_GRAPH_CONSTRUCTION,
+        page=Pages.DOCUMENT_GRAPH,
         result=result,
         metadata=dict(n_nodes=n_nodes),
     )

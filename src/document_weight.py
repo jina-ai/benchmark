@@ -2,6 +2,7 @@ import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -21,7 +22,7 @@ def test_document_document_set_weight(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_set_weight)
 
     json_writer.append(
-        name="document_embedding/test_document_document_set_weight",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -44,7 +45,7 @@ def test_document_document_get_weight(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_get_weight)
 
     json_writer.append(
-        name="document_embedding/test_document_document_get_weight",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

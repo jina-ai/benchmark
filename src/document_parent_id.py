@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -19,14 +20,14 @@ def test_document_document_parent_id(num_docs, json_writer):
             },
         )
 
-    def _content_hash(chunks):
+    def _parent_id(chunks):
         for c in chunks:
             c.parent_id
 
-    result = benchmark_time(setup=_input_docs, func=_content_hash)
+    result = benchmark_time(setup=_input_docs, func=_parent_id)
 
     json_writer.append(
-        name="document_parent_id/test_document_document_parent_id",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

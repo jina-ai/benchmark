@@ -38,7 +38,7 @@ def test_document_encoder_executor(executor, input_docs, json_writer):
     document_array_profile = profiles[1]
 
     json_writer.append(
-        page=Pages.DOCUMENT_EMBEDDING,
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(
             profiles=dict(
