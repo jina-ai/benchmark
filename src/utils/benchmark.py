@@ -44,7 +44,7 @@ def benchmark_time(
     profiles_by_cls = {_cls: [] for _cls in profile_cls}
 
     with TimeContext() as test_timer:
-        while test_timer.time_since_start() < 2e9 or len(results) < n:
+        while test_timer.time_since_start() < 1e9 or len(results) < n:
             if setup is not None:
                 new_args, new_kwargs = setup(*args, **kwargs)
             else:

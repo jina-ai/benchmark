@@ -283,9 +283,7 @@ def test_document_convert_uri_to_text(num_docs, json_writer):
             (),
             dict(
                 docs=[
-                    Document(
-                        content="http://google.com/index.html", mime_type="text/html"
-                    )
+                    Document(uri="http://google.com/index.html", mime_type="text/html")
                     for _ in range(num_docs)
                 ]
             ),
