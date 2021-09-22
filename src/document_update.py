@@ -3,6 +3,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -24,7 +25,7 @@ def test_document_document_update_embedding(num_docs, json_writer):
 
     result = benchmark_time(setup=_input_docs, func=_update_embedding)
     json_writer.append(
-        name="document_update/test_document_document_update_embedding",
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -47,7 +48,7 @@ def test_document_document_update_text(num_docs, json_writer):
 
     result = benchmark_time(setup=_input_docs, func=_update_text)
     json_writer.append(
-        name="document_update/test_document_document_update_text",
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

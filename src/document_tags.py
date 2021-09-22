@@ -2,6 +2,7 @@ import pytest
 from jina import Document, DocumentArray
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -23,7 +24,7 @@ def test_document_document_tags_setter(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_tags_set)
 
     json_writer.append(
-        name="document_embedding/test_document_document_tags_setter",
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -48,7 +49,7 @@ def test_document_document_tags_getter(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_get_tags_tag1)
 
     json_writer.append(
-        name="document_embedding/test_document_document_tags_getter",
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

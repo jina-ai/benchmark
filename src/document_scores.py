@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -19,12 +20,12 @@ def test_document_get_scores(num_docs, json_writer):
 
     def _doc_get_scores(docs):
         for doc in docs:
-            _ = doc._doc_scores["euclidean"]
+            _ = doc.scores["euclidean"]
 
     result = benchmark_time(setup=_input_docs, func=_doc_get_scores)
 
     json_writer.append(
-        name="document_scores/test_document_get_scores",
+        page=Pages.DOCUMENT_RELEVANCE,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -45,7 +46,7 @@ def test_document_set_scores(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_doc_set_scores)
 
     json_writer.append(
-        name="document_scores/test_document_set_scores",
+        page=Pages.DOCUMENT_RELEVANCE,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

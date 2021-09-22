@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -23,7 +24,7 @@ def test_document_get_evaluations(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_doc_get_evaluations)
 
     json_writer.append(
-        name="document_scores/test_document_get_evaluations",
+        page=Pages.DOCUMENT_RELEVANCE,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -48,7 +49,7 @@ def test_document_set_evaluations(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_doc_set_evaluations)
 
     json_writer.append(
-        name="document_scores/test_document_set_evaluations",
+        page=Pages.DOCUMENT_RELEVANCE,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

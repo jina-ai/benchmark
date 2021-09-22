@@ -2,9 +2,10 @@ import pytest
 import os
 import numpy as np
 
-from jina import Document, DocumentArray
+from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 """
@@ -41,7 +42,7 @@ def test_document_convert_image_uri_to_blob(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_image_uri_to_blob)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_image_uri_to_blob",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -65,7 +66,7 @@ def test_document_convert_uri_to_buffer(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_uri_to_buffer)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_uri_to_buffer",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -90,14 +91,14 @@ def test_document_convert_image_buffer_to_blob(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_image_buffer_to_blob)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_image_buffer_to_blob",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
 
 
 @pytest.mark.parametrize("num_docs", [1, 100, 1000])
-def test_document_convert_image_buffer_to_blob(num_docs, json_writer):
+def test_document_convert_image_datauri_to_blob(num_docs, json_writer):
     def _input_docs():
         image_dir = os.path.join(cur_dir, "utils", "test.png")
         docs = []
@@ -115,14 +116,14 @@ def test_document_convert_image_buffer_to_blob(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_image_datauri_to_blob)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_image_buffer_to_blob",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
 
 
 @pytest.mark.parametrize("num_docs", [1, 100, 1000])
-def test_document_convert_convert_uri_to_datauri(num_docs, json_writer):
+def test_document_convert_uri_to_datauri(num_docs, json_writer):
     def _input_docs():
         image_dir = os.path.join(cur_dir, "utils", "test.png")
         docs = []
@@ -139,7 +140,7 @@ def test_document_convert_convert_uri_to_datauri(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_uri_to_datauri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_convert_uri_to_datauri",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -165,7 +166,7 @@ def test_document_convert_buffer_to_blob(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_buffer_to_blob)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_buffer_to_blob",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -191,7 +192,7 @@ def test_document_convert_image_blob_to_uri(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_image_blob_to_uri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_image_blob_to_uri",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -217,7 +218,7 @@ def test_document_convert_content_to_uri(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_content_to_uri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_content_to_uri",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -243,7 +244,7 @@ def test_document_convert_text_to_uri(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_text_to_uri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_text_to_uri",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -269,7 +270,7 @@ def test_document_convert_buffer_to_uri(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_buffer_to_uri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_buffer_to_uri",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -297,7 +298,7 @@ def test_document_convert_uri_to_text(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_uri_to_text)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_uri_to_text",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -323,7 +324,7 @@ def test_document_convert_blob_to_buffer(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_convert_buffer_to_uri)
 
     json_writer.append(
-        name="document_conversions_blob_image_uri_text/test_document_convert_blob_to_buffer",
+        page=Pages.DOCUMENT_CONVERSION,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

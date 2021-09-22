@@ -38,7 +38,7 @@ def test_set_attribute_text(text_length, json_writer):
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_SET_ATTRIBUTES,
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(text_length=text_length),
     )
@@ -55,7 +55,7 @@ def test_set_attribute_blob(num_dims, json_writer):
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_SET_ATTRIBUTES,
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(num_dims=num_dims),
     )
@@ -72,7 +72,7 @@ def test_set_attribute_buffer(buffer_length, json_writer):
     )
 
     json_writer.append(
-        page=Pages.DOCUMENT_SET_ATTRIBUTES,
+        page=Pages.DOCUMENT_CONTENT,
         result=result,
         metadata=dict(buffer_length=buffer_length),
     )

@@ -3,6 +3,7 @@ import numpy as np
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize('num_docs', [1, 100, 10_000])
@@ -17,7 +18,7 @@ def test_document_dict_with_text(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_dict)
 
     json_writer.append(
-        name='document_dict/test_document_dict_with_text',
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -35,7 +36,7 @@ def test_document_dict_with_array(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_dict)
 
     json_writer.append(
-        name='document_dict/test_document_dict_with_array',
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -17,7 +18,7 @@ def test_document_document_chunks(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_get_chunks)
 
     json_writer.append(
-        name="document_chunks/test_document_document_chunks",
+        page=Pages.DOCUMENT_RECURSIVE,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

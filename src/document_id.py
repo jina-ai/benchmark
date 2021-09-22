@@ -3,6 +3,7 @@ from jina import Document, DocumentArray
 from jina.helper import random_identity
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 random_identity(use_uuid1=True)
@@ -18,7 +19,7 @@ def test_document_document_generate_id(num_docs, use_uuid1, json_writer):
     result = benchmark_time(func=_generate_id)
 
     json_writer.append(
-        name="document_embedding/test_document_document_generate_id",
+        page=Pages.DOCUMENT_HELPER,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -41,7 +42,7 @@ def test_document_document_get_id(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_get_id)
 
     json_writer.append(
-        name="document_embedding/test_document_document_get_id",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )

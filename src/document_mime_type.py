@@ -2,6 +2,7 @@ import pytest
 from jina import Document
 
 from .utils.benchmark import benchmark_time
+from .pages import Pages
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -25,7 +26,7 @@ def test_document_get_mime_type(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_get_mime_type)
 
     json_writer.append(
-        name="document_mime_type/test_document_get_mime_type",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
@@ -46,7 +47,7 @@ def test_document_set_mime_type(num_docs, json_writer):
     result = benchmark_time(setup=_input_docs, func=_set_mime_type)
 
     json_writer.append(
-        name="document_mime_type/test_document_set_mime_type",
+        page=Pages.DOCUMENT_META,
         result=result,
         metadata=dict(num_docs=num_docs),
     )
