@@ -6,7 +6,7 @@ import copy
 from collections import defaultdict
 from distutils.version import LooseVersion
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union, Optional
 
 
 COLOR_VALUES = [
@@ -77,11 +77,11 @@ def _get_color(mean_time, master_mean_time):
     return COLOR_VALUES[bucket]
 
 
-def _get_cleaned_mean_time(data: Dict[str, Any], scaling: int) -> str:
+def _get_cleaned_mean_time(time: Optional[int], scaling: int) -> str:
     """Return cleaned data"""
 
-    if data.get('mean_time', None):
-        return str(int(int(data["mean_time"]) / scaling))
+    if time is not None:
+        return str(int(int(time) / scaling))
     else:
         return NOT_A_NUMBER
 
@@ -216,14 +216,15 @@ def generate_homepage(output_dir: str) -> None:
 
 def _hash_run(d):
     tmp_dict = copy.deepcopy(d)
-    del tmp_dict['mean_time']
-    del tmp_dict['std_time']
-    del tmp_dict['iterations']
+    tmp_dict.pop('mean_time', None)
+    tmp_dict.pop('std_time', None)
+    tmp_dict.pop('iterations', None)
+    tmp_dict.pop('results', None)
 
     return json.dumps(tmp_dict, sort_keys=True)
 
 
-def _get_stats(test_data, last_benchmarked_version):
+def _get_stats(test_data, latest_version):
     results = defaultdict(dict)
     for version, test_results in test_data.items():
         for test_result in test_results.values():
@@ -241,12 +242,30 @@ def _get_stats(test_data, last_benchmarked_version):
             )
             results[parameter_hash]['parameter_hash'] = parameter_hash
 
-            if version == last_benchmarked_version:
+            if version == latest_version:
                 results[parameter_hash]['last_version_mean'] = test_result['mean_time']
 
     stats = list(results.values())
     _add_scaling(stats)
     return stats
+
+
+def _get_one_version_stats(test_results):
+    results = defaultdict(lambda x: 1e20)
+    results['min_mean_docs_per_sec'] = 0
+
+    for test in test_results:
+        results['min_time'] = min(results['min_time'], test['mean_time'])
+        results['min_memory'] = min(results['min_memory'], test['mean_memory'])
+        results['min_indexer_memory'] = min(
+            results['min_indexer_memory'], test['mean_indexer_memory']
+        )
+        results['min_mean_docs_per_sec'] = max(
+            results['min_mean_docs_per_sec'], test['mean_mean_docs_per_sec']
+        )
+        results['min_latency'] = min(results['min_latency'], test['mean_latency'])
+
+    return results
 
 
 def _add_scaling(stats):
@@ -277,43 +296,147 @@ def generate_docs(
         cum_data: Cumulative data in Dict.
         output_dir: Absolute path to Hugo docs directory.
     """
-    last_benchmarked_version: str = version_list[0]
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    for page in cum_data:
+    for page, page_data in cum_data.items():
         output_file = os.path.join(output_dir, f'{page}.md')
+        if page == 'indexer_comparison':
+            generate_comparison_test(page_data, output_file, _cleaned_title(page))
+        else:
+            generate_versioned_test(page_data, output_file, _cleaned_title(page))
 
-        with open(output_file, 'w') as fp:
-            fp.write('---\n')
-            fp.write(f'title: {_cleaned_title(page)}\n')
-            fp.write('---\n')
-            fp.write(f'# {_cleaned_title(page)}\n\n')
 
-            fp.write(f'{LEGEND}\n')
+def _get_last_version(single_test_data):
+    versions = list(single_test_data.keys())
+    if versions:
+        return max(versions)
+    else:
+        return None
 
-            for test_name, single_test_data in cum_data[page].items():
-                stats = _get_stats(single_test_data, last_benchmarked_version)
 
-                header = _get_table_header(stats)
+def generate_versioned_test(page_data, output_file, title):
+    with open(output_file, 'w') as fp:
+        fp.write('---\n')
+        fp.write(f'title: {title}\n')
+        fp.write('---\n')
+        fp.write(f'# {title}\n\n')
 
-                fp.write(f'## {_cleaned_title(test_name)}\n')
+        fp.write(f'{LEGEND}\n')
 
-                fp.write(header)
+        for test_name, single_test_data in page_data.items():
+            latest_version = _get_last_version(single_test_data)
 
-                for version, data_dict in single_test_data.items():
-                    fp.write(f'| {version} |')
-                    for run in stats:
-                        run_data = data_dict[run['parameter_hash']]
+            if latest_version is None:
+                return
 
-                        mean_time = _get_cleaned_mean_time(run_data, run['scaling'])
-                        color = _get_color(mean_time, run['min'])
+            stats = _get_stats(single_test_data, latest_version)
+            header = _get_table_header(stats)
 
-                        if is_test_unstable(run_data):
-                            mean_time = f'<s>{mean_time}</s>'
+            fp.write(f'## {_cleaned_title(test_name)}\n')
+            fp.write(header)
 
-                        fp.write(f' <span style="color:{color};">{mean_time}</span> |')
-                    fp.write('\n')
+            for version, data_dict in single_test_data.items():
+                fp.write(f'| {version} |')
+                for run in stats:
+                    run_data = data_dict[run['parameter_hash']]
+
+                    mean_time = _get_cleaned_mean_time(
+                        run_data.get('mean_time', None), run['scaling']
+                    )
+                    color = _get_color(mean_time, run['min'])
+
+                    if is_test_unstable(run_data):
+                        mean_time = f'<s>{mean_time}</s>'
+
+                    fp.write(f' <span style="color:{color};">{mean_time}</span> |')
                 fp.write('\n')
+            fp.write('\n')
+
+
+def generate_comparison_test(page_data, output_file, title):
+    with open(output_file, 'w') as fp:
+        fp.write('---\n')
+        fp.write(f'title: {title}\n')
+        fp.write('---\n')
+        fp.write(f'# {title}\n\n')
+
+        for test_name, single_test_data in page_data.items():
+            latest_version = _get_last_version(single_test_data)
+
+            if latest_version is None:
+                continue
+
+            table = []
+
+            test_data = single_test_data[latest_version]
+
+            header = _get_table_header(list(test_data.values()))
+
+            fp.write(f'## {_cleaned_title(test_name)}\n')
+            fp.write(f'Tests were performed against Jina {latest_version}.\n\n')
+            fp.write(header)
+
+            table.append(
+                [
+                    'index time in ms',
+                    'search time in ms',
+                    'index memory',
+                    'search memory',
+                    'p90 in ms',
+                    'p99 in ms',
+                    'RPS',
+                    'Documents per second',
+                ]
+            )
+
+            for run in test_data.values():
+
+                table.append(
+                    [
+                        _get_cleaned_mean_time(run['results']['mean_index_time'], 1e6),
+                        _get_cleaned_mean_time(run['results']['mean_search_time'], 1e6),
+                        get_readable_size(run['results']['mean_search_memory']),
+                        get_readable_size(run['results']['mean_index_memory']),
+                        _get_cleaned_mean_time(run['results']['p90'], 1e6),
+                        _get_cleaned_mean_time(run['results']['p99'], 1e6),
+                        get_rps(run),
+                        get_dps(run),
+                    ]
+                )
+
+            transposed = list(map(list, zip(*table)))
+
+            fp.write('|\n|'.join(' | '.join(row) for row in transposed))
+            fp.write('\n\n')
+
+
+def get_dps(run):
+    total_docs = run['metadata']['docs_per_request'] * run['metadata']['num_requests']
+    dps = total_docs / (run['results']['mean_search_time'] / 1e9)
+    return f'{dps:.2f}'
+
+
+def get_rps(run):
+    rps = run['metadata']['num_requests'] / (run['results']['mean_search_time'] / 1e9)
+    return f'{rps:.2f}'
+
+
+def get_readable_size(num_bytes: Union[int, float]) -> str:
+    """
+    Transform the bytes into readable value with different units (e.g. 1 KB, 20 MB, 30.1 GB).
+
+    :param num_bytes: Number of bytes.
+    :return: Human readable string representation.
+    """
+    num_bytes = int(num_bytes)
+    if num_bytes < 1024:
+        return f'{num_bytes} Bytes'
+    elif num_bytes < 1024 ** 2:
+        return f'{num_bytes / 1024:.1f} KB'
+    elif num_bytes < 1024 ** 3:
+        return f'{num_bytes / (1024 ** 2):.1f} MB'
+    else:
+        return f'{num_bytes / (1024 ** 3):.1f} GB'
 
 
 def generate_menus(cum_data: Dict[Any, Any], output_dir: str) -> None:

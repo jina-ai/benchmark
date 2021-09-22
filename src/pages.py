@@ -17,3 +17,4 @@ class Pages:
     DOCUMENT_SET_ATTRIBUTES = 'document_set_attributes'
     EXECUTOR = 'executor'
     FLOW = 'flow'
+    INDEXER_COMPARISON = 'indexer_comparison'
