@@ -1,10 +1,7 @@
-import pytest
 from jina import Document
 from jina.types.document.graph import GraphDocument
 
 from .utils.benchmark import benchmark_time
-
-NUM_REPETITIONS = 5
 
 
 def test_empty_document_graph_adjacency(json_writer):
@@ -14,17 +11,11 @@ def test_empty_document_graph_adjacency(json_writer):
     def _doc_get_adjacency(gdoc):
         _ = gdoc.adjacency
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_graphdoc, func=_doc_get_adjacency, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_graphdoc, func=_doc_get_adjacency)
 
     json_writer.append(
-        dict(
-            name="document_graph_adjacency/test_empty_document_graph_adjacency",
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-        )
+        name="document_graph_adjacency/test_empty_document_graph_adjacency",
+        result=result,
     )
 
 
@@ -40,15 +31,9 @@ def test_document_graph_adjacency(json_writer):
     def _doc_get_adjacency(gdoc):
         _ = gdoc.adjacency
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_graphdoc, func=_doc_get_adjacency, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_graphdoc, func=_doc_get_adjacency)
 
     json_writer.append(
-        dict(
-            name="document_graph_adjacency/test_empty_document_graph_adjacency",
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-        )
+        name="document_graph_adjacency/test_empty_document_graph_adjacency",
+        result=result,
     )

@@ -1,10 +1,8 @@
 import numpy as np
 import pytest
-from jina import Document, DocumentArray
+from jina import Document
 
 from .utils.benchmark import benchmark_time
-
-NUM_REPETITIONS = 5
 
 
 @pytest.mark.parametrize("num_docs", [100, 1000, 10_000])
@@ -24,18 +22,11 @@ def test_document_document_update_embedding(num_docs, json_writer):
         for d in docs:
             d.update(new_doc)
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_update_embedding, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_docs, func=_update_embedding)
     json_writer.append(
-        dict(
-            name="document_update/test_document_document_update_embedding",
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit="ms",
-            metadata=dict(num_docs=num_docs),
-        )
+        name="document_update/test_document_document_update_embedding",
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
 
 
@@ -54,16 +45,9 @@ def test_document_document_update_text(num_docs, json_writer):
         for d in docs:
             d.update(new_doc)
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_update_text, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_docs, func=_update_text)
     json_writer.append(
-        dict(
-            name="document_update/test_document_document_update_text",
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit="ms",
-            metadata=dict(num_docs=num_docs),
-        )
+        name="document_update/test_document_document_update_text",
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )

@@ -10,6 +10,7 @@ class Pages:
     DA_SHUFFLE = 'document_array_shuffle'
     DA_SORT = 'document_array_sort'
     DA_TRAVERSE = 'document_array_traverse'
+    DOCUMENT_ATTRIBUTES = 'document_construct'
     DOCUMENT_CONSTRUCT = 'document_construct'
     DOCUMENT_GET_ATTRIBUTES = 'document_get_attributes'
     DOCUMENT_GRAPH_CONSTRUCTION = 'document_graph_construction'

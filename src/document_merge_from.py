@@ -1,9 +1,7 @@
 import pytest
-from jina import Document, DocumentArray
+from jina import Document
 
 from .utils.benchmark import benchmark_time
-
-NUM_REPETITIONS = 5
 
 
 @pytest.mark.parametrize("num_docs", [1, 100, 10_000])
@@ -21,17 +19,10 @@ def test_document_merge_from(num_docs, json_writer):
         for d in docs:
             d.MergeFrom(doc)
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_merge_from, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_docs, func=_merge_from)
 
     json_writer.append(
-        dict(
-            name="document_mergefrom/test_document_merge_from",
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit="ms",
-            metadata=dict(num_docs=num_docs),
-        )
+        name="document_mergefrom/test_document_merge_from",
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )

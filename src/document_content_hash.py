@@ -3,8 +3,6 @@ from jina import Document
 
 from .utils.benchmark import benchmark_time
 
-NUM_REPETITIONS = 5
-
 
 @pytest.mark.parametrize('num_docs', [100, 1000, 10_000])
 def test_document_document_content_hash(num_docs, json_writer):
@@ -18,16 +16,9 @@ def test_document_document_content_hash(num_docs, json_writer):
         for d in docs:
             d.content_hash
 
-    mean_time, std_time = benchmark_time(
-        setup=_input_docs, func=_content_hash, n=NUM_REPETITIONS
-    )
+    result = benchmark_time(setup=_input_docs, func=_content_hash)
     json_writer.append(
-        dict(
-            name='document_content_hash/test_document_document_content_hash',
-            iterations=NUM_REPETITIONS,
-            mean_time=mean_time,
-            std_time=std_time,
-            unit='ms',
-            metadata=dict(num_docs=num_docs),
-        )
+        name='document_content_hash/test_document_document_content_hash',
+        result=result,
+        metadata=dict(num_docs=num_docs),
     )
