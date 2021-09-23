@@ -16,6 +16,7 @@ class ResultsCollector:
     def __init__(self, output_dir, default_filename):
         self.results = defaultdict(list)
         self.output_dir = output_dir
+        self.default_filename = default_filename
 
     def get_test_name():
         test = os.environ['PYTEST_CURRENT_TEST']
