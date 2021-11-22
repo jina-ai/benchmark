@@ -59,11 +59,11 @@ def test_document_convert_uri_to_buffer(num_docs, json_writer):
 
         return (), dict(docs=docs)
 
-    def _convert_uri_to_buffer(docs):
+    def _load_uri_to_buffer(docs):
         for doc in docs:
             doc.load_uri_to_buffer()
 
-    result = benchmark_time(setup=_input_docs, func=_convert_uri_to_buffer)
+    result = benchmark_time(setup=_input_docs, func=_load_uri_to_buffer)
 
     json_writer.append(
         page=Pages.DOCUMENT_CONVERSION,
@@ -109,11 +109,11 @@ def test_document_convert_image_datauri_to_blob(num_docs, json_writer):
 
         return (), dict(docs=docs)
 
-    def _convert_image_datauri_to_blob(docs):
+    def _load_uri_to_image_blob(docs):
         for doc in docs:
             doc.load_uri_to_image_blob()
 
-    result = benchmark_time(setup=_input_docs, func=_convert_image_datauri_to_blob)
+    result = benchmark_time(setup=_input_docs, func=_load_uri_to_image_blob)
 
     json_writer.append(
         page=Pages.DOCUMENT_CONVERSION,
