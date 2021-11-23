@@ -3,7 +3,6 @@ import scipy.sparse as sp
 from jina import Document
 
 from .utils.benchmark import benchmark_time
-from jina.types.ndarray.sparse.scipy import SparseNdArray as SparseScipy
 from .pages import Pages
 
 
@@ -22,7 +21,7 @@ def test_document_document_get_sparse_embedding_scipy(num_docs, json_writer):
 
     def _get_sparse_blob(docs):
         for d in docs:
-            d.get_sparse_embedding(SparseScipy)
+            d.embedding
 
     result = benchmark_time(setup=_input_docs, func=_get_sparse_blob)
 
