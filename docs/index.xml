@@ -54,7 +54,7 @@ Document Get Content # num_docs 100 1000 10000 unit μs μs μs 2.</description>
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
-Document Convert Image Uri To Blob # num_docs 1 100 1000 unit μs ms ms 2.</description></item><item><title>Document Get Attributes</title><link>https://benchmark.jina.ai/docs/document_get_attributes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://benchmark.jina.ai/docs/document_get_attributes/</guid><description>Document Get Attributes # The following data should be read as follows:
+Document Load Uri To Image Blob # num_docs 1 100 1000 unit μs ms ms 2.</description></item><item><title>Document Get Attributes</title><link>https://benchmark.jina.ai/docs/document_get_attributes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://benchmark.jina.ai/docs/document_get_attributes/</guid><description>Document Get Attributes # The following data should be read as follows:
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
@@ -82,7 +82,7 @@ Get Content Text # text_length 10 100 1000 10000 unit ns ns ns ns 2.</descriptio
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
-Document Document Chunks # num_docs 100 1000 10000 unit μs μs μs 2.</description></item><item><title>Document Relevance Attributes</title><link>https://benchmark.jina.ai/docs/document_relevance_attributes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://benchmark.jina.ai/docs/document_relevance_attributes/</guid><description>Document Relevance Attributes # The following data should be read as follows:
+Document Document Chunks # num_docs 100 1000 10000 unit ns μs μs 2.</description></item><item><title>Document Relevance Attributes</title><link>https://benchmark.jina.ai/docs/document_relevance_attributes/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://benchmark.jina.ai/docs/document_relevance_attributes/</guid><description>Document Relevance Attributes # The following data should be read as follows:
 Colors of cells display the percentage of the minimum value in the column:
 0 - 10% | 10 - 20% | 20 - 30% | 30 - 40% | 40 - 50% | 50 - 60% | 60 - 70%
 1337: unstable tests with &amp;ldquo;standard deviation / mean &amp;gt; 0.5&amp;rdquo;
