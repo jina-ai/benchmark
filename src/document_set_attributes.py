@@ -30,7 +30,7 @@ def _generate_random_blob(num_dims):
 @pytest.mark.parametrize('text_length', [10, 100, 1000, 10000])
 def test_set_attribute_text(text_length, json_writer):
     def _set_doc(doc):
-        doc.set_attributes(text=_generate_random_text(text_length))
+        doc._set_attributes(text=_generate_random_text(text_length))
 
     result = benchmark_time(
         func=_set_doc,
@@ -47,7 +47,7 @@ def test_set_attribute_text(text_length, json_writer):
 @pytest.mark.parametrize('num_dims', [1, 2])
 def test_set_attribute_blob(num_dims, json_writer):
     def _set_doc(doc):
-        doc.set_attributes(blob=_generate_random_blob(num_dims))
+        doc._set_attributes(blob=_generate_random_blob(num_dims))
 
     result = benchmark_time(
         func=_set_doc,
@@ -64,7 +64,7 @@ def test_set_attribute_blob(num_dims, json_writer):
 @pytest.mark.parametrize('buffer_length', [10, 1000, 100000])
 def test_set_attribute_buffer(buffer_length, json_writer):
     def _set_doc(doc):
-        doc.set_attributes(buffer=_generate_random_buffer(buffer_length))
+        doc._set_attributes(buffer=_generate_random_buffer(buffer_length))
 
     result = benchmark_time(
         func=_set_doc,
