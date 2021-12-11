@@ -26,9 +26,9 @@ def _build_da(num_docs, num_matches, num_chunks):
 @pytest.mark.parametrize(
     'num_docs,num_matches,num_chunks,traversal_paths',
     [
-        (10, 10, 10, 'r, c, m'),
-        (100, 100, 100, 'r, c, m'),
-        (1000, 100, 100, 'r, c, m'),
+        (10, 10, 10, 'r,c,m'),
+        (100, 100, 100, 'r,c,m'),
+        (1000, 100, 100, 'r,c,m'),
         (1000, 10, 10, 'r'),
         (1000, 10, 100, 'c'),
         (1000, 100, 10, 'm'),
