@@ -1,8 +1,8 @@
 import pytest
 from jina import Document, DocumentArray
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
+from .utils.benchmark import benchmark_time
 
 NUM_DOCS = 100000
 

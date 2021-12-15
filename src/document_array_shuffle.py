@@ -1,9 +1,8 @@
 import pytest
-from jina import Document, DocumentArray
-from jina.types.arrays.memmap import DocumentArrayMemmap
+from jina import Document, DocumentArray, DocumentArrayMemmap
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
+from .utils.benchmark import benchmark_time
 
 
 @pytest.mark.parametrize('memmap', [False, True])

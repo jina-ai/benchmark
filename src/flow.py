@@ -1,8 +1,8 @@
 import pytest
 from jina import Flow
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
+from .utils.benchmark import benchmark_time
 
 NUM_PODS = 10
 

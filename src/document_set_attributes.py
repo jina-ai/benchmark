@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 from jina import Document
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
+from .utils.benchmark import benchmark_time
 
 
 def _generate_random_text(text_length):
