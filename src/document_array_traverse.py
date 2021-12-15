@@ -1,11 +1,10 @@
-import pytest
 import shutil
 
-from jina import Document, DocumentArray
-from jina.types.arrays.memmap import DocumentArrayMemmap
+import pytest
+from jina import Document, DocumentArray, DocumentArrayMemmap
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
+from .utils.benchmark import benchmark_time
 
 
 def _get_docs(num_docs):

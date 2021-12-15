@@ -1,12 +1,11 @@
-import pytest
 import os
-import numpy as np
 
+import numpy as np
+import pytest
 from jina import Document
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
-
+from .utils.benchmark import benchmark_time
 
 """
 This file contains tests for the following methods from Document:

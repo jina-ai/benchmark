@@ -2,9 +2,8 @@ import pytest
 from jina import Document, DocumentArray
 from jina.helper import random_identity
 
-from .utils.benchmark import benchmark_time
 from .pages import Pages
-
+from .utils.benchmark import benchmark_time
 
 random_identity(use_uuid1=True)
 

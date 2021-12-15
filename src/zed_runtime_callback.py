@@ -1,11 +1,9 @@
 import numpy as np
 import pytest
-from jina import Executor, requests
+from jina import Document, DocumentArray, Executor, requests
 from jina.clients.request import request_generator
 from jina.parsers import set_pea_parser
 from jina.peapods.runtimes.zmq.zed import ZEDRuntime
-from jina.types.arrays.document import DocumentArray
-from jina.types.document import Document
 from jina.types.message import Message
 from jina.types.request import Request
 

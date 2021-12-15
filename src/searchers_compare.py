@@ -1,16 +1,15 @@
 import os
-from statistics import mean, stdev
-from collections import defaultdict
 import shutil
+from collections import defaultdict
+from statistics import mean, stdev
 
 import numpy as np
 import pytest
-from jina import Document, DocumentArray, Executor, requests
-from jina.types.arrays.memmap import DocumentArrayMemmap
+from jina import Document, DocumentArray, Executor, requests, DocumentArrayMemmap
 from pympler import asizeof, tracker
 
-from .utils.timecontext import TimeContext
 from .pages import Pages
+from .utils.timecontext import TimeContext
 
 NUM_REPETITIONS = 5
 NUM_REQUESTS = 100

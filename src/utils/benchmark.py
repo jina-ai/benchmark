@@ -1,11 +1,10 @@
-from contextlib import ExitStack
 from collections import namedtuple
+from contextlib import ExitStack
 from statistics import mean, stdev
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from .profiler import Profiler, merge_profiles
 from .timecontext import TimeContext
-
 
 BenchmarkResult = namedtuple(
     'BenchmarkResult', ['mean', 'std', 'iterations', 'profiles']
